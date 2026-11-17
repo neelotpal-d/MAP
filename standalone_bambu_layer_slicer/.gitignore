@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+*.summary.json
+.generated_*.json
+*.gcode
+*.gcode.3mf
+Generated*/
+h2d_right_nozzle/inputPaths/*.gcode
+h2d_dual_nozzle/inputPaths/*.gcode
+a1_single_nozzle/inputPaths/*.gcode
+h2d_right_nozzle/models/*
+!h2d_right_nozzle/models/.gitkeep
+h2d_dual_nozzle/models/*
+!h2d_dual_nozzle/models/.gitkeep
+
+# Required assembly reference/template inputs.
+!a1_single_nozzle/reference/*.gcode.3mf
+!h2d_right_nozzle/templates/**/*.gcode
+!h2d_dual_nozzle/templates/**/*.gcode
+!h2d_right_nozzle/machineSetup/*.gcode
+!h2d_dual_nozzle/machineSetup/*.gcode

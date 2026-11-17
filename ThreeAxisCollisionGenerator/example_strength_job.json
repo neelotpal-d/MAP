@@ -1,0 +1,122 @@
+{
+  "output": "../model_runs_portable",
+  "pipeline": {
+    "model": {
+      "model_name": "part_strength",
+      "mesh_path": "../inputShapes/part.obj",
+      "w0": "auto",
+      "w0_initial": "auto",
+      "num_layers": 10,
+      "up_direction": [
+        0,
+        1,
+        0
+      ],
+      "in_plane_u": [
+        1,
+        0,
+        0
+      ],
+      "device": "cuda"
+    },
+    "sdf": {
+      "sdf_epochs": 150,
+      "sdf_grid_spacing": 2.0,
+      "sdf_padding": 2.0,
+      "sdf_point_limit": 150000
+    },
+    "initializer": {
+      "initializer_epochs": 150,
+      "initializer_grid_spacing": 2.0,
+      "initializer_max_input_points": 100000,
+      "initializer_seed": 20261023
+    },
+    "training": {
+      "epochs": 50,
+      "learning_rate": 1e-05,
+      "batch_size": 500,
+      "input_grid_spacing": 2.0,
+      "max_input_points": 150000,
+      "input_points_per_epoch": 150000,
+      "collision_roots_per_step": 256,
+      "warmup_epochs": 0,
+      "surface_group_scalar_delay_epochs": 20,
+      "scalar_consistency_mode": "local-edge",
+      "local_edge_scalar_weight": 50.0,
+      "max_layer_height_ratio": 2.0,
+      "gradient_band_count": 8,
+      "checkpoint_tag": "fast_surface_quality",
+      "regularization_profile": "banded",
+      "enable_input_curvature": true,
+      "input_curvature_mode": "geometric",
+      "input_curvature_weight": 0.1,
+      "input_curvature_radius_mm": 35.0,
+      "input_curvature_sample_fraction": 1.0,
+      "input_curvature_boundary_coverage": true,
+      "gradient_band_ratio_weight": 10.0,
+      "gradient_band_floor_weight": 1.0
+    },
+    "surface_quality": {
+      "surface_normal_max_angle": 40.0,
+      "surface_sample_density": 1.25,
+      "base_height": 1.0,
+      "base_normal_max_angle": 40.0,
+      "base_direction_weight": 0.0,
+      "skip_surface_selection": true,
+      "skip_constraint_sample_preview": true,
+      "skip_automatic_selection_window": true
+    },
+    "collision": {
+      "disable_collision": false,
+      "normalize_collision_by_gradient": true,
+      "collision_gradient_epsilon": 1e-06,
+      "collision_weight": 1000000.0,
+      "collision_weight_schedule": [
+        "1:1000000"
+      ],
+      "collision_topk_fraction": 0.3,
+      "mining_candidate_count": 50000,
+      "hard_pool_size": 8192,
+      "scoring_root_batch_size": 256,
+      "sdf_gate_batch_size": 50000,
+      "collision_validation_count": 4096,
+      "field_query_batch_size": 16384,
+      "tool_plane_config": "tool_y8_xz25_training_margin04.json"
+    },
+    "execution": {
+      "yes": true,
+      "skip_sdf_verification": true,
+      "skip_initializer_verification": true
+    },
+    "support_free": {
+      "support_free_weight": 200.0,
+      "support_free_angle": 45.0
+    }
+  },
+  "strength": {
+    "enabled": true,
+    "file": "../inputShapes/part_stress.txt",
+    "weight": 1.0,
+    "point_columns": [
+      0,
+      1,
+      2
+    ],
+    "direction_columns": [
+      3,
+      4,
+      5
+    ],
+    "signed_column": 6,
+    "tensile_only": true,
+    "min_tensile_stress": 0.0,
+    "neighbors": 8,
+    "max_distance_mm": 5.0,
+    "seed": 42,
+    "sampling": "fps",
+    "samples": 0,
+    "batch_size": 500,
+    "fps_filter_order": "after"
+  },
+  "workflow": "strength"
+}

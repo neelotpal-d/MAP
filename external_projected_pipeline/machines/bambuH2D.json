@@ -1,0 +1,22 @@
+{
+  "machine_name": "example_machine",
+  "base_center": [175.0, 160.0, 0.0],
+  "up_direction": [0.0, 0.0, 1.0],
+  "filament_diameter": 1.75,
+  "alpha": 0.91,
+  "travel_feedrate": 30000.0,
+  "print_feedrate": null,
+  "travel_acceleration": 800.0,
+  "print_acceleration": 500.0,
+  "path_start_slowdown_fraction": null,
+  "path_start_feedrate_scale": null,
+  "first_layer_extrusion_scale": null,
+  "first_layer_count": 0,
+  "first_layer_print_feedrate": null,
+  "travel_lift": 5.0,
+  "interrupt_threshold": 5.0,
+  "retract_amount": 0.8,
+  "pre_extrude_amount": 0.9,
+  "pre_gcode_file": "bambuH2D_pre.gcode",
+  "post_gcode_file": "bambuH2D_post.gcode"
+}

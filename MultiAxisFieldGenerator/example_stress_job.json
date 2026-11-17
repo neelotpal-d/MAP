@@ -1,0 +1,48 @@
+{
+  "output": "runs/my_stress_model",
+  "model": {
+    "mesh": "inputs/part.obj",
+    "start_checkpoint": "inputs/initializer.pt",
+    "sdf_checkpoint": "inputs/sdf.pt",
+    "up_axis": "y",
+    "base_band_mm": 2.5
+  },
+  "tool": {
+    "training": "tools/abb_training.json",
+    "validation": "tools/abb_nominal.json"
+  },
+  "training": {
+    "objective": "combined",
+    "epochs": 100,
+    "collision_weight_schedule": [
+      "1:10000",
+      "26:20000",
+      "51:30000",
+      "76:50000"
+    ],
+    "validate_every": 100,
+    "exact_validation": true,
+    "normalize_collision_by_gradient": false,
+    "collision_gradient_epsilon": 1e-06
+  },
+  "stress": {
+    "enabled": true,
+    "file": "inputs/stress.txt",
+    "weight": 1.0,
+    "samples": 4096,
+    "batch": 256,
+    "neighbors": 8,
+    "max_distance_mm": 5.0,
+    "point_columns": [
+      0,
+      1,
+      2
+    ],
+    "direction_columns": [
+      3,
+      4,
+      5
+    ],
+    "coordinate_space": "world"
+  }
+}

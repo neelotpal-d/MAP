@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "external-projected-pipeline"
+version = "2.0.0"
+description = "Projected toolpaths, nearest-surface heights and manifest support planning"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "scipy>=1.10", "shapely>=2.0", "libigl>=2.6.1", "pymeshlab"]
+
+[project.optional-dependencies]
+preview = ["pyvista"]
+intrinsic = ["potpourri3d"]
+
+[project.scripts]
+projected-toolpaths = "external_projected_pipeline.pipeline_cli:main"
+
+[tool.setuptools]
+packages = ["external_projected_pipeline"]
+package-dir = {external_projected_pipeline = "."}
+
+[tool.setuptools.package-data]
+external_projected_pipeline = ["runtime/*.py", "configs/*.json", "machines/*.json", "machines/*.gcode", "*.md", "*.json", "requirements*.txt"]

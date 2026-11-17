@@ -1,0 +1,17 @@
+{
+  "name": "abb_tool",
+  "description": "Axisymmetric enclosure of the extrusion head used with the legacy ABB Fertility setup; not a model of the ABB robot or a measured CAD tool.",
+  "source": "Neural3DP/collisionLoss.py:init_tool_dense_uniform1",
+  "units": "mm",
+  "cone_angle_degrees": 61.0,
+  "cone_distances": [3.75, 7.5, 9.75, 12.75],
+  "inner_radius": 11.25,
+  "inner_heights": [4.5, 7.25, 11.25, 33.75, 44.5, 49.5, 52.5, 57.5],
+  "outer_radius": 24.0,
+  "outer_heights": [18.0, 23.0, 27.5, 32.5, 37.5, 42.5, 47.5, 52.5, 57.5],
+  "outer_height_jitter_mm": 3.75,
+  "cylinder_axial_spacing_mm": 3.75,
+  "cylinder_axial_jitter": true,
+  "sample_cylinder_caps": true,
+  "angular_samples": 10
+}

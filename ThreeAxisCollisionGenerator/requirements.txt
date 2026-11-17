@@ -1,0 +1,8 @@
+numpy
+scipy
+torch
+pyvista
+vtk
+libigl
+einops
+matplotlib

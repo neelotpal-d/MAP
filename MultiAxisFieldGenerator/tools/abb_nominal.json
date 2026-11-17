@@ -1,0 +1,10 @@
+{
+  "name": "abb_tool_nominal_enclosure",
+  "units": "mm",
+  "source": "https://arxiv.org/html/2511.17578v1#A2",
+  "description": "Uninflated axisymmetric enclosure reconstructed from Appendix B and the legacy radially-clamped cone check. Not measured tool CAD.",
+  "axial_assumptions": "The cone joins the inner stem at 4.5 mm. The outer cylinder starts at 18.5 mm. Both stems end at 58.5 mm. These use published sampling extents as envelope bounds and must be checked against the actual head; no 4 mm axial subtraction was assumed.",
+  "cone": {"half_angle_degrees": 60.0, "radius_max": 7.25, "z_min": 0.0, "z_max": 4.5},
+  "inner_cylinder": {"radius": 7.25, "z_min": 4.5, "z_max": 58.5},
+  "outer_cylinder": {"radius": 20.0, "z_min": 18.5, "z_max": 58.5}
+}

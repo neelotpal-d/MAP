@@ -1,0 +1,19 @@
+{
+  "tool_x_min": -28.5,
+  "tool_x_max": 28.5,
+  "tool_y_min": 4.0,
+  "tool_y_max": 100.0,
+  "tool_z_min": -61.0,
+  "tool_z_max": 15.6,
+  "grid_spacing": 1.0,
+  "build_direction": [
+    0,
+    1,
+    0
+  ],
+  "in_plane_u": [
+    1,
+    0,
+    0
+  ]
+}

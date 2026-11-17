@@ -1,0 +1,2 @@
+# Only needed if directly using the bundled intrinsic heat-field helpers.
+potpourri3d

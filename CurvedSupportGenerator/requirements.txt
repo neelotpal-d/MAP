@@ -1,0 +1,6 @@
+numpy
+scipy
+pyvista
+vtk
+# Optional checkpoint evaluation: torch, einops
+# Optional Open3D model queries: open3d

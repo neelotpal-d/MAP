@@ -1,0 +1,18 @@
+{
+  "output": "../runs/fertility_portable",
+  "model": {
+    "mesh": "../../experiments/five_axis_abb/assets/fertility.obj",
+    "volume_mesh": "../../experiments/five_axis_abb/assets/fertility.ele",
+    "start_checkpoint": "../../experiments/five_axis_abb/assets/fertility_initializer.pt",
+    "sdf_checkpoint": "../../experiments/five_axis_abb/assets/fertility_sdf.pt",
+    "up_axis": "y"
+  },
+  "tool": {"training": "../tools/abb_training.json", "validation": "../tools/abb_nominal.json"},
+  "training": {
+    "epochs": 100,
+    "collision_weight_schedule": ["1:10000", "26:20000", "51:30000", "76:50000"],
+    "validate_every": 100,
+    "exact_validation": true
+  },
+  "stress": {"enabled": false}
+}

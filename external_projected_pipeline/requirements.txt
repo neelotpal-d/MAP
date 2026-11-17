@@ -1,0 +1,9 @@
+# Dependencies of the projected + nearest-triangle pipelines.
+numpy>=1.24
+scipy>=1.10
+pyvista>=0.47
+# Constrained triangulation supplies matching repaired height references.
+shapely>=2.1
+libigl>=2.6.1
+# The copied stage dispatcher imports the remeshing helper eagerly.
+pymeshlab

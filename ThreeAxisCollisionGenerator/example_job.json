@@ -1,0 +1,74 @@
+{
+  "output": "../model_runs_portable",
+  "pipeline": {
+    "model": {
+      "model_name": "bunny_fast_collision",
+      "mesh_path": "../inputShapes/bunny.obj",
+      "node_path": "../inputShapes/bunny.node",
+      "ele_path": "../inputShapes/bunny.ele",
+      "w0": 15,
+      "w0_initial": 15,
+      "num_layers": 5,
+      "up_direction": [
+        0,
+        1,
+        0
+      ],
+      "in_plane_u": [
+        1,
+        0,
+        0
+      ],
+      "device": "cuda"
+    },
+    "sdf": {
+      "sdf_epochs": 150,
+      "sdf_grid_spacing": 2.0,
+      "sdf_padding": 2.0,
+      "sdf_point_limit": 150000
+    },
+    "initializer": {
+      "initializer_epochs": 150,
+      "initializer_grid_spacing": 2.0,
+      "initializer_max_input_points": 100000
+    },
+    "training": {
+      "epochs": 250,
+      "learning_rate": 1e-05,
+      "batch_size": 1000,
+      "input_grid_spacing": 2.0,
+      "max_input_points": 150000,
+      "input_points_per_epoch": 30000,
+      "collision_roots_per_step": 128,
+      "warmup_epochs": 10,
+      "surface_group_scalar_delay_epochs": 20,
+      "scalar_consistency_mode": "local-edge",
+      "local_edge_scalar_weight": 50.0,
+      "max_layer_height_ratio": 2.0,
+      "gradient_band_count": 8,
+      "checkpoint_tag": "fast_surface_quality"
+    },
+    "surface_quality": {
+      "surface_normal_max_angle": 40.0,
+      "surface_sample_density": 1.25,
+      "base_height": 1.0,
+      "base_normal_max_angle": 40.0,
+      "base_direction_weight": 100.0,
+      "skip_surface_selection": true,
+      "skip_constraint_sample_preview": true
+    },
+    "collision": {
+      "disable_collision": false,
+      "normalize_collision_by_gradient": false,
+      "collision_gradient_epsilon": 1e-06
+    },
+    "execution": {
+      "yes": true,
+      "skip_sdf_verification": true,
+      "skip_initializer_verification": true
+    }
+  },
+  "strength": {
+    "enabled": false
+  }
+}

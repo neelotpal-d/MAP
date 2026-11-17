@@ -1,0 +1,26 @@
+{
+  "output": "runs/no_collision_model",
+  "model": {
+    "mesh": "inputs/part.obj",
+    "up_axis": "y",
+    "base_band_mm": 2.5
+  },
+  "training": {
+    "objective": "support_free",
+    "epochs": 100,
+    "collision_weight": 0,
+    "validate_every": 100,
+    "normalize_collision_by_gradient": false,
+    "collision_gradient_epsilon": 1e-06
+  },
+  "builders": {
+    "initializer": {
+      "steps": 2000,
+      "samples": 32768,
+      "batch": 2048
+    }
+  },
+  "stress": {
+    "enabled": false
+  }
+}

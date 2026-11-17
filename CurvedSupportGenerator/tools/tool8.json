@@ -1,0 +1,20 @@
+{
+  "build_direction": [
+    0,
+    1,
+    0
+  ],
+  "in_plane_u": [
+    1,
+    0,
+    0
+  ],
+  "tool_x_min": -25.0,
+  "tool_x_max": 25.0,
+  "tool_y_min": 8.0,
+  "tool_y_max": 100.0,
+  "tool_z_min": -25.0,
+  "tool_z_max": 25.0,
+  "grid_spacing": 1.0,
+  "max_sampled_points": 400000
+}

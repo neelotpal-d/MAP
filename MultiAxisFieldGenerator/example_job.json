@@ -1,0 +1,38 @@
+{
+  "output": "runs/my_model",
+  "model": {
+    "mesh": "inputs/part.obj",
+    "start_checkpoint": "inputs/initializer.pt",
+    "sdf_checkpoint": "inputs/sdf.pt",
+    "up_axis": "y",
+    "base_band_mm": 2.5,
+    "field_width": 128,
+    "field_layers": 10,
+    "field_frequency": 7,
+    "sdf_width": 256,
+    "sdf_layers": 5,
+    "sdf_frequency": 30
+  },
+  "tool": {
+    "training": "tools/abb_training.json",
+    "validation": "tools/abb_nominal.json"
+  },
+  "training": {
+    "objective": "support_free",
+    "epochs": 100,
+    "collision_roots": 256,
+    "collision_weight_schedule": [
+      "1:10000",
+      "26:20000",
+      "51:30000",
+      "76:50000"
+    ],
+    "validate_every": 100,
+    "exact_validation": true,
+    "normalize_collision_by_gradient": false,
+    "collision_gradient_epsilon": 1e-06
+  },
+  "stress": {
+    "enabled": false
+  }
+}

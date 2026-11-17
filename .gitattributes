@@ -1,0 +1,5 @@
+# Preserve exact bundled source bytes and integrity hashes across checkouts.
+* -text
+*.3mf binary
+*.png binary
+*.vtu binary

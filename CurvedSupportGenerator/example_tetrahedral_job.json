@@ -1,0 +1,41 @@
+{
+  "output": "../support_output_tetrahedral",
+  "clean_output": true,
+  "pipeline": {
+    "input": {
+      "field_mode": "tetrahedral",
+      "mesh": "../model.obj",
+      "tetrahedral_volume": "../model_field.vtu",
+      "tetrahedral_scalar": "scalar",
+      "model_volume": "../model_field.vtu",
+      "layer_values": "../main_scalar_values.txt",
+      "skeleton_source": "../saved_skeleton"
+    },
+    "settings": {
+      "envelope_mode": "gradient",
+      "trajectory_region": "overhang",
+      "support_threshold_angle": 60.0,
+      "spacing": 2.0,
+      "padding": 10.0,
+      "build_direction": [0.0, 1.0, 0.0],
+      "layer_spacing": 0.2,
+      "all_layers": true,
+      "export_compatible_layers": true,
+      "support_field_mode": "relaxed",
+      "fast_clearance": true,
+      "tip_radius": 2.5,
+      "branch_sizing": "bambu",
+      "branch_diameter": 2.4,
+      "terminal_cap": "rounded",
+      "platform_base_radius_factor": 1.8,
+      "platform_base_height": 0.6,
+      "layer_trim": "surface_scalar",
+      "model_distance_backend": "certified",
+      "model_query_backend": "open3d",
+      "geometry_threads": 8,
+      "layer_workers": 4,
+      "trim_pair_pruning": true,
+      "allow_stalled_skeleton": true
+    }
+  }
+}
