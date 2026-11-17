@@ -1,6 +1,6 @@
 # MAP — multi-axis process-planning tools
 
-Developed by **Neelotpal Dutta**. This repository contains the backend source
+This repository contains the backend source
 snapshot bundled with the MultiAxisPrinting combined interface dated
 17 November 2026. The same backend files are included in
 https://github.com/RyanTaoLiu/MultiAxisPrinting/tree/dev2 .

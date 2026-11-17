@@ -185,4 +185,4 @@ trial results, not performance or stiffness guarantees for another model.
 python -m unittest discover -s ThreeAxisCollisionGenerator/tests -v
 ```
 
-Backend source: [MAP](https://github.com/neelotpal-d/MAP), developed by Neelotpal Dutta. Additional author details: see AUTHORS.md. Third-party notices remain applicable.
+Backend source: [MAP](https://github.com/neelotpal-d/MAP). Third-party notices remain applicable.

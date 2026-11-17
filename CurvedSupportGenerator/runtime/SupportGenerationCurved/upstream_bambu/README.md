@@ -1,7 +1,7 @@
 # Bambu-derived support sizing
 
 The adjacent `bambu_sizing.py` ports selected regular-tree radius and platform
-expansion calculations, adapted by Neelotpal Dutta. It retains AGPL-3.0 terms.
+expansion calculations, adapted in MAP. It retains AGPL-3.0 terms.
 Original project: https://github.com/bambulab/BambuStudio
 Commit: 79df7ae309be398ed30c9f397c13c9911c2edc57
 Original source links:

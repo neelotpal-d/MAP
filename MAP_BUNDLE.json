@@ -2,7 +2,7 @@
   "format": "map.bundled-source.v1",
   "date": "2026-11-17",
   "source_repository": "https://github.com/neelotpal-d/MAP",
-  "snapshot_id": "cea7dc229bd8b519ddee7cee36f1c1d79bf11a200f0f510c9e9b705372492bf8",
+  "snapshot_id": "e821294516aa5164d1fbb6f3c6533a4a175c261264721dc2068896d1bcf63b83",
   "origin_archive": "MultiAxisInterface-combined-20261117.zip",
   "origin_archive_sha256": "1eca8322521671e2becf533f0d10b07f0dd895c4db0573c852020843da3c40af",
   "distribution": "Copied source; no new dependency/algorithm/process changes",
@@ -24,7 +24,7 @@
     },
     {
       "path": "CurvedSupportGenerator/AUTHORS.md",
-      "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
     },
     {
       "path": "CurvedSupportGenerator/build_native.py",
@@ -48,7 +48,7 @@
     },
     {
       "path": "CurvedSupportGenerator/README.md",
-      "sha256": "292deaddf46afbf98332aea465b4d89f4e92eca7ba9e08f045981aa181d22671"
+      "sha256": "a82a3e3ad93c5df5e8c8be8ca0023f1abc962c5a964a35df02d24d502d77dd44"
     },
     {
       "path": "CurvedSupportGenerator/requirements.txt",
@@ -412,7 +412,7 @@
     },
     {
       "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/README.md",
-      "sha256": "97c2ba35494b012d1aee997e9ba42bcd7eb1ac08320ecf38c6ab62d71b7e7587"
+      "sha256": "e6dff78e04676736d4f59384ac70dfcdb5074468bbc20610bd10a1460015fda3"
     },
     {
       "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/Support/TreeSupport.cpp",
@@ -472,11 +472,11 @@
     },
     {
       "path": "external_projected_pipeline/AUTHORS.md",
-      "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
     },
     {
       "path": "external_projected_pipeline/bundle_manifest.json",
-      "sha256": "2d8078bf1547c7e1dba6775c70aa836491a250052c68134932f3c758c0664ef5"
+      "sha256": "dcff30e42fc371c461031bebedbefec5036a17a1b75241e257662b2c127c7d98"
     },
     {
       "path": "external_projected_pipeline/configs/projected.example.json",
@@ -556,7 +556,7 @@
     },
     {
       "path": "external_projected_pipeline/README.md",
-      "sha256": "a5749accc4ad3e67c8ee56e85d0b617723858439b18095cbb3998d2cfe06f925"
+      "sha256": "d00e91f805aa10502df9895b4e1afea27b1ce656675b5ec51135e807337c0b0d"
     },
     {
       "path": "external_projected_pipeline/requirements-optional.txt",
@@ -796,7 +796,7 @@
     },
     {
       "path": "MultiAxisFieldGenerator/AUTHORS.md",
-      "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
     },
     {
       "path": "MultiAxisFieldGenerator/build_initializer.py",
@@ -832,7 +832,7 @@
     },
     {
       "path": "MultiAxisFieldGenerator/README.md",
-      "sha256": "e7bc2858c70960c46a3348655e011cbd331922f57de7263842fcfaa716bb1322"
+      "sha256": "0495bc28a77e0b0b98a90a750b995c6bb474be44764f2343372613b7efce62ae"
     },
     {
       "path": "MultiAxisFieldGenerator/requirements.txt",
@@ -980,7 +980,7 @@
     },
     {
       "path": "standalone_bambu_layer_slicer/AUTHORS.md",
-      "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
     },
     {
       "path": "standalone_bambu_layer_slicer/common/assemble_layer_paths.py",
@@ -1196,7 +1196,7 @@
     },
     {
       "path": "standalone_bambu_layer_slicer/README.md",
-      "sha256": "a80542b5cc247da7380ad00941161c9d7fd7c73840bbb755efb29d8a8efaff43"
+      "sha256": "68ea79d70157bb4aad4befc35d60c906f3794320c335f00eadbf1f1c16005ae5"
     },
     {
       "path": "ThreeAxisCollisionGenerator/.gitignore",
@@ -1212,7 +1212,7 @@
     },
     {
       "path": "ThreeAxisCollisionGenerator/AUTHORS.md",
-      "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
     },
     {
       "path": "ThreeAxisCollisionGenerator/cli.py",
@@ -1252,7 +1252,7 @@
     },
     {
       "path": "ThreeAxisCollisionGenerator/README.md",
-      "sha256": "c2ff63d9c0aa9e375133daf2a30ba58115a44478d655ff30f632b5f78beee6f9"
+      "sha256": "bfcacafd57740829794ee21beba131f9d64c8da2129289a3506dc14485934b13"
     },
     {
       "path": "ThreeAxisCollisionGenerator/requirements.txt",
@@ -1442,5 +1442,6 @@
       "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_training_margin04.json",
       "sha256": "df94e51d66da3050369e6a0db3677e1d22a62c9e26f7529b70be40fd7fa8f76d"
     }
-  ]
+  ],
+  "documentation_revision": "repository-reference-only"
 }

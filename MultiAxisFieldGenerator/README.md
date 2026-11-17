@@ -361,4 +361,4 @@ five-axis witness replay does too. Analytical point-in-tool collision tests
 remain geometric and unchanged. No full real-part optimization was run for
 this update.
 
-Backend source: [MAP](https://github.com/neelotpal-d/MAP), developed by Neelotpal Dutta. Additional author details: see AUTHORS.md. Third-party notices remain applicable.
+Backend source: [MAP](https://github.com/neelotpal-d/MAP). Third-party notices remain applicable.

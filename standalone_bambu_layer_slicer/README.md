@@ -98,4 +98,4 @@ path set with a small, low-risk print first. Check the selected physical
 nozzle, material, temperatures, machine calibration, plate coordinate system,
 and first-layer clearance before sending a production job.
 
-Backend source: [MAP](https://github.com/neelotpal-d/MAP), developed by Neelotpal Dutta. Additional author details: see AUTHORS.md. Third-party notices remain applicable.
+Backend source: [MAP](https://github.com/neelotpal-d/MAP). Third-party notices remain applicable.

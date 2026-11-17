@@ -11,8 +11,8 @@
   },
   {
     "path": "AUTHORS.md",
-    "bytes": 792,
-    "sha256": "f7c6574ba643f6fc623222740996f4299070fab2582ec58bd91c04252e01fd11"
+    "bytes": 397,
+    "sha256": "4525cbe4602a54d2314b36d84d648c050feec9a8ae3e57b267b1cface1467e09"
   },
   {
     "path": "CurvedSupportGenerator/__init__.py",
@@ -26,8 +26,8 @@
   },
   {
     "path": "CurvedSupportGenerator/AUTHORS.md",
-    "bytes": 306,
-    "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
   },
   {
     "path": "CurvedSupportGenerator/build_native.py",
@@ -56,8 +56,8 @@
   },
   {
     "path": "CurvedSupportGenerator/README.md",
-    "bytes": 8477,
-    "sha256": "292deaddf46afbf98332aea465b4d89f4e92eca7ba9e08f045981aa181d22671"
+    "bytes": 8404,
+    "sha256": "a82a3e3ad93c5df5e8c8be8ca0023f1abc962c5a964a35df02d24d502d77dd44"
   },
   {
     "path": "CurvedSupportGenerator/requirements.txt",
@@ -511,8 +511,8 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/README.md",
-    "bytes": 854,
-    "sha256": "97c2ba35494b012d1aee997e9ba42bcd7eb1ac08320ecf38c6ab62d71b7e7587"
+    "bytes": 842,
+    "sha256": "e6dff78e04676736d4f59384ac70dfcdb5074468bbc20610bd10a1460015fda3"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/Support/TreeSupport.cpp",
@@ -586,13 +586,13 @@
   },
   {
     "path": "external_projected_pipeline/AUTHORS.md",
-    "bytes": 306,
-    "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
   },
   {
     "path": "external_projected_pipeline/bundle_manifest.json",
     "bytes": 10412,
-    "sha256": "2d8078bf1547c7e1dba6775c70aa836491a250052c68134932f3c758c0664ef5"
+    "sha256": "dcff30e42fc371c461031bebedbefec5036a17a1b75241e257662b2c127c7d98"
   },
   {
     "path": "external_projected_pipeline/configs/projected.example.json",
@@ -691,8 +691,8 @@
   },
   {
     "path": "external_projected_pipeline/README.md",
-    "bytes": 8664,
-    "sha256": "a5749accc4ad3e67c8ee56e85d0b617723858439b18095cbb3998d2cfe06f925"
+    "bytes": 8591,
+    "sha256": "d00e91f805aa10502df9895b4e1afea27b1ce656675b5ec51135e807337c0b0d"
   },
   {
     "path": "external_projected_pipeline/requirements-optional.txt",
@@ -981,8 +981,8 @@
   },
   {
     "path": "MAP_BUNDLE.json",
-    "bytes": 66122,
-    "sha256": "e6f55cdcbe1fd0b64811c90bc5f4bc53608b85cf9c03442012ad570b8bea05d4"
+    "bytes": 66180,
+    "sha256": "2b9a3269e1e70a65a237479a2c6063c2bb7f19c35f080283df3a8d2dc38d2b14"
   },
   {
     "path": "MultiAxisFieldGenerator/.gitignore",
@@ -1001,8 +1001,8 @@
   },
   {
     "path": "MultiAxisFieldGenerator/AUTHORS.md",
-    "bytes": 306,
-    "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
   },
   {
     "path": "MultiAxisFieldGenerator/build_initializer.py",
@@ -1046,8 +1046,8 @@
   },
   {
     "path": "MultiAxisFieldGenerator/README.md",
-    "bytes": 19633,
-    "sha256": "e7bc2858c70960c46a3348655e011cbd331922f57de7263842fcfaa716bb1322"
+    "bytes": 19560,
+    "sha256": "0495bc28a77e0b0b98a90a750b995c6bb474be44764f2343372613b7efce62ae"
   },
   {
     "path": "MultiAxisFieldGenerator/requirements.txt",
@@ -1191,8 +1191,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 1903,
-    "sha256": "c638c3b9eabaa765a9e03234724d1dfd9a9720df778ff0c5345d3582031d7f65"
+    "bytes": 1869,
+    "sha256": "faa5eb4a95a74b15802870e7f2ded42d179a43116b8cad42e84c71180c2c192e"
   },
   {
     "path": "standalone_bambu_layer_slicer/.gitignore",
@@ -1236,8 +1236,8 @@
   },
   {
     "path": "standalone_bambu_layer_slicer/AUTHORS.md",
-    "bytes": 306,
-    "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
   },
   {
     "path": "standalone_bambu_layer_slicer/common/assemble_layer_paths.py",
@@ -1506,8 +1506,8 @@
   },
   {
     "path": "standalone_bambu_layer_slicer/README.md",
-    "bytes": 3498,
-    "sha256": "a80542b5cc247da7380ad00941161c9d7fd7c73840bbb755efb29d8a8efaff43"
+    "bytes": 3425,
+    "sha256": "68ea79d70157bb4aad4befc35d60c906f3794320c335f00eadbf1f1c16005ae5"
   },
   {
     "path": "third_party/BambuStudio/LICENSE",
@@ -1521,8 +1521,8 @@
   },
   {
     "path": "THIRD_PARTY_NOTICES.md",
-    "bytes": 1553,
-    "sha256": "f3aff8914433821b962674bcb6cfe2b4c8ae784489abf869719293248dc3acb0"
+    "bytes": 1525,
+    "sha256": "a5b7c6e388d168c79274e047728f8bb3fd27ebf7164ad115c10adf951d70a9e6"
   },
   {
     "path": "ThreeAxisCollisionGenerator/.gitignore",
@@ -1541,8 +1541,8 @@
   },
   {
     "path": "ThreeAxisCollisionGenerator/AUTHORS.md",
-    "bytes": 306,
-    "sha256": "07a29e24faf7dcb63272e32729776c5b516694e06b7d2c8bdc50bf3f37f322fd"
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
   },
   {
     "path": "ThreeAxisCollisionGenerator/cli.py",
@@ -1591,8 +1591,8 @@
   },
   {
     "path": "ThreeAxisCollisionGenerator/README.md",
-    "bytes": 10133,
-    "sha256": "c2ff63d9c0aa9e375133daf2a30ba58115a44478d655ff30f632b5f78beee6f9"
+    "bytes": 10060,
+    "sha256": "bfcacafd57740829794ee21beba131f9d64c8da2129289a3506dc14485934b13"
   },
   {
     "path": "ThreeAxisCollisionGenerator/requirements.txt",

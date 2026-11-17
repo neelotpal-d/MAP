@@ -20,5 +20,5 @@
   include Qt/PyQt, PyQtAds, NumPy/SciPy, PyVista/VTK, PyMeshLab, libigl,
   Shapely/GEOS, TetGen, Torch, and the packages in `environment.yml`.
 
-No blanket licence or transfer of third-party rights is implied by adding
-Neelotpal Dutta's project-author details. See `LICENSE_STATUS.md`.
+Repository attribution does not grant a blanket licence or transfer
+third-party rights. See `LICENSE_STATUS.md`.

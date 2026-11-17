@@ -141,4 +141,4 @@ Independent layer processes still run concurrently. Other platforms honor the
 request. This mitigates measured contour/clean repeatability problems; it does
 not claim every native/classic VTK thread pool is capped.
 
-Backend source: [MAP](https://github.com/neelotpal-d/MAP), developed by Neelotpal Dutta. Additional author details: see AUTHORS.md. Third-party notices remain applicable.
+Backend source: [MAP](https://github.com/neelotpal-d/MAP). Third-party notices remain applicable.

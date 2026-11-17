@@ -128,4 +128,4 @@ side's upstream metadata in either direction. The configured gap is the fallback
 Coordinates, normals, path order and contour offsets are unchanged. Existing
 saved height files must be regenerated to receive this correction.
 
-Backend source: [MAP](https://github.com/neelotpal-d/MAP), developed by Neelotpal Dutta. Additional author details: see AUTHORS.md. Third-party notices remain applicable.
+Backend source: [MAP](https://github.com/neelotpal-d/MAP). Third-party notices remain applicable.
