@@ -47,3 +47,4 @@ MultiAxisPrinting-dev/data/layers/*
 !MultiAxisPrinting-dev/data/toolpaths/
 MultiAxisPrinting-dev/data/toolpaths/*
 !MultiAxisPrinting-dev/data/toolpaths/.gitkeep
+.map_patch_backups/

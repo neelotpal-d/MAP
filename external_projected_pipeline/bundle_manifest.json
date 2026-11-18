@@ -119,7 +119,7 @@
     "runtime/support_height_validation.py": "2807c747088d5a2295d2564e30b20ea42cdb3e6d9289e98d019a7afd159a880b",
     "runtime/reference_geometry_cache.py": "972719b81fb36ee1608b4fa09242b2b31991da6f8c94fd6f010295d787595367",
     "runtime/surface_hatch_metric.py": "11e395654c34e50e38931aa04a3755d725ebad26fe21de4d7290113eece43e39",
-    "runtime/support_hole_repair.py": "210450b324b4c6cda8b0bae029d387d4c0a2d08d41be7b0d46144f70a9b13e7b",
+    "runtime/support_hole_repair.py": "fc325147807373be00387a535b81980ebfa4c0d6459a0f21f8b77e113400d65c",
     "runtime/deposition_bvh.py": "3ae82cec6a87fb48bf440a286f15141076328cdec92e53748dc0d011d9069a03",
     "runtime/path_backing_audit.py": "b193b506c2eea169545e202fd35e27a587581e6296ed1d749b4aa11311d5871e",
     "runtime/export_input_guard.py": "ea7b5080380e561c75094b84ec9a10f816a3e250ceb672da39189386c2a1dda5",
@@ -133,7 +133,8 @@
     "runtime/surface_remesh.py": "e60db6826e80788cafccad15b84e48073a681d0b599c92f022609758573940ce",
     "runtime/field_orientation.py": "c58ed609a454c3d6055203f09147d3c5e12e0f950568abda73a6e5dd5131e727",
     "runtime/surface_field_support.py": "73f89717372b571ae5e5fc3d51148ea1366493525d1c346c52ba283edf0f63a4",
-    "runtime/surface_waypoint_sampling.py": "27b8dd5e05f003e8df276985d596f22f11f7a9498016627a93f81e3152a03cfc"
+    "runtime/surface_waypoint_sampling.py": "27b8dd5e05f003e8df276985d596f22f11f7a9498016627a93f81e3152a03cfc",
+    "tests/test_support_sheet_spacing.py": "7f2fbf9e65bc33c7f879e24ee70e87c56b1e48e6b78054c66fe7bf9bc56e1452"
   },
   "surface_field_integration": "2026-11-17: shared experimental model and paired surface planners; normal diagnostics and export guards retained"
 }

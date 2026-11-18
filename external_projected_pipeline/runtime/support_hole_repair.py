@@ -24,6 +24,19 @@ def _sha(path):
     return h.hexdigest()
 
 
+def chart_y_shift_budget(layer_height):
+    """Bound field-chart correction to a quarter of the source layer target.
+
+    This is a geometry displacement budget, not an extrusion-height limit.
+    At the existing 0.2 mm target it remains 0.05 mm; coarser source layers
+    must not be forced through the old absolute 0.05 mm ceiling.
+    """
+    height=float(layer_height)
+    if not np.isfinite(height) or height<=0:
+        raise ValueError('Source nominal layer height must be positive and finite.')
+    return .25*height
+
+
 def patch_identity(lifter):
     h=hashlib.sha256(np.ascontiguousarray(lifter.vertices,dtype=np.float64).tobytes())
     h.update(np.ascontiguousarray(lifter.faces,dtype=np.int64).tobytes())
@@ -160,9 +173,12 @@ def prepare_repair(entries,mesh_dir,output_dir,support_config,export_metadata,he
     settings=dict(field_source=root,model_source=model,birth_width_mm=float(option.get('birth_width_mm',4*width)),
         protection_distance_mm=gap+1.25*width,minimum_new_path_clearance_mm=gap+width,
         parent_radius_mm=.5*width,maximum_sheet_shift_mm=max(4*nominal,1.6*width),boundary_sample_mm=min(.25,.5*width))
+    chart_height=float(export_metadata.get('nominal_layer_height',nominal))
     settings.update(surface_repair_budget_mm=min(.01,.05*nominal),model_clearance_mm=gap,
         surface_repair_output=str((output_dir/'support_surface_repair').resolve()),
-        chart_maximum_y_shift_mm=min(.05,.25*nominal),chart_model_clearance_mm=max(0,gap-min(.01,.05*nominal)))
+        chart_maximum_y_shift_mm=chart_y_shift_budget(chart_height),
+        chart_source_layer_height_mm=chart_height,
+        chart_model_clearance_mm=max(0,gap-min(.01,.05*nominal)))
     if not np.isfinite([width,nominal,gap,*[settings[k] for k in ('birth_width_mm','protection_distance_mm','minimum_new_path_clearance_mm','parent_radius_mm','maximum_sheet_shift_mm','boundary_sample_mm')]]).all() or min(width,nominal,settings['birth_width_mm'])<=0 or gap<0:
         raise ValueError('Invalid support-hole repair dimensions.')
     settings.update(domain_sha256=_sha(Path(root)/'domain.npz'),field_sha256=_sha(Path(root)/'optimized_field.npz'),model_sha256=_sha(model))
@@ -249,8 +265,14 @@ class FieldRepairLifter:
             # space in a whole layer's bounding box.
             limit=settings.get('chart_maximum_y_shift_mm',.05)
             count=max(2,int(np.ceil(2*limit/field.spacing))+2)
-            for dy in np.linspace(-limit,limit,count):
-                test=q[material].copy();test[:,1]=seed[material]+dy
+            lower=seed[material]-limit;upper=seed[material]+limit
+            if hasattr(field,'origin') and hasattr(field,'shape'):
+                # Check every intersected Y cell inside the saved grid. A
+                # wider valid bracket near the boundary must not extrapolate.
+                lower=np.maximum(lower,float(field.origin[1]))
+                upper=np.minimum(upper,float(field.origin[1]+(field.shape[1]-1)*field.spacing))
+            for fraction in np.linspace(0.,1.,count):
+                test=q[material].copy();test[:,1]=lower+(upper-lower)*fraction
                 _,g=field.evaluate_scalars_and_gradients(test)
                 if (g[:,1]<=1e-9).any():raise ValueError('Saved field is not monotone in the projected path root bracket.')
         for _ in range(24):

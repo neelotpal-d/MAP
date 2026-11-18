@@ -2,10 +2,10 @@
   "format": "map.bundled-source.v1",
   "date": "2026-11-17",
   "source_repository": "https://github.com/neelotpal-d/MAP",
-  "snapshot_id": "e821294516aa5164d1fbb6f3c6533a4a175c261264721dc2068896d1bcf63b83",
+  "snapshot_id": "619d6e89ddf542cb56520922a8e3f22ecf56c10a306b99107042eb3bbed63aa7",
   "origin_archive": "MultiAxisInterface-combined-20261117.zip",
   "origin_archive_sha256": "1eca8322521671e2becf533f0d10b07f0dd895c4db0573c852020843da3c40af",
-  "distribution": "Copied source; no new dependency/algorithm/process changes",
+  "distribution": "Bundled MAP source with recorded maintenance patches",
   "components": [
     "MultiAxisFieldGenerator",
     "ThreeAxisCollisionGenerator",
@@ -476,7 +476,7 @@
     },
     {
       "path": "external_projected_pipeline/bundle_manifest.json",
-      "sha256": "dcff30e42fc371c461031bebedbefec5036a17a1b75241e257662b2c127c7d98"
+      "sha256": "e970bdddb68ed97ce35b8734815ec14b9044151a20f65f684f0737eef3dd3b3e"
     },
     {
       "path": "external_projected_pipeline/configs/projected.example.json",
@@ -728,7 +728,7 @@
     },
     {
       "path": "external_projected_pipeline/runtime/support_hole_repair.py",
-      "sha256": "210450b324b4c6cda8b0bae029d387d4c0a2d08d41be7b0d46144f70a9b13e7b"
+      "sha256": "fc325147807373be00387a535b81980ebfa4c0d6459a0f21f8b77e113400d65c"
     },
     {
       "path": "external_projected_pipeline/runtime/support_preflight_cache.py",
@@ -1441,7 +1441,14 @@
     {
       "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_training_margin04.json",
       "sha256": "df94e51d66da3050369e6a0db3677e1d22a62c9e26f7529b70be40fd7fa8f76d"
+    },
+    {
+      "path": "external_projected_pipeline/tests/test_support_sheet_spacing.py",
+      "sha256": "7f2fbf9e65bc33c7f879e24ee70e87c56b1e48e6b78054c66fe7bf9bc56e1452"
     }
   ],
-  "documentation_revision": "repository-reference-only"
+  "documentation_revision": "repository-reference-only",
+  "maintenance_patches": [
+    "support-sheet-spacing-20261117"
+  ]
 }

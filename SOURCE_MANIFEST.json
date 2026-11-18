@@ -6,8 +6,8 @@
   },
   {
     "path": ".gitignore",
-    "bytes": 1105,
-    "sha256": "b3f90f8a0936932f589782c10ac669bfcef234e1ffe0ebac470f5f7f19da12fc"
+    "bytes": 1126,
+    "sha256": "292af8a7f675345fa0caaf3304e9dc33ce03c2ff5253af6058d8ce2d3bcb960d"
   },
   {
     "path": "AUTHORS.md",
@@ -591,8 +591,8 @@
   },
   {
     "path": "external_projected_pipeline/bundle_manifest.json",
-    "bytes": 10412,
-    "sha256": "dcff30e42fc371c461031bebedbefec5036a17a1b75241e257662b2c127c7d98"
+    "bytes": 10523,
+    "sha256": "e970bdddb68ed97ce35b8734815ec14b9044151a20f65f684f0737eef3dd3b3e"
   },
   {
     "path": "external_projected_pipeline/configs/projected.example.json",
@@ -906,8 +906,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/support_hole_repair.py",
-    "bytes": 21441,
-    "sha256": "210450b324b4c6cda8b0bae029d387d4c0a2d08d41be7b0d46144f70a9b13e7b"
+    "bytes": 22572,
+    "sha256": "fc325147807373be00387a535b81980ebfa4c0d6459a0f21f8b77e113400d65c"
   },
   {
     "path": "external_projected_pipeline/runtime/support_preflight_cache.py",
@@ -981,8 +981,8 @@
   },
   {
     "path": "MAP_BUNDLE.json",
-    "bytes": 66180,
-    "sha256": "2b9a3269e1e70a65a237479a2c6063c2bb7f19c35f080283df3a8d2dc38d2b14"
+    "bytes": 66427,
+    "sha256": "6de2019365371e0adf6bdbaa9cdc17b3e3c30fed6015141f36596c33df0c2b2c"
   },
   {
     "path": "MultiAxisFieldGenerator/.gitignore",
@@ -1828,5 +1828,10 @@
     "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_training_margin04.json",
     "bytes": 143,
     "sha256": "df94e51d66da3050369e6a0db3677e1d22a62c9e26f7529b70be40fd7fa8f76d"
+  },
+  {
+    "path": "external_projected_pipeline/tests/test_support_sheet_spacing.py",
+    "bytes": 9601,
+    "sha256": "7f2fbf9e65bc33c7f879e24ee70e87c56b1e48e6b78054c66fe7bf9bc56e1452"
   }
 ]
