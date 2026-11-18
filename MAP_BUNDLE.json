@@ -2,7 +2,7 @@
   "format": "map.bundled-source.v1",
   "date": "2026-11-17",
   "source_repository": "https://github.com/neelotpal-d/MAP",
-  "snapshot_id": "619d6e89ddf542cb56520922a8e3f22ecf56c10a306b99107042eb3bbed63aa7",
+  "snapshot_id": "6d2f99a4e8c81c99b706f95305b5557423b46c6207b5cff3bdcdc4c427b799a0",
   "origin_archive": "MultiAxisInterface-combined-20261117.zip",
   "origin_archive_sha256": "1eca8322521671e2becf533f0d10b07f0dd895c4db0573c852020843da3c40af",
   "distribution": "Bundled MAP source with recorded maintenance patches",
@@ -476,7 +476,7 @@
     },
     {
       "path": "external_projected_pipeline/bundle_manifest.json",
-      "sha256": "e970bdddb68ed97ce35b8734815ec14b9044151a20f65f684f0737eef3dd3b3e"
+      "sha256": "08c4a689fef030ffabe70ecca511ff85f95d296138f45e65de2b7074a4ab46e6"
     },
     {
       "path": "external_projected_pipeline/configs/projected.example.json",
@@ -624,7 +624,7 @@
     },
     {
       "path": "external_projected_pipeline/runtime/connected_patch_planner.py",
-      "sha256": "86ba3255ad90ccae9c00c147bb59d4f9e1e0128f880a299ee3a92c1582dd0d0c"
+      "sha256": "28b32fa53c27e402d2874968910d3640bc9b4ed9028aa2e18c9d3c6875f4483f"
     },
     {
       "path": "external_projected_pipeline/runtime/contact_support_height.py",
@@ -728,7 +728,7 @@
     },
     {
       "path": "external_projected_pipeline/runtime/support_hole_repair.py",
-      "sha256": "fc325147807373be00387a535b81980ebfa4c0d6459a0f21f8b77e113400d65c"
+      "sha256": "a1b864d7fe60c2c7d2c39ed1738eeeb88f891b3dbef1ddcfb1015890205fe2a9"
     },
     {
       "path": "external_projected_pipeline/runtime/support_preflight_cache.py",
@@ -1445,10 +1445,15 @@
     {
       "path": "external_projected_pipeline/tests/test_support_sheet_spacing.py",
       "sha256": "7f2fbf9e65bc33c7f879e24ee70e87c56b1e48e6b78054c66fe7bf9bc56e1452"
+    },
+    {
+      "path": "external_projected_pipeline/tests/test_support_repair_choice.py",
+      "sha256": "0a440a7cf97c0fdf6d3a40d2e17a9fe8b71a557cb4eff9da9d7133576e74c7b9"
     }
   ],
   "documentation_revision": "repository-reference-only",
   "maintenance_patches": [
+    "support-repair-choice-20261118",
     "support-sheet-spacing-20261117"
   ]
 }

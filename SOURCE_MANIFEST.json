@@ -591,8 +591,8 @@
   },
   {
     "path": "external_projected_pipeline/bundle_manifest.json",
-    "bytes": 10523,
-    "sha256": "e970bdddb68ed97ce35b8734815ec14b9044151a20f65f684f0737eef3dd3b3e"
+    "bytes": 10634,
+    "sha256": "08c4a689fef030ffabe70ecca511ff85f95d296138f45e65de2b7074a4ab46e6"
   },
   {
     "path": "external_projected_pipeline/configs/projected.example.json",
@@ -776,8 +776,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/connected_patch_planner.py",
-    "bytes": 11033,
-    "sha256": "86ba3255ad90ccae9c00c147bb59d4f9e1e0128f880a299ee3a92c1582dd0d0c"
+    "bytes": 11643,
+    "sha256": "28b32fa53c27e402d2874968910d3640bc9b4ed9028aa2e18c9d3c6875f4483f"
   },
   {
     "path": "external_projected_pipeline/runtime/contact_support_height.py",
@@ -906,8 +906,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/support_hole_repair.py",
-    "bytes": 22572,
-    "sha256": "fc325147807373be00387a535b81980ebfa4c0d6459a0f21f8b77e113400d65c"
+    "bytes": 23715,
+    "sha256": "a1b864d7fe60c2c7d2c39ed1738eeeb88f891b3dbef1ddcfb1015890205fe2a9"
   },
   {
     "path": "external_projected_pipeline/runtime/support_preflight_cache.py",
@@ -981,8 +981,8 @@
   },
   {
     "path": "MAP_BUNDLE.json",
-    "bytes": 66427,
-    "sha256": "6de2019365371e0adf6bdbaa9cdc17b3e3c30fed6015141f36596c33df0c2b2c"
+    "bytes": 66647,
+    "sha256": "6fa828675076a081926a2e305d69dade24ec6861efe331069f75791108f8c3ac"
   },
   {
     "path": "MultiAxisFieldGenerator/.gitignore",
@@ -1833,5 +1833,10 @@
     "path": "external_projected_pipeline/tests/test_support_sheet_spacing.py",
     "bytes": 9601,
     "sha256": "7f2fbf9e65bc33c7f879e24ee70e87c56b1e48e6b78054c66fe7bf9bc56e1452"
+  },
+  {
+    "path": "external_projected_pipeline/tests/test_support_repair_choice.py",
+    "bytes": 5334,
+    "sha256": "0a440a7cf97c0fdf6d3a40d2e17a9fe8b71a557cb4eff9da9d7133576e74c7b9"
   }
 ]

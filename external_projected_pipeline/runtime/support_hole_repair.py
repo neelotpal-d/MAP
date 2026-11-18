@@ -57,7 +57,8 @@ def _geometry_context(field_source,model_source,domain_sha,field_sha,model_sha):
     if not isinstance(mesh,pv.PolyData):mesh=mesh.extract_surface(algorithm='dataset_surface')
     mesh=mesh.triangulate().clean()
     if mesh.n_open_edges:raise ValueError('Support-hole repair requires a closed original model solid.')
-    vertices=mesh.points.copy();faces=mesh.regular_faces.copy()
+    vertices=np.asarray(mesh.points,dtype=np.float64).copy()
+    faces=np.asarray(mesh.regular_faces,dtype=np.int64).copy()
     tree=igl.AABB();tree.init(vertices,faces)
     inside=vtk.vtkSelectEnclosedPoints();inside.Initialize(mesh)
     return GridField.load(field_source),(vertices,faces,tree,inside,mesh)
@@ -246,10 +247,12 @@ class FieldRepairLifter:
         self.base,self.mask,self.context=base,mask,context
         self.field_mask=mask;self.full_field_chart=False;self.chart_y_shift=0.
         self.points=0;self.error=0.;self.clearance=float('inf')
+        self.initial_error=0.;self.initial_mesh_samples=0;self.lift_seconds=0.;self.normal_seconds=0.
     def __getattr__(self,name):return getattr(self.base,name)
     def lift(self,points):
         mask=shapely.covers(self.field_mask,shapely.points(points))
         if not mask.any():return self.base.lift(points)
+        started=time.perf_counter()
         result=np.empty((len(points),3));ambiguous=snapped=0
         if (~mask).any():result[~mask],ambiguous,snapped=self.base.lift(points[~mask])
         field,model=_context(self.context['settings'])
@@ -277,6 +280,12 @@ class FieldRepairLifter:
                 if (g[:,1]<=1e-9).any():raise ValueError('Saved field is not monotone in the projected path root bracket.')
         for _ in range(24):
             value,gradient=field.evaluate_scalars_and_gradients(q);error=value-scalar
+            if _==0 and material.any():
+                # A first-order normal-distance estimate, not an exact nearest
+                # surface distance. Reuse this existing query: no extra sampling.
+                initial=abs(error[material])/np.maximum(np.linalg.norm(gradient[material],axis=1),1e-12)
+                self.initial_error=max(self.initial_error,float(initial.max(initial=0)))
+                self.initial_mesh_samples+=int(material.sum())
             if abs(error).max(initial=0)<1e-10:break
             if (gradient[:,1]<=1e-9).any():raise ValueError('Support hole mask is not a positive-Y field graph.')
             q[:,1]-=np.clip(error/gradient[:,1],-.25,.25)
@@ -286,7 +295,8 @@ class FieldRepairLifter:
         if physical.max(initial=0)>1e-5 or (gradient[:,1]<=1e-9).any() or (abs(q[:,1]-seed)>limits).any():
             bad=int(np.argmax(abs(q[:,1]-seed)-limits))
             raise ValueError(f'Support path cannot be lifted onto its saved field sheet: Y shift={abs(q[bad,1]-seed[bad]):.6g} mm, '
-                f'limit={limits[bad]:.6g} mm, point={q[bad].tolist()}, field error={physical.max(initial=0):.6g} mm.')
+                f'limit={limits[bad]:.6g} mm, point={q[bad].tolist()}, field error={physical.max(initial=0):.6g} mm, '
+                f'initial normal-error estimate={self.initial_error:.6g} mm.')
         distance=_distances(model,q)
         clearance=np.where(material,settings.get('chart_model_clearance_mm',settings.get('model_clearance_mm',0)),settings['minimum_new_path_clearance_mm'])
         if (distance<clearance).any() or _confirmed_inside(model,q).any():
@@ -296,17 +306,23 @@ class FieldRepairLifter:
         self.points+=len(q);self.error=max(self.error,float(physical.max(initial=0)))
         if material.any():self.chart_y_shift=max(self.chart_y_shift,float(abs(q[material,1]-seed[material]).max(initial=0)))
         self.clearance=min(self.clearance,float(distance.min()));result[mask]=q
+        self.lift_seconds+=time.perf_counter()-started
         return result,ambiguous,snapped
     def normals(self,points,normals):
         mask=shapely.covers(self.field_mask,shapely.points(points[:,[0,2]]))
         if mask.any():
+            started=time.perf_counter()
             field,_=_context(self.context['settings']);_,g=field.evaluate_scalars_and_gradients(points[mask])
             g/=np.maximum(np.linalg.norm(g,axis=1,keepdims=True),1e-12)
             g*=np.where(np.einsum('ij,ij->i',g,normals[mask])<0,-1.,1.)[:,None];normals[mask]=g
+            self.normal_seconds+=time.perf_counter()-started
         return normals
     def report(self):return dict(mask_count=self.mask_count,field_lift_points=self.points,
         maximum_physical_field_error_mm=self.error,minimum_model_distance_mm=self.clearance if self.points else None,
-        full_field_chart=self.full_field_chart,maximum_chart_y_shift_mm=self.chart_y_shift)
+        full_field_chart=self.full_field_chart,maximum_chart_y_shift_mm=self.chart_y_shift,
+        initial_mesh_samples=self.initial_mesh_samples,
+        maximum_initial_normalized_field_error_mm=self.initial_error if self.initial_mesh_samples else None,
+        field_lift_seconds=self.lift_seconds,field_normal_seconds=self.normal_seconds)
 
 
 def bind_repair(lifter,context_path):

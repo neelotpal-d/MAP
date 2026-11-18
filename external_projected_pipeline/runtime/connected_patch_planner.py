@@ -163,6 +163,12 @@ def plan_connected_patches(planner):
             metadata['support_hole_repair']=dict(mask_count=sum(r['mask_count'] for r in repairs),
                 field_lift_points=sum(r['field_lift_points'] for r in repairs),
                 maximum_physical_field_error_mm=max(r['maximum_physical_field_error_mm'] for r in repairs),
+                maximum_chart_y_shift_mm=max(r.get('maximum_chart_y_shift_mm',0.) for r in repairs),
+                initial_mesh_samples=sum(r.get('initial_mesh_samples',0) for r in repairs),
+                maximum_initial_normalized_field_error_mm=max((r['maximum_initial_normalized_field_error_mm'] for r in repairs
+                    if r.get('maximum_initial_normalized_field_error_mm') is not None),default=None),
+                field_lift_seconds=sum(r.get('field_lift_seconds',0.) for r in repairs),
+                field_normal_seconds=sum(r.get('field_normal_seconds',0.) for r in repairs),
                 minimum_model_distance_mm=min(clearance) if clearance else None)
         metadata.update(path_file=output.name, path_point_count=len(points),
                         source_mesh_bounds=source_bounds,
