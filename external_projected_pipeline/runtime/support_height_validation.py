@@ -71,6 +71,10 @@ def resolve_height_settings(config):
         if not np.isfinite(support_limit) or support_limit<=0:
             raise ValueError('support_validation.max_verified_support_height must be finite and positive.')
         validation['max_verified_support_height']=support_limit
+        outlier_policy = validation.get('height_outlier_policy', 'require_refinement')
+        if outlier_policy not in ('clamp_warn', 'require_refinement'):
+            raise ValueError('support_validation.height_outlier_policy must be clamp_warn or require_refinement.')
+        validation['height_outlier_policy'] = outlier_policy
         if validation['limit_interface_reach']:
             contact = dict(result.get('contact_support_height', {}))
             contact['maximum_bead_height'] = validation['max_bead_height']
@@ -295,6 +299,8 @@ class HeightValidator:
             normal_miss_actual_points=0, normal_miss_cap_points=0,
             uncapped_model_normal_points=0, above_cap_model_normal_points=0,
             verified_support_normal_points=0,support_normal_over_limit_points=0,
+            support_normal_over_limit_clamped_points=0,
+            height_outlier_policy=config.get('height_outlier_policy','require_refinement'),
             normal_miss_tolerance_degrees=config.get('normal_miss_tolerance_degrees', 3.),
             continuity_available=bool(config.get('model_solid')), reference_mesh_queries=0,
             check_height_mm=config['check_height'], max_bead_height_mm=config['max_bead_height'])
@@ -453,6 +459,8 @@ class HeightValidator:
         support_over_limit[recovered]=chosen_support_normal[recovered] & (measured>support_limit+self.tolerance)
         report['verified_support_normal_points']=int(chosen_support_normal[recovered].sum())
         report['support_normal_over_limit_points']=int(support_over_limit.sum())
+        if config.get('height_outlier_policy') == 'clamp_warn':
+            report['support_normal_over_limit_clamped_points'] = int(support_over_limit.sum())
         report['max_verified_support_height_mm']=support_limit
         report['normal_miss_fallback_points'] = int(chosen_fallback[recovered].sum())
         report['normal_miss_actual_points'] = int((chosen_fallback & ~chosen_cap)[recovered].sum())

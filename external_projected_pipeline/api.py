@@ -241,13 +241,11 @@ def export_bare(toolpath_dir, output_dir, *, machine_name='bambuH2D', machine_di
     metadata = _read(source / 'batch_3axis.meta.json')
     if metadata.get('machine_export_supported') is False:
         raise ValueError('This experimental path batch is for inspection, not machine export.')
-    layers=metadata.get('layers',[])
-    support_over=(sum(r.get('support_validation',{}).get('support_normal_over_limit_points',0) for r in layers
-        if (start_main is None or int(r['layer_main'])>=start_main) and (end_main is None or int(r['layer_main'])<=end_main))
-        if layers else metadata.get('support_validation',{}).get('support_normal_over_limit_points',0))
-    if support_over:
-        raise ValueError(f'{support_over} verified support normal gaps exceed the configured support height limit. '
-            'Add intermediate support layers and recompute heights before machine export.')
+    if __package__:
+        from .runtime.height_warning_policy import check_height_outliers
+    else:
+        from runtime.height_warning_policy import check_height_outliers
+    check_height_outliers(metadata, start_main=start_main, end_main=end_main)
     issues = metadata.get('support_validation', {}).get('unresolved_points', 0)
     if issues:
         raise ValueError(f'{issues} unresolved supporting-height points remain. Inspect the per-layer '

@@ -93,7 +93,8 @@ def support_paths(vertices, faces, settings, entry, config):
         area=float(.5*np.linalg.norm(np.cross(triangle[:,1]-triangle[:,0], triangle[:,2]-triangle[:,0]), axis=1).sum())
         step, sampling=support_resample_spacing(area, base_spacing=base_step,
             min_spacing=minimum, min_points_per_contour=min_points)
-        fill=role=='platform' or (role=='contact' and area>=profile['min_fill_area'])
+        fill=role=='platform' or ((role=='contact' or
+            (role=='regular' and profile['infill_enabled'])) and area>=profile['min_fill_area'])
         contours=profile['contour_count']
         candidate=max(1, contours-1) if fill and role=='contact' and profile['reduce_contour_for_infill'] else contours
         wall=profile['filled_wall_width'] if fill and role=='contact' else width

@@ -581,8 +581,8 @@
   },
   {
     "path": "external_projected_pipeline/api.py",
-    "bytes": 14758,
-    "sha256": "40e213b16d4544e25c77fcd9ee9278f702033076928ad64efa38b356de6aac4c"
+    "bytes": 14401,
+    "sha256": "9b3f4a2706c1fcdf10fe52a2adc1e66e28b18ed67876fec922970a88df54b778"
   },
   {
     "path": "external_projected_pipeline/AUTHORS.md",
@@ -591,8 +591,8 @@
   },
   {
     "path": "external_projected_pipeline/bundle_manifest.json",
-    "bytes": 10634,
-    "sha256": "08c4a689fef030ffabe70ecca511ff85f95d296138f45e65de2b7074a4ab46e6"
+    "bytes": 10881,
+    "sha256": "50b3af119b6d1e1cca9ba96b7f36b5136908bd9dc829181d066ca8031b0185c4"
   },
   {
     "path": "external_projected_pipeline/configs/projected.example.json",
@@ -601,8 +601,8 @@
   },
   {
     "path": "external_projected_pipeline/configs/support-model.example.json",
-    "bytes": 6149,
-    "sha256": "2b3f94d393cd80c9a47e77ae4eb61d6b0d3f03267259974e84a208f9fda5834a"
+    "bytes": 6322,
+    "sha256": "5bee8f735ddddb80ff0184869c6e79629333edd57ba6eb10fac33a4d02a424f4"
   },
   {
     "path": "external_projected_pipeline/execution_settings.py",
@@ -726,8 +726,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/batch_compute_manifest_support_heights.py",
-    "bytes": 17540,
-    "sha256": "bd9d86ef0a047e70509f6e61e3195f291eaeffb9b20fc610bdcf0258b0bcddd1"
+    "bytes": 17823,
+    "sha256": "516dc538ce14b3ec231944ed788fd078f4e02b58e5138ed45b8ac767b216ef11"
   },
   {
     "path": "external_projected_pipeline/runtime/batch_compute_projected_nearest_heights.py",
@@ -756,8 +756,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/batch_generate_projected_manifest_support_paths.py",
-    "bytes": 14078,
-    "sha256": "883e2d295598c1d0295448df65b050c1bc57025fae5e13c4e87a25de30bf56bf"
+    "bytes": 14422,
+    "sha256": "8713e1b22da3771265a3d4700b462bb48ebd79f994dad7e8120664b51f7ad8fd"
   },
   {
     "path": "external_projected_pipeline/runtime/batch_generate_projected_support_model_paths.py",
@@ -846,8 +846,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/machine_gcode_export.py",
-    "bytes": 70687,
-    "sha256": "1d857ead921a2dc15dd420a868f77b838b54831123b695a52d2aa87fa99cb514"
+    "bytes": 70307,
+    "sha256": "812089d05ef63900037f32b2d15b86f5035a38b17376ff47bc04f62e8c5bef14"
   },
   {
     "path": "external_projected_pipeline/runtime/mesh_distance_workflow.py",
@@ -856,8 +856,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/path_backing_audit.py",
-    "bytes": 11873,
-    "sha256": "b193b506c2eea169545e202fd35e27a587581e6296ed1d749b4aa11311d5871e"
+    "bytes": 11956,
+    "sha256": "5da2c88256da6d6f4288b2ebd270bd22f7ccb8885fdadb21e5f754bd589d5b0e"
   },
   {
     "path": "external_projected_pipeline/runtime/path_fragment_filter.py",
@@ -896,13 +896,13 @@
   },
   {
     "path": "external_projected_pipeline/runtime/run_surface_pipeline_projected_manifest_support.py",
-    "bytes": 16719,
-    "sha256": "db7cf5e97f7d4c5a0145222fe4875f03cd31b425ee40b814bc5ee80afb97fc60"
+    "bytes": 16798,
+    "sha256": "cb34d758776a50c81a1ee3a44946956cea1f1a72a42607877ad7692c79d7135b"
   },
   {
     "path": "external_projected_pipeline/runtime/support_height_validation.py",
-    "bytes": 32402,
-    "sha256": "2807c747088d5a2295d2564e30b20ea42cdb3e6d9289e98d019a7afd159a880b"
+    "bytes": 33043,
+    "sha256": "588cf6802bcd096d9b44893eaed9fefe6853e9259f68112878b092fe1b761033"
   },
   {
     "path": "external_projected_pipeline/runtime/support_hole_repair.py",
@@ -921,8 +921,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/surface_field_support.py",
-    "bytes": 8930,
-    "sha256": "73f89717372b571ae5e5fc3d51148ea1366493525d1c346c52ba283edf0f63a4"
+    "bytes": 8995,
+    "sha256": "640d11f09ef717fff529844552e097e98acf0aab30f1ee2946334fb452f49b44"
   },
   {
     "path": "external_projected_pipeline/runtime/surface_hatch_metric.py",
@@ -981,8 +981,8 @@
   },
   {
     "path": "MAP_BUNDLE.json",
-    "bytes": 66647,
-    "sha256": "6fa828675076a081926a2e305d69dade24ec6861efe331069f75791108f8c3ac"
+    "bytes": 67110,
+    "sha256": "67a800acdec9a2f12713533ec546510aeb690740178b33cfd45bafaf0d17a1a3"
   },
   {
     "path": "MultiAxisFieldGenerator/.gitignore",
@@ -1838,5 +1838,15 @@
     "path": "external_projected_pipeline/tests/test_support_repair_choice.py",
     "bytes": 5334,
     "sha256": "0a440a7cf97c0fdf6d3a40d2e17a9fe8b71a557cb4eff9da9d7133576e74c7b9"
+  },
+  {
+    "path": "external_projected_pipeline/runtime/height_warning_policy.py",
+    "bytes": 1969,
+    "sha256": "bbe79c7299e16f3241916e0d834dddbbb0e888db3dc8073895a06201f64acf9a"
+  },
+  {
+    "path": "external_projected_pipeline/tests/test_course_height_policy.py",
+    "bytes": 2439,
+    "sha256": "c064601ed8ddd49b519cd4e6456128d17152af4d06147a6b4f90f816f4fd003b"
   }
 ]

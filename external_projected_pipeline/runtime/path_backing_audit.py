@@ -130,7 +130,7 @@ def screen_records(records,*,width=.5,nominal=.2,bed=0.,threads=2,backend='auto'
         if index:index.close()
 
 
-def repair_support_seams(folder,layers,*,width=.5,nominal=.2,bed=0.,threads=2,backend='auto'):
+def repair_support_seams(folder,layers,*,width=.5,nominal=.2,bed=0.,threads=2,backend='auto',repair=True):
     """Only reorder existing raw runs. Heights are calculated after this stage."""
     folder=Path(folder)
     print('[support backing] Reading XYZ once; normals/widths are loaded only for relocated seams.',flush=True)
@@ -138,7 +138,7 @@ def repair_support_seams(folder,layers,*,width=.5,nominal=.2,bed=0.,threads=2,ba
     before=screen_records(records,width=width,nominal=nominal,bed=bed,threads=threads,backend=backend)
     wanted={(f['main'],f['sub'],f['lo']) for f in before['findings']}
     changes=[]
-    if wanted:
+    if wanted and repair:
         index,runs=_index(records,threads,backend);pieces={id(r):[] for r in records}
         try:
             for run in runs:
@@ -179,8 +179,9 @@ def repair_support_seams(folder,layers,*,width=.5,nominal=.2,bed=0.,threads=2,ba
                 path_tag_block_count=int(np.count_nonzero(np.r_[True,tags[order][1:]!=tags[order][:-1]])),support_seam_relocated=True)
             record.update(p=p[order,:3],breaks=bounds.tolist())
     # Screen the exact reordered geometry in memory; avoid rereading every file.
-    after=screen_records(records,width=width,nominal=nominal,bed=bed,threads=threads,backend=backend)
+    after=screen_records(records,width=width,nominal=nominal,bed=bed,threads=threads,backend=backend) if changes else before
     report=dict(before=before,changes=changes,after=after,status=after['status'],
+        repair_enabled=bool(repair),
         policy='Reverse or split/reorder existing segments; no added printed segment. Rebuild chronology and rescreen afterwards.')
     (folder/'support_backing.json').write_text(json.dumps(report,indent=2))
     return report

@@ -249,6 +249,7 @@ def run_manifest_height_stage(*, mesh_dir: Path, path_dir: Path, output_dir: Pat
                      'normal_miss_actual_points', 'normal_miss_cap_points', 'clamped_height_points',
                      'uncapped_model_normal_points', 'above_cap_model_normal_points', 'contact_platform_flags_cleared',
                      'verified_support_normal_points','support_normal_over_limit_points',
+                     'support_normal_over_limit_clamped_points',
                      'recent_reference_reuses', 'older_reference_cache_hits', 'older_reference_mesh_loads',
                      'older_reference_cache_evictions', 'older_reference_load_seconds', 'older_reference_tree_build_seconds'):
             summary[name] = sum(r.get('support_validation', {}).get(name, 0) for r in results)
@@ -256,8 +257,11 @@ def run_manifest_height_stage(*, mesh_dir: Path, path_dir: Path, output_dir: Pat
         if summary.get('threshold_fallback_points'):
             print(f"[height warning] {summary['threshold_fallback_points']} ambiguous heights assigned the threshold; geometric support remains unverified.",flush=True)
         if summary.get('support_normal_over_limit_points'):
+            action = ('extrusion heights clamped; physical gaps remain, inspect backing and bridging.'
+                if validation_config.get('height_outlier_policy') == 'clamp_warn'
+                else 'add support layers before machine export.')
             print(f"[height warning] {summary['support_normal_over_limit_points']} verified support normal gaps exceed "
-                  f"{validation_config['max_verified_support_height']} mm; add support layers before machine export.",flush=True)
+                  f"{validation_config['max_verified_support_height']} mm; {action}",flush=True)
     write_height_metadata(output_dir / 'batch_3axis.meta.json', dict(
         batch_kind='3axis_manifest_support_model_heights',
         height_mode='nearest_triangle_with_contact_correction' if contact_config.get('enabled', False) else 'nearest_triangle_surface_euclidean',

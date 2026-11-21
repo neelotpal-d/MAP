@@ -214,7 +214,8 @@ def run(config_path: Path) -> Path:
     from path_backing_audit import repair_support_seams
     backing=repair_support_seams(output,layers,width=float(support_cfg.get('width',.5)),
         nominal=float(height_settings.get('nominal_layer_height',.2)),
-        bed=float(height_settings.get('platform_value',0)),threads=min(workers,4))
+        bed=float(height_settings.get('platform_value',0)),threads=min(workers,4),
+        repair=bool(support_cfg.get('backing_repair',{}).get('enabled',True)))
     print(f'[support backing] {backing["status"]}; {len(backing["changes"])} seam relocations; '
           f'{len(backing["after"]["findings"])} remaining findings (see support_backing.json)',flush=True)
     metadata = dict(batch_kind='projected_manifest_support_model_paths', output_format='x y z nx ny nz',

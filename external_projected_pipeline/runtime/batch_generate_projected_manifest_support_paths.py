@@ -43,6 +43,11 @@ def support_profile(entry: dict, config: dict, default_width: float) -> dict:
     else:
         role = 'regular'
     values = dict(config.get(role, {}))
+    if role == 'regular':
+        values.setdefault('infill_enabled', True)
+        values.setdefault('density', .15)
+    if not isinstance(values.get('infill_enabled', False), bool):
+        raise ValueError(f'{role}.infill_enabled must be a boolean.')
     width = float(values.get('width', config.get('width', default_width)))
     count = values.get('contour_count', 2)
     if isinstance(count,bool) or not isinstance(count,int) or count<1:
@@ -127,7 +132,9 @@ def process_manifest_support_layer(mesh_path: Path, output_dir: Path, *, entry: 
     for component in components:
         step, sample_meta = support_resample_spacing(float(component.area), base_spacing=base_step,
                                                     min_spacing=min_step, min_points_per_contour=min_points)
-        fill = role == 'platform' or (role == 'contact' and component.area >= profile['min_fill_area'])
+        fill = role == 'platform' or ((role == 'contact' or
+            (role == 'regular' and profile.get('infill_enabled', False)))
+            and component.area >= profile['min_fill_area'])
         candidate_count = (
             max(1, count - 1)
             if fill and role == 'contact' and profile['reduce_contour_for_infill']

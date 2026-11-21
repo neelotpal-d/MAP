@@ -139,12 +139,9 @@ def collect_toolpath_files(folder: Path) -> dict[LayerKey, Path]:
 
 
 def assert_resolved_support_heights(metadata, *, start_main, end_main):
+    from height_warning_policy import check_height_outliers
+    check_height_outliers(metadata, start_main=start_main, end_main=end_main)
     layers = metadata.get('layers', [])
-    over_limit=sum(row.get('support_validation',{}).get('support_normal_over_limit_points',0) for row in layers
-        if start_main<=int(row['layer_main'])<=end_main) if layers else metadata.get('support_validation',{}).get('support_normal_over_limit_points',0)
-    if over_limit:
-        raise ValueError(f'{over_limit} verified support normal gaps exceed the configured support height limit. '
-            'Add intermediate support layers and recompute heights; capped extrusion would not fill the measured gap.')
     count = sum(row.get('support_validation', {}).get('unresolved_points', 0) for row in layers
         if start_main <= int(row['layer_main']) <= end_main)
     if not layers:

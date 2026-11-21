@@ -46,7 +46,9 @@
     "reuse_existing_output": "./outputs/expanded_support_surfaces"
   },
   "hybrid_contours": {
-    "point_reduction": {"enabled": true},
+    "point_reduction": {
+      "enabled": true
+    },
     "model_half_width_inset": false,
     "reuse_existing_paths": false,
     "planner_backend": "xz_projected_2d",
@@ -151,7 +153,9 @@
     "min_points_per_contour": 16,
     "layer_workers": 2,
     "regular": {
-      "contour_count": 2
+      "contour_count": 2,
+      "infill_enabled": true,
+      "density": 0.15
     },
     "platform": {
       "contour_count": 3,
@@ -168,8 +172,11 @@
       "alternate_angle_degrees": 90.0
     },
     "hole_repair": {
-      "enabled": true,
+      "enabled": false,
       "field_source": null
+    },
+    "backing_repair": {
+      "enabled": false
     }
   },
   "heights_3axis": {
@@ -198,7 +205,8 @@
       "check_height_factor": 1.75,
       "max_bead_height_factor": 1.5,
       "model_solid": null,
-      "normal_miss_tolerance_degrees": 3.0
+      "normal_miss_tolerance_degrees": 3.0,
+      "height_outlier_policy": "clamp_warn"
     }
   },
   "pipeline_variant": "support-model",
