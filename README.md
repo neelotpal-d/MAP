@@ -2,7 +2,8 @@
 
 This repository contains the backend source
 snapshot bundled with the MultiAxisPrinting combined interface dated
-17 November 2026. The same backend files are included in
+17 November 2026, with the maintenance revisions recorded in `MAP_BUNDLE.json`.
+The same backend files are included in
 https://github.com/RyanTaoLiu/MultiAxisPrinting/tree/dev2 .
 
 | Directory | Purpose |
@@ -29,8 +30,8 @@ This is the algorithm source repository. For the complete GUI, FEA and the
 locked cross-platform installation workflow, use MultiAxisPrinting/dev2.
 It currently bundles a snapshot directly; no new package/dependency mechanism
 or numerical workflow is introduced here. `MAP_BUNDLE.json` records the exact
-backend hashes shared between the repositories. Algorithm/process source and
-configuration files are unchanged from the supplied combined ZIP.
+backend hashes shared between the repositories, including reviewed changes to
+source and configuration since the original combined ZIP.
 
 See AUTHORS.md for author details/placeholders. Original SIREN, Bambu-derived
 and other third-party authorship/licences remain applicable; see

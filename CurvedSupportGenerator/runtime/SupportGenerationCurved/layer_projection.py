@@ -57,7 +57,7 @@ def certified_planar_bases(geometry,settings,layer_height,schedule,output):
         tested_vertices_centroids_and_edge_midpoints=True,no_footprint_or_acceptance_tolerance_changed=True))
     return records
 
-def project_layer(record,shape,field,folder,regions,*,surface=None,schedule=None):
+def project_layer(record,shape,field,folder,regions,*,surface=None,schedule=None,scalar_error_budget=None,maximum_refinements=6):
     from SupportGenerationCurved.nonplanar import slice_error
     from SupportGenerationCurved.planar_bases import settings_for,remove_from_field_layer
     from SupportGenerationCurved.spatial_roles import classify_patches
@@ -68,8 +68,12 @@ def project_layer(record,shape,field,folder,regions,*,surface=None,schedule=None
     target=record['scalar'];index=record['layer']
     if schedule is None:schedule=np.loadtxt(OUT/'main_scalar_values.txt')
     gaps=np.diff(schedule);budget=.25*min(gaps[max(0,index-1)],gaps[min(len(gaps)-1,index)])
+    if scalar_error_budget is not None:
+        if not np.isfinite(scalar_error_budget) or scalar_error_budget<=0:raise ValueError('Scalar error budget must be positive and finite.')
+        budget=min(budget,float(scalar_error_budget))
+    if not isinstance(maximum_refinements,int) or not 0<=maximum_refinements<=12:raise ValueError('Maximum refinements must be an integer from 0 to 12.')
     maximum_move=0.;refinements=0
-    for refinement in range(7):
+    for refinement in range(maximum_refinements+1):
         points=np.asarray(surface.points).copy()
         for iteration in range(8):
             scalar,gradient=field.evaluate_scalars_and_gradients(points)
@@ -87,7 +91,7 @@ def project_layer(record,shape,field,folder,regions,*,surface=None,schedule=None
         values=np.concatenate([field.evaluate_scalars(probes[k:k+25000]) for k in range(0,len(probes),25000)])
         bad=(abs(values.reshape(-1,4)-target)>budget*.8).any(axis=1)
         if not bad.any():break
-        assert refinement<6,'Isosurface facet refinement budget exhausted'
+        assert refinement<maximum_refinements,'Isosurface facet refinement budget exhausted'
         surface=tg.subdivide_selected_faces(surface,bad);refinements+=1
     bases=settings_for(shape)
     if bases and surface.n_points and surface.bounds[2]<=bases['plate']+bases['height']+1e-8:

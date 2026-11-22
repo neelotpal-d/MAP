@@ -41,7 +41,8 @@ def conflicts(base,tolerance):
     return bad,worst
 
 
-def validate_field_chart(base,field,scalar,tolerance=.001,field_tolerance=.01,maximum_facet_difference=.05):
+# Match the 1e-5 mm ambiguity threshold in ProjectedSurfaceLifter.lift.
+def validate_field_chart(base,field,scalar,tolerance=1e-5,field_tolerance=.01,maximum_facet_difference=.05):
     """Approve the saved implicit graph, never a choice of overlapping faces.
 
     Contour vertices must belong to the declared saved scalar level and have

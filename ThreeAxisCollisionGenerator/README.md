@@ -25,6 +25,15 @@ contains the corresponding batch-256 alternative. Input coordinates are mm.
 | Collision sampling | 256 roots per step, top 30% tool-point violations |
 | Optimization | 50 epochs, Adam 1e-5, no warm-up |
 
+Main-field learning-rate decay is available in the interface under **Advanced**:
+**Learning-rate decay every N epochs** and **Learning-rate decay factor**.
+The existing backend defaults are 250 epochs and 0.1, so the 50-epoch preset
+finishes before any decay. Interval zero disables decay. These settings are
+independent of the collision SDF's step-based learning-rate schedule.
+Portable JSON jobs may set `pipeline.training.learning_rate_decay_every_epochs`
+and `pipeline.training.learning_rate_decay_factor`. Both field training loops
+use these settings; old jobs retain their original defaults.
+
 Numeric frequencies remain supported. `auto` is resolved by the public JSON
 wrapper on the mesh actually supplied to training. In the separate stress-
 orientation wrapper it is resolved again after the mesh has been rotated.

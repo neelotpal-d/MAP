@@ -533,7 +533,8 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
         orientation.bind(scalar_net, values['fixed_frame'], values['range_vals'])
     optimizer = (orientation.optimizer(scalar_net, values['learning_rate']) if orientation is not None
                  else torch.optim.Adam(scalar_net.parameters(), lr=values['learning_rate']))
-    scheduler = lr_scheduler.StepLR(optimizer, step_size=values["step_size"], gamma=values["step_gamma"])
+    scheduler = (lr_scheduler.StepLR(optimizer, step_size=values["step_size"], gamma=values["step_gamma"])
+                 if values["step_size"] else None)
     if module.LEARNING_RATE_WARMUP_EPOCHS > 0:
         for parameter_group in optimizer.param_groups[:1]:
             parameter_group["lr"] = values["learning_rate"] * module.LEARNING_RATE_WARMUP_FACTOR
@@ -959,7 +960,8 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
                             else loss_sums[name] + detached_component
                         )
 
-            scheduler.step()
+            if scheduler is not None:
+                scheduler.step()
             if module.ENABLE_INPUT_CURVATURE_LOSS and module.INPUT_CURVATURE_SAMPLE_FRACTION == 1. and not frame_only:
                 interior_seen = getattr(input_loader, 'seen', None)
                 coverage = dict(epoch=epoch+1, interior_evaluations=curvature_interior_evaluations,

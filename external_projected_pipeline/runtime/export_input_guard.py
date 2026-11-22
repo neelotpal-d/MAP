@@ -49,6 +49,7 @@ def snapshot(source,destination):
         path=row.get('output_path_file') or (stem+'_3axis.txt')
         actual=source/path
         frozen_name=bind(source/path,stem+'_3axis.txt')
+        row['path_point_count']=0;row['height_max']=0.
         if actual.stat().st_size:
             heights=np.loadtxt(actual,usecols=6,ndmin=1)
             if not np.isfinite(heights).all() or (heights<0).any():raise ValueError('Invalid actual export heights: '+str(actual))
@@ -60,7 +61,8 @@ def snapshot(source,destination):
             if row.get(field):row[field]=bind(source/row[field],stem+suffix)
         if row.get('width_profile_file'):
             source_width=next(p for p,target,_ in copies if target==row['width_profile_file'])
-            profile=np.loadtxt(source_width,ndmin=1)
+            profile=np.loadtxt(source_width,ndmin=1) if source_width.stat().st_size else np.empty(0)
+            if profile.ndim!=1 or len(profile)!=row['path_point_count']:raise ValueError('Width profile must match the actual export path point count.')
             if not np.isfinite(profile).all() or (profile<=0).any():raise ValueError('Invalid actual export width profile.')
             row['width_profile_max']=float(profile.max(initial=0))
         mesh=row.get('surface_metric_mesh')

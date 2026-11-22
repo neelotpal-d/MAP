@@ -2235,7 +2235,7 @@ def train_scalar_field(
     if LEARNING_RATE_RAMP_EPOCHS < 0:
         raise ValueError("LEARNING_RATE_RAMP_EPOCHS cannot be negative.")
     optimizer = torch.optim.Adam(scalar_net.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=step_gamma)
+    scheduler = lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=step_gamma) if step_size else None
     if LEARNING_RATE_WARMUP_EPOCHS > 0:
         if not 0.0 < LEARNING_RATE_WARMUP_FACTOR <= 1.0:
             raise ValueError("LEARNING_RATE_WARMUP_FACTOR must be in (0, 1].")
@@ -2571,7 +2571,7 @@ def train_scalar_field(
 
         # Do not let StepLR count the warm-up/ramp epochs: its first decay is
         # measured from stable target-LR training instead.
-        if epoch >= LEARNING_RATE_WARMUP_EPOCHS + LEARNING_RATE_RAMP_EPOCHS:
+        if scheduler is not None and epoch >= LEARNING_RATE_WARMUP_EPOCHS + LEARNING_RATE_RAMP_EPOCHS:
             scheduler.step()
         if SHOW_NORM_CONTROL_BATCHES_EACH_EPOCH:
             visualize_norm_control_batches(norm_batch_snapshots, epoch)

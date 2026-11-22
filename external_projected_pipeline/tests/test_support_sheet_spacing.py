@@ -49,10 +49,85 @@ class SheetBudgetTests(unittest.TestCase):
         stack.enter_context(patch.object(repair,'_confirmed_inside',side_effect=lambda m,q:np.full(len(q),inside)))
         return stack
 
+    def test_submillimeter_conflicts_use_the_same_threshold_as_path_lifting(self):
+        from projection_mesh_repair import validate_field_chart
+        field,_,_,_=self.fixture(a=0.)
+        triangle=np.array([[0.,2.,0.],[1.,2.,0.],[0.,2.,1.]])
+        query=np.array([[.2,.2]])
+        with tempfile.TemporaryDirectory() as folder:settings=self.settings(folder,height=.2)
+        for separation in (5e-6,5e-4):
+            vertices=np.vstack((triangle,triangle+[0.,separation,0.]))
+            base=ProjectedSurfaceLifter.build(vertices,np.array([[0,1,2],[3,4,5]]))
+            _,ambiguous,_=base.lift(query)
+            chart=validate_field_chart(base,field,2.)
+            if separation<1e-5:
+                self.assertEqual(ambiguous,0)
+                self.assertIsNone(chart)
+            else:
+                self.assertGreater(ambiguous,0)
+                self.assertIsNotNone(chart)
+                self.assertAlmostEqual(chart['maximum_facet_difference_mm'],separation)
+                with self.context(field):
+                    points,remaining,_=self.lifter(field,base,settings).lift(query)
+                self.assertEqual(remaining,0)
+                np.testing.assert_allclose(points[:,1],2.,atol=1e-10)
+
     def test_budget_scaling_and_invalid_inputs(self):
         for h in (.1,.2,.4,.6):self.assertAlmostEqual(repair.chart_y_shift_budget(h),h/4)
         for h in (0,-1,float('nan'),float('inf')):
             with self.assertRaises(ValueError):repair.chart_y_shift_budget(h)
+
+    def test_extracted_surface_can_keep_the_path_lifters_physical_budget(self):
+        import pyvista as pv
+        from SupportGenerationCurved.layer_projection import project_layer
+        from SupportGenerationCurved.tree_geometry import TaperedTree
+        field,base,vertices,faces=self.fixture()
+        surface=pv.PolyData(vertices,np.column_stack((np.full(len(faces),3),faces)).ravel())
+        obstacle=pv.Cube(center=(100,100,100)).triangulate()
+        shape=TaperedTree([[.5,0,.5,.5,4,.5,5,5,0]],obstacle,(0,1,0),0,.4,.4)
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);settings=self.settings(root,height=.2)
+            record=dict(file='',layer=1,scalar=2.)
+            refined=project_layer(record,shape,field,root,[],surface=surface,
+                schedule=np.array([1.,2.,3.]),scalar_error_budget=.005,maximum_refinements=12)
+            mesh=pv.read(refined['file'])
+            corrected=ProjectedSurfaceLifter.build(np.asarray(mesh.points),mesh.regular_faces)
+            with self.context(field):
+                points,ambiguous,_=self.lifter(field,corrected,settings).lift(np.array([[.5,.5]]))
+            self.assertEqual(ambiguous,0)
+            self.assertGreater(refined['iso_refinement_passes'],0)
+            self.assertLessEqual(refined['interior_scalar_error_max'],.005)
+            self.assertAlmostEqual(points[0,1],2.+.3373452/4,places=8)
+
+    def test_regular_support_infill_is_explicit_and_stays_inside_its_walls(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);mesh=root/'1_0.obj'
+            mesh.write_text('v 0 2 0\nv 10 2 0\nv 10 2 10\nv 0 2 10\nf 1 2 3\nf 1 3 4\n')
+            entry=dict(part='support',layer_main=1,layer_sub=0,scalar=2.,is_platform_layer=False,is_contact_layer=False)
+            for enabled in (False,True):
+                output=root/str(enabled);output.mkdir()
+                config=dict(width=.5,regular=dict(contour_count=1,infill_enabled=enabled,density=1.))
+                path,metadata=process_manifest_support_layer(mesh,output,entry=entry,
+                    support_config=config,hybrid_config=dict(spacing=.5,resample_spacing=.5))
+                self.assertEqual(any(c['fill_enabled'] for c in metadata['support_components']),enabled)
+                rows=np.loadtxt(path,ndmin=2)
+                self.assertTrue(np.all(rows[:,[0,2]]>=.25-1e-8))
+                self.assertTrue(np.all(rows[:,[0,2]]<=9.75+1e-8))
+                np.testing.assert_allclose(rows[:,1],2.,atol=1e-10)
+
+    def test_bed_reinforcement_has_a_clear_connected_base_and_rejects_clipped_columns(self):
+        import pyvista as pv
+        from SupportGenerationCurved.saved_field_layers import reinforcement_rows
+        from SupportGenerationCurved.tree_geometry import TaperedTree
+        model=pv.Cube(center=(0,2,0),x_length=2,y_length=2,z_length=2).triangulate()
+        rows,normals,proof=reinforcement_rows([dict(center_xz=[3.,0.],top_y=3.,radius=.5)],model,0.,.4)
+        self.assertGreaterEqual(proof[0]['body_clearance_lower_bound_mm'],.4)
+        self.assertEqual(rows[-1,-1],3)
+        shape=TaperedTree(rows,model,(0,1,0),0.,.4,.4,terminal_normals=normals)
+        axis=np.column_stack((np.full(61,3.),np.linspace(0,3,61),np.zeros(61)))
+        self.assertLessEqual(shape.evaluate(axis).max(),1e-6)
+        with self.assertRaisesRegex(ValueError,'model clearance'):
+            reinforcement_rows([dict(center_xz=[2.,0.],top_y=3.,radius=.85)],model,0.,.4)
 
     def test_source_spacing_controls_geometry_without_changing_extrusion_settings(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -2,7 +2,7 @@
   "format": "map.bundled-source.v1",
   "date": "2026-11-17",
   "source_repository": "https://github.com/neelotpal-d/MAP",
-  "snapshot_id": "3755ec47c9ec8d38dd211bccb3e6ea4a22ab526cd09a0ecd34385109df61a8db",
+  "snapshot_id": "4950558de51c7bb72e9b1af8fe3380c3be10a4b000aa333c928875f7210d6c4d",
   "origin_archive": "MultiAxisInterface-combined-20261117.zip",
   "origin_archive_sha256": "1eca8322521671e2becf533f0d10b07f0dd895c4db0573c852020843da3c40af",
   "distribution": "Bundled MAP source with recorded maintenance patches",
@@ -164,7 +164,7 @@
     },
     {
       "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_projection.py",
-      "sha256": "c7ebc411672744f9509cb2d46760003ba0c8d0f7d99a5942eff8014f5947e6fc"
+      "sha256": "64815e0248af60724b79e15bd4cdc22abd3821777419839044f52ccd6199af84"
     },
     {
       "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_roles.py",
@@ -332,7 +332,7 @@
     },
     {
       "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/saved_field_layers.py",
-      "sha256": "812af6a20cd1158fdd2b2a2eb8c8298008392f52641f8c0475827b0ce4b71625"
+      "sha256": "dff1cf7265c2799a3284e137f9b09e63e4f24d8c1193daf17500e8b76b0d57fb"
     },
     {
       "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/separated_posts.py",
@@ -476,7 +476,7 @@
     },
     {
       "path": "external_projected_pipeline/bundle_manifest.json",
-      "sha256": "50b3af119b6d1e1cca9ba96b7f36b5136908bd9dc829181d066ca8031b0185c4"
+      "sha256": "4c2df0dd5f307faaed89025d597de23d343c1d178c129e878b15af67b556d1c4"
     },
     {
       "path": "external_projected_pipeline/configs/projected.example.json",
@@ -652,7 +652,7 @@
     },
     {
       "path": "external_projected_pipeline/runtime/export_input_guard.py",
-      "sha256": "ea7b5080380e561c75094b84ec9a10f816a3e250ceb672da39189386c2a1dda5"
+      "sha256": "3c253c4075323ec06e71aafd23f33ca44160990c2cccd77ece81c3990ae74869"
     },
     {
       "path": "external_projected_pipeline/runtime/export_projected_manifest_support.py",
@@ -700,7 +700,7 @@
     },
     {
       "path": "external_projected_pipeline/runtime/projection_mesh_repair.py",
-      "sha256": "772006bcfc51096658935edd661cf5723cf3600ab8404d3e686583b12f55ffe1"
+      "sha256": "4b7d6819f6b097286ff4c67ca76a179c73225dd2175a076516cbfcbfab7fb788"
     },
     {
       "path": "external_projected_pipeline/runtime/reference_geometry_cache.py",
@@ -1252,7 +1252,7 @@
     },
     {
       "path": "ThreeAxisCollisionGenerator/README.md",
-      "sha256": "bfcacafd57740829794ee21beba131f9d64c8da2129289a3506dc14485934b13"
+      "sha256": "ed182b8eac35b8119bcd24f9a4f70d16596dfab9d508b02c9dd6d253a42e5c05"
     },
     {
       "path": "ThreeAxisCollisionGenerator/requirements.txt",
@@ -1288,11 +1288,11 @@
     },
     {
       "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/convex_surface_quality.py",
-      "sha256": "d04bb4144b893debc4f2d450523dafddc7f2944354b71f93f107d82449f95be3"
+      "sha256": "e31298ba96debdcebfbe1df5d6825a373a68500969ff0f76730cbb4f17fb27d7"
     },
     {
       "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/hard_collision_sampling.py",
-      "sha256": "e5a8a1b197329651530a1d0ec123b3629bb9505db3fab045c03227a2cb982563"
+      "sha256": "e2786adb666d427672938ef90ed2c5c2992447c978144eb38634b1aee93d8a70"
     },
     {
       "path": "ThreeAxisCollisionGenerator/runtime/exportIsoSurfaces.py",
@@ -1324,7 +1324,7 @@
     },
     {
       "path": "ThreeAxisCollisionGenerator/runtime/runBandedSurfaceQualityPipeline.py",
-      "sha256": "0e9178ee2aa2751192d232247a3d0ee6c951202b3131ab1877c02bb25be1f5f7"
+      "sha256": "bba37b6a3756ab5e1b87e95e8a5ea9d8bea2cca12ad917719307788973a46e35"
     },
     {
       "path": "ThreeAxisCollisionGenerator/runtime/runBandedSurfaceQualityPipelineLocalEdge.py",
@@ -1444,7 +1444,7 @@
     },
     {
       "path": "external_projected_pipeline/tests/test_support_sheet_spacing.py",
-      "sha256": "7f2fbf9e65bc33c7f879e24ee70e87c56b1e48e6b78054c66fe7bf9bc56e1452"
+      "sha256": "05e23a874777aaddf35853c22e7f28b197e33653dfdd4fff08c85faaf0e53038"
     },
     {
       "path": "external_projected_pipeline/tests/test_support_repair_choice.py",
@@ -1457,13 +1457,19 @@
     {
       "path": "external_projected_pipeline/tests/test_course_height_policy.py",
       "sha256": "c064601ed8ddd49b519cd4e6456128d17152af4d06147a6b4f90f816f4fd003b"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tests/test_learning_rate_schedule.py",
+      "sha256": "85748c5574de7a5db88625e181f9fd707b8fb9d9410b009c12405f6bb2fe7788"
     }
   ],
   "documentation_revision": "repository-reference-only",
   "maintenance_patches": [
     "support-repair-choice-20261118",
     "support-sheet-spacing-20261117",
-    "course-height-warnings-optional-backing-repair-20261121"
+    "course-height-warnings-optional-backing-repair-20261121",
+    "important-geometry-export-optimizer-course-updates-20261121",
+    "important-geometry-export-optimizer-course-updates-20261122"
   ],
-  "maintenance_revision": "2026-11-21"
+  "maintenance_revision": "2026-11-22"
 }

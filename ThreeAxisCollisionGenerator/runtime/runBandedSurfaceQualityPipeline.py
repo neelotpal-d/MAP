@@ -169,6 +169,10 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument("--epochs", type=int, default=250)
     parser.add_argument("--learning-rate", "--lr", type=float, default=1e-5, help="Scalar-field optimizer learning rate.")
+    parser.add_argument('--learning-rate-decay-every-epochs', type=int, default=250,
+                        help='Main field StepLR interval in epochs; 0 disables decay. Separate from SDF training.')
+    parser.add_argument('--learning-rate-decay-factor', type=float, default=.1,
+                        help='Main field StepLR multiplier in (0, 1].')
     parser.add_argument("--start-checkpoint", default=None, help="Checkpoint path, or 'previous' to resume the newest earlier checkpoint in this model folder.")
     parser.add_argument("--batch-size", type=int, default=1000)
     parser.add_argument(
@@ -463,6 +467,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--strength-seed', type=int, default=42)
     parser.add_argument('--initializer-seed', type=int, default=None)
     args = parser.parse_args()
+    if args.learning_rate_decay_every_epochs < 0:
+        parser.error('--learning-rate-decay-every-epochs must be nonnegative.')
+    if not 0 < args.learning_rate_decay_factor <= 1:
+        parser.error('--learning-rate-decay-factor must be in (0, 1].')
     if args.optimize_yaw:
         args.disable_orientation = False
         if args.orientation_initial_quaternion is not None:
@@ -1742,6 +1750,8 @@ def configure_training_module(module, paths: dict[str, Path], args: argparse.Nam
     module.MAX_INPUT_POINTS = args.max_input_points
     module.EPOCHS = args.epochs
     module.LEARNING_RATE = args.learning_rate
+    module.STEP_SIZE = args.learning_rate_decay_every_epochs
+    module.STEP_GAMMA = args.learning_rate_decay_factor
     module.AFFINE_RESIDUAL_DIRECTION = [0.0, 1.0, 0.0] if args.affine_y_residual else None
     module.AFFINE_RESIDUAL_INITIAL_SCALE = args.affine_residual_initial_scale
     if args.affine_y_residual:

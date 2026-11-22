@@ -14,6 +14,29 @@ from .platform_router.engine import load_support_field
 _STATE=None
 
 
+def reinforcement_rows(posts,mesh,plate,clearance,base_height=.6,base_factor=1.8):
+    """Bed-connected capsules with a distance bound for their entire volume."""
+    if not isinstance(posts,list):raise ValueError('reinforcement_posts must be an array.')
+    if not posts:return np.empty((0,9)),np.empty((0,3)),[]
+    from .platform_router.acceleration import NativeDistance
+    distance=NativeDistance(mesh);rows=[];reports=[]
+    for post in posts:
+        x,z=map(float,post['center_xz']);top=float(post['top_y']);radius=float(post['radius'])
+        if not np.isfinite([x,z,top,radius,base_height,base_factor]).all() or min(radius,base_height)<=0 or base_factor<1 or top<=plate+base_height:
+            raise ValueError('Invalid bed reinforcement dimensions.')
+        count=max(2,int(np.ceil((top-plate-base_height)/.05))+1)
+        ys=np.linspace(plate+base_height,top,count);points=np.column_stack((np.full(count,x),ys,np.full(count,z)))
+        # Signed distance is 1-Lipschitz: sample spacing/2 bounds every
+        # centreline point; subtracting radius then covers the whole capsule.
+        bound=float(distance(points).min())-radius-float(np.diff(ys).max())/2-1e-5
+        base_bound=float(np.asarray(mesh.points)[:,1].min())-(plate+base_height)
+        if min(bound,base_bound)<clearance:raise ValueError('Bed reinforcement would be clipped by the model clearance.')
+        rows.extend([[x,plate+base_height,z,x,top,z,radius,radius,0],
+            [x,plate,z,x,plate+base_height,z,radius*base_factor,radius,3]])
+        reports.append(dict(post=post,body_clearance_lower_bound_mm=bound,base_clearance_lower_bound_mm=base_bound))
+    return np.asarray(rows),np.tile([0.,1.,0.],(len(rows),1)),reports
+
+
 def geometry(pipeline):
     from .skeleton_geometry import load_skeleton,sweep_rows
     from SupportGenerationVoxel.model_field import load_closed_mesh
@@ -35,6 +58,13 @@ def geometry(pipeline):
             platform_base_height=float(s.get('platform_base_height',.6)),branch_sizing=s.get('branch_sizing','bambu'),
             branch_diameter_angle=float(s.get('branch_diameter_angle',5.)),planar_platform_bases=bool(s.get('planar_platform_bases',True)),
             maximum_platform_radius=float(s.get('maximum_platform_trunk_diameter',8.))/2)
+        extra,extra_normals,certificates=reinforcement_rows(s.get('reinforcement_posts',[]),mesh,float(s.get('plate',0)),
+            max(float(s.get('side_clearance',.4)),float(s.get('contact_gap',.4))),
+            float(s.get('platform_base_height',.6)),float(s.get('platform_base_radius_factor',1.8)))
+        if len(extra):
+            if not s.get('planar_platform_bases',True):raise ValueError('Bed reinforcements require planar platform bases.')
+            rows=np.vstack((rows,extra));normals=np.vstack((normals,extra_normals))
+            sizing['bed_reinforcements']=certificates
         shape=tg.TaperedTree(rows,mesh,(0,1,0),float(s.get('plate',0)),
             float(s.get('side_clearance',.4)),float(s.get('contact_gap',.4)),terminal_normals=normals,
             terminal_cap='rounded',distance_backend='certified',prune_pairs=bool(s.get('trim_pair_pruning',True)))
@@ -79,8 +109,23 @@ def extract(index):
     if generated['vertex_bad'] or generated['centroid_bad']:raise ValueError(f'Layer {index}: geometry validation failed.')
     surface=generated.pop('surface');record=generated['manifest'];record.update(slice_error(surface,state['field'],value))
     gaps=np.diff(schedule);budget=float(.25*min(gaps[max(0,index-1)],gaps[min(len(gaps)-1,index)]))
+    # Geometric source binding and projected root lifting need a physical
+    # accuracy bound in addition to a fraction of the scalar layer interval.
+    if surface.n_cells:
+        points=np.asarray(surface.points)
+        minimum_norm=float('inf');minimum_y=float('inf')
+        for start in range(0,len(points),25000):
+            _,gradient=state['field'].evaluate_scalars_and_gradients(points[start:start+25000])
+            minimum_norm=min(minimum_norm,float(np.linalg.norm(gradient,axis=1).min()))
+            minimum_y=min(minimum_y,float(gradient[:,1].min()))
+        tolerance=float(s.get('layer_field_tolerance_mm',.005))
+        if not np.isfinite(tolerance) or tolerance<=0:raise ValueError('Layer field tolerance must be positive and finite.')
+        if not np.isfinite(minimum_norm) or minimum_norm<=1e-12:raise ValueError('Support layer has a degenerate field gradient.')
+        budget=min(budget,tolerance*minimum_norm)
+        if minimum_y>1e-9:
+            budget=min(budget,.02*minimum_y)
     if surface.n_cells and max(record['vertex_scalar_error_max'],record['interior_scalar_error_max'])>budget:
-        record=project_layer(record,state['shape'],state['field'],out/'tree_layers_refined',state['regions'],surface=surface,schedule=schedule)
+        record=project_layer(record,state['shape'],state['field'],out/'tree_layers_refined',state['regions'],surface=surface,schedule=schedule,scalar_error_budget=budget,maximum_refinements=12)
     if max(record['vertex_scalar_error_max'],record['interior_scalar_error_max'])>budget:
         raise ValueError(f'Layer {index}: trilinear isosurface error exceeds {budget:g}.')
     result=dict(record=record,seconds=time.perf_counter()-t,extraction_timing=generated['timing'])
@@ -123,7 +168,7 @@ def run_job(pipeline,output):
     model_volume(inputs['mesh'],pv.read(inputs['mesh']),inputs['tetrahedral_volume'],_loaded_volume=native.volume)
     shape,sizing,rooted,fast,backend=geometry(pipeline)
     if inputs.get('shared_layer_values'):
-        schedule=np.loadtxt(inputs['shared_layer_values']).reshape(-1);schedule_report=dict(mode='explicit shared refinement',seconds=0.)
+        schedule=np.loadtxt(inputs['shared_layer_values']).reshape(-1);schedule_report=dict(mode='explicit shared schedule',seconds=0.)
     else:
         if inputs.get('layer_values'):
             initial=np.loadtxt(inputs['layer_values']).reshape(-1)
