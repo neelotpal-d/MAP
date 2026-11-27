@@ -345,6 +345,7 @@ def main():
                         obstacles_mm=points[arrays["witness_indices"][bad]],
                         field_drops=arrays["max_field_drop"][bad])
     (output/"report.json").write_text(json.dumps(report, indent=2))
+    print(json.dumps(dict(event='nominal_collision_result', report=str((output/'report.json').resolve()))), flush=True)
     print(json.dumps(report, indent=2), flush=True)
     print(f"Saved report, sampled clouds, per-root counts and collision witnesses: {output}", flush=True)
 

@@ -14,7 +14,7 @@ WORDS = re.compile(r'([XYZEF])\s*([^\s]+)')
 FILE = re.compile(r'\bfile=(\S+)')
 
 
-def verify_a1_motion(path, *, maximum_z_speed=20., maximum_stationary_extrusion=1.,
+def verify_a1_motion(path, *, maximum_z_speed=20., maximum_stationary_extrusion=1.,build_size=256.,
                      tiny_e=1e-4, restart_tolerance=.01):
     """Check modes, pressure recovery, small moving E and clearance approaches.
 
@@ -23,7 +23,7 @@ def verify_a1_motion(path, *, maximum_z_speed=20., maximum_stationary_extrusion=
     separately; a withdrawal is required to be repaid before later deposition.
     """
     if not all(math.isfinite(v) and v > 0 for v in
-               (maximum_z_speed, maximum_stationary_extrusion, tiny_e, restart_tolerance)):
+               (maximum_z_speed, maximum_stationary_extrusion, tiny_e, restart_tolerance,build_size)):
         raise ValueError('A1 verification limits must be finite and positive.')
     started=time.perf_counter(); body=False; starts=ends=moves=deposits=approaches=0
     position=[None]*3; feed=None; debt=net=0.; active=None; snippet=''
@@ -73,8 +73,8 @@ def verify_a1_motion(path, *, maximum_z_speed=20., maximum_stationary_extrusion=
                 if axis in values:position[i]=values[axis]
             feed=values.get('F',feed)
             if feed is not None and feed<=0:fail(number,'nonpositive feedrate')
-            if any(v is not None and (v < -1e-6 or v > 256.000001) for v in position):
-                fail(number,'motion outside A1 bounds',position=position.copy())
+            if any(v is not None and (v < -1e-6 or v > build_size+1e-6) for v in position):
+                fail(number,'motion outside selected printer bounds',position=position.copy())
             moved=position!=old and None not in old+position
             e=values.get('E',0.);net+=e
             if moved:
@@ -120,15 +120,15 @@ def verify_a1_motion(path, *, maximum_z_speed=20., maximum_stationary_extrusion=
         maximum_stationary_prime_mm=maximum_prime,maximum_stationary_extrusion_run_mm=max_run,
         maximum_stationary_extrusion_run_requested_seconds=max_run_seconds,
         maximum_Z_travel_speed_mm_s=max_z_speed,seconds=time.perf_counter()-started,
-        limits=dict(maximum_z_speed=maximum_z_speed,maximum_stationary_extrusion=maximum_stationary_extrusion,
+        limits=dict(maximum_z_speed=maximum_z_speed,maximum_stationary_extrusion=maximum_stationary_extrusion,build_size=build_size,
                     tiny_e=tiny_e,restart_tolerance=restart_tolerance),
         scope='Assembled body commands only; no firmware/pressure simulation or geometric collision certificate.')
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('gcode',type=Path);p.add_argument('report',type=Path)
-    p.add_argument('--maximum-z-speed',type=float,default=20.);a=p.parse_args()
-    report=verify_a1_motion(a.gcode,maximum_z_speed=a.maximum_z_speed)
+    p.add_argument('--maximum-z-speed',type=float,default=20.);p.add_argument('--build-size',type=float,default=256.);a=p.parse_args()
+    report=verify_a1_motion(a.gcode,maximum_z_speed=a.maximum_z_speed,build_size=a.build_size)
     a.report.write_text(json.dumps(report,indent=2),encoding='utf8')
     print(json.dumps({k:v for k,v in report.items() if k!='errors'}),flush=True)
     if report['status']!='passed':raise SystemExit(f'A1 motion verification failed; inspect {a.report}')

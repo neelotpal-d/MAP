@@ -18,7 +18,7 @@ def digest(path):
 
 def revision():
     runtime=Path(__file__).resolve().parent
-    files=[runtime/name for name in ('support_preflight_cache.py','support_hole_repair.py',
+    files=[runtime/name for name in ('support_preflight_cache.py','support_hole_repair.py','mesh_hole_repair.py',
         'projection_mesh_repair.py','surface_hatch_metric.py','connected_patch_planner.py',
         'batch_generate_projected_hybrid_paths.py','mesh_distance_workflow.py','heat_method_core.py')]
     files.append(runtime.parents[1]/'CurvedSupportGenerator/runtime/SupportGenerationCurved/field_grid.py')
@@ -50,7 +50,7 @@ def reclassify(row,settings):
     for hole in row['holes']:
         xy=np.asarray(hole['xy'],float)
         hole['small_birth_candidate']=bool(np.ptp(xy,axis=0).max()<settings['birth_width_mm'])
-        hole['protected']=bool(hole['model_distance_mm']<=settings['protection_distance_mm'])
+        hole['protected']=bool(hole.get('repair_unavailable_reason') or hole['model_distance_mm']<=settings['protection_distance_mm'])
     return row
 
 class Probe:
@@ -59,7 +59,7 @@ class Probe:
         self.stats=dict(hit=False,miss=False,invalid=False,write_failed=False,hash_seconds=0.)
         if not settings.get('catalogue_cache_enabled',False):return
         start=time.perf_counter();self.source_sha=digest(path);self.stats['hash_seconds']=time.perf_counter()-start
-        identity=dict(schema=SCHEMA,source_sha256=self.source_sha,file=entry['combined_mesh'],scalar=float(entry['scalar']),
+        identity=dict(schema=SCHEMA,method=settings.get('method','field'),source_sha256=self.source_sha,file=entry['combined_mesh'],scalar=float(entry['scalar']),
             domain_sha256=settings['domain_sha256'],field_sha256=settings['field_sha256'],model_sha256=settings['model_sha256'],
             boundary_sample_mm=settings['boundary_sample_mm'],revision=settings['catalogue_cache_revision'])
         self.key=hashlib.sha256(json.dumps(identity,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()

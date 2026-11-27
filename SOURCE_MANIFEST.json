@@ -41,8 +41,8 @@
   },
   {
     "path": "CurvedSupportGenerator/build_native.py",
-    "bytes": 2505,
-    "sha256": "9dc574f7f6270d5ff2e34da2aeb36fa462da5cb3910c5e262264cc7fe67cb7d5"
+    "bytes": 4592,
+    "sha256": "a7520b8294ad6c1faf05382b6f7dbfd4a437bac49573fb7c0f72927f514d5ac1"
   },
   {
     "path": "CurvedSupportGenerator/cli.py",
@@ -106,8 +106,8 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/config.py",
-    "bytes": 4984,
-    "sha256": "ce14d46137f12f506c11506cb3834afe10f1546c918a2c0afc358184c4922575"
+    "bytes": 5048,
+    "sha256": "f9a6c6e6491d4605eb64eb981f6b2344cfbd9fcc049cd5147de1fb6d4b366ac9"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/conservative_domain.py",
@@ -130,6 +130,11 @@
     "sha256": "2eadae84b7365b68f9b523edfd529eb36fd03396c25ecdd187f020f746608002"
   },
   {
+    "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/contact_selection.py",
+    "bytes": 8141,
+    "sha256": "4c54b4a94d9245873a638501e4821a3cc967a88dc833e8a178f5a36c89d62cdb"
+  },
+  {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/distance_certificate.py",
     "bytes": 5156,
     "sha256": "0477b29f39e310c9c9df5e478e3842bc9c353286811554c51eb8e75e09dbe65d"
@@ -146,8 +151,8 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/exact_support_bvh.py",
-    "bytes": 6532,
-    "sha256": "a675d493cb4f74d78aeef2e7e7917c2b3d4ae735c567b3bb4bdb0ef4688f5793"
+    "bytes": 6886,
+    "sha256": "6defb462e2f0cbf8744462a1e933a2f9d76b258ce04eb270403cddf8eaebeb72"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/field_grid.py",
@@ -156,8 +161,8 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/generate.py",
-    "bytes": 43768,
-    "sha256": "f24ace54547f7230c572c8cb78182c0d7e81d574a819e4cfce5bcad1f7ac604a"
+    "bytes": 44036,
+    "sha256": "b84112fdedcb803dc293626f281a726cba419f7e0361674ec6c6ec63f0f03601"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/grid_distance_certificate.py",
@@ -171,13 +176,18 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_extraction.py",
-    "bytes": 4494,
-    "sha256": "6d8042d7d75d41b5d485412659373d0e9d5ff8ab2eb7b8bb869709bc7d578417"
+    "bytes": 8299,
+    "sha256": "26b020ede474deeb59f056b49230131427ec62456634406f6a7e49b322670ba0"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_projection.py",
-    "bytes": 9336,
-    "sha256": "64815e0248af60724b79e15bd4cdc22abd3821777419839044f52ccd6199af84"
+    "bytes": 18020,
+    "sha256": "09f02fc03e1276842748734abe0c4c85ed7eaa9d3ef7ce851c500a785af38168"
+  },
+  {
+    "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_quality.py",
+    "bytes": 5156,
+    "sha256": "0786f2629f2b56305283c0909822f0013e23204e0646a01e52c8cbcbf5c0756d"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_roles.py",
@@ -216,8 +226,13 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/model_skeleton.py",
-    "bytes": 17154,
-    "sha256": "5b052e96a7646c65c5170ff9952b23320e29c74d0bfaad64030a3c792d104ad0"
+    "bytes": 18584,
+    "sha256": "e656005f98dd08f8d9ee578886dde36b12d331db4d63cdde4ca321a0aef30134"
+  },
+  {
+    "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/native_library.py",
+    "bytes": 982,
+    "sha256": "48705b92d12a5aaec95c3bb18a1db2a11d2666c49e12d25d1de23c35b8f19cfa"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/native_model.py",
@@ -226,8 +241,8 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/native_point_cache.py",
-    "bytes": 2974,
-    "sha256": "52c738b92e05fa19fb5f4ce37e9055ee8e1ea8833fb3384d51083aca39322b6c"
+    "bytes": 3113,
+    "sha256": "ca3fd625b4687654cb59dd6904a493de925d289f9172e1998490251baaae40b7"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/neural_support.py",
@@ -286,8 +301,8 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/engine.py",
-    "bytes": 14481,
-    "sha256": "3496283e53bba25b123fe00dbb1b316ff9c4ac1a0a2ebf7c6ff7e30476ce5be5"
+    "bytes": 14561,
+    "sha256": "e6447913517a9691d7adcfdca89e07f88949a7ae923377fd51f28ba4e1913e82"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/fast_platform_grafts.py",
@@ -386,8 +401,8 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/saved_field_layers.py",
-    "bytes": 18469,
-    "sha256": "dff1cf7265c2799a3284e137f9b09e63e4f24d8c1193daf17500e8b76b0d57fb"
+    "bytes": 25432,
+    "sha256": "30b477db2421be692ad377b863804f039a2327705d26906bdf7ee3eaeb0b1d6d"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/separated_posts.py",
@@ -461,8 +476,18 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/tree_geometry.py",
-    "bytes": 101579,
-    "sha256": "80e2e72037a7dd81de5aab8a755fc6a66a1846d24792c8dbac22ac9718e02f31"
+    "bytes": 117502,
+    "sha256": "013664f577438a3224ed79648eab615a7c05ac220ac7dd6a970d53488e6e8703"
+  },
+  {
+    "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/triangle_proof_cache.py",
+    "bytes": 2265,
+    "sha256": "2e0da7108205710cbed01e8690f7d3e4ad8c63fda546d600399f25a7a759c661"
+  },
+  {
+    "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/trim_tolerance.py",
+    "bytes": 3456,
+    "sha256": "c0638f2410cdad818606d58825a8059757cd27780611494ff0c631e4da33ba34"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/trunk_shift.py",
@@ -575,9 +600,19 @@
     "sha256": "d526084f309032a7613dab330876b3592390deaa7053b2425bd7e3e9148162c0"
   },
   {
+    "path": "MAP_BACKEND_NOTICES.md",
+    "bytes": 3117,
+    "sha256": "0b67107e5bd3719c58ca1a39dbd37690c3637c91a0de2782bce5856410f4f1f2"
+  },
+  {
+    "path": "MAP_BACKEND_RELEASE.json",
+    "bytes": 76179,
+    "sha256": "3f97fb9556d986cc4d7ff8c11702dc1f6e3b8cbc0ddfc8964715b2e157a2e310"
+  },
+  {
     "path": "MAP_BUNDLE.json",
-    "bytes": 65953,
-    "sha256": "ff25acafd037de00b64cf73c60afc5ab82d1bc35603a5b377408fd1a09ce3ce7"
+    "bytes": 69246,
+    "sha256": "7b051bd02d4ae78a2118b4068f4d23ac1674de463ea61f09addbb8974ba7c1aa"
   },
   {
     "path": "MultiAxisFieldGenerator/.gitignore",
@@ -591,8 +626,8 @@
   },
   {
     "path": "MultiAxisFieldGenerator/README.md",
-    "bytes": 19560,
-    "sha256": "0495bc28a77e0b0b98a90a750b995c6bb474be44764f2343372613b7efce62ae"
+    "bytes": 21369,
+    "sha256": "0c00d77cdaea548d51f461798cb29547168bf7bc00b04b0bb77e18078cf69c94"
   },
   {
     "path": "MultiAxisFieldGenerator/__init__.py",
@@ -640,6 +675,11 @@
     "sha256": "ab2d77eea7c691f807cb057b6fdae95a60f4917b5a9a72624f82262cfaa65aa9"
   },
   {
+    "path": "MultiAxisFieldGenerator/joint_cli.py",
+    "bytes": 6048,
+    "sha256": "852cd05386209a34f5723d87551e7336dfed3df37b767ad8bfa4192c8d313d25"
+  },
+  {
     "path": "MultiAxisFieldGenerator/pack.py",
     "bytes": 1149,
     "sha256": "5834359d9f9422740ab7bf1e47cda89c3d1e39124fe59dfd8aa51dea1deb0383"
@@ -670,6 +710,16 @@
     "sha256": "493fcd63545f436fdde1e808ec98b00b8b2603fdf0b7dccf370acf60ff419a9f"
   },
   {
+    "path": "MultiAxisFieldGenerator/runtime/joint_path_beta.py",
+    "bytes": 22047,
+    "sha256": "f100f169bf6a17bea727d1bba19922cb59fe52e882cc6b275f5e8070d859f0d0"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/joint_path_geometry.py",
+    "bytes": 2145,
+    "sha256": "a26423208413753f63260ea9a6467ab9d36aa677dc99c83f590859db2e019b0f"
+  },
+  {
     "path": "MultiAxisFieldGenerator/runtime/plotting.py",
     "bytes": 940,
     "sha256": "47b2adfcab1c1a116281ce84061a8e3975eab699fd84f482c277f8f040b817d5"
@@ -681,8 +731,8 @@
   },
   {
     "path": "MultiAxisFieldGenerator/runtime/run_model.py",
-    "bytes": 73386,
-    "sha256": "04e17f9e786cace9357ebd896f81e8e06f76caa248311f7cb56d1cc9eb3b575b"
+    "bytes": 74461,
+    "sha256": "d85e388991fbd0888d17f6c3de932d02dd480342740712b8fe33474f789a37d5"
   },
   {
     "path": "MultiAxisFieldGenerator/runtime/sdf_sampling.py",
@@ -706,8 +756,8 @@
   },
   {
     "path": "MultiAxisFieldGenerator/runtime/validate_nominal_collision.py",
-    "bytes": 21342,
-    "sha256": "41b53b6a5fc7589fc2ea8d473ca1b70f6dc38d0822ee56cc636c67e87d57efca"
+    "bytes": 21462,
+    "sha256": "e8e07c12dd1b0c00290fab623fc65586e82eb7321c521536a6b3802c4caae782"
   },
   {
     "path": "MultiAxisFieldGenerator/runtime/validate_sdf.py",
@@ -911,8 +961,8 @@
   },
   {
     "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/hard_collision_sampling.py",
-    "bytes": 62507,
-    "sha256": "e2786adb666d427672938ef90ed2c5c2992447c978144eb38634b1aee93d8a70"
+    "bytes": 61961,
+    "sha256": "cc19a3e72e2e9448721abddf81a277cf54b3448178e59d1f61ff5596050e4f2a"
   },
   {
     "path": "ThreeAxisCollisionGenerator/runtime/exportIsoSurfaces.py",
@@ -971,8 +1021,8 @@
   },
   {
     "path": "ThreeAxisCollisionGenerator/runtime/scalarFieldCollisionCheck.py",
-    "bytes": 40053,
-    "sha256": "8f19b809cdb4891adc69ab213f7cd9a5d3745328173bce5b5169d22cb6fa7862"
+    "bytes": 40688,
+    "sha256": "cdd32c90b15000ad9e986471a65cc14dad3392bcbe0a3f279c9cf64ba95098f5"
   },
   {
     "path": "ThreeAxisCollisionGenerator/runtime/scalarNetUtils.py",
@@ -1018,6 +1068,11 @@
     "path": "ThreeAxisCollisionGenerator/runtime/toolSampling.py",
     "bytes": 5638,
     "sha256": "acdbe3c429a23f7639c378c7c4e323934fadad1569ac716410a67d16dda3e12b"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/trainingMetrics.py",
+    "bytes": 3470,
+    "sha256": "c2d68bb89cbf69616937a8162a95d767ce4ef44980f951c7a9ef93b50c21ff8c"
   },
   {
     "path": "ThreeAxisCollisionGenerator/runtime/viewCachedLayers.py",
@@ -1136,23 +1191,28 @@
   },
   {
     "path": "external_projected_pipeline/api.py",
-    "bytes": 14401,
-    "sha256": "9b3f4a2706c1fcdf10fe52a2adc1e66e28b18ed67876fec922970a88df54b778"
+    "bytes": 14872,
+    "sha256": "fe37bd7af0edc200f40d3c46cc76b5995e12c1244dbe8a685c164f62dbb31eb3"
   },
   {
     "path": "external_projected_pipeline/bundle_manifest.json",
-    "bytes": 10881,
-    "sha256": "4c2df0dd5f307faaed89025d597de23d343c1d178c129e878b15af67b556d1c4"
+    "bytes": 12000,
+    "sha256": "ca09fd0192f6ad6ee4fb80393b7657df2fc6399c8c69e6b1406e04bbf8d3a2cc"
+  },
+  {
+    "path": "external_projected_pipeline/calibration.py",
+    "bytes": 12844,
+    "sha256": "0480763ef4723759621dcff9084f227cc251597d131ec7608a9f838d012bfeff"
   },
   {
     "path": "external_projected_pipeline/configs/projected.example.json",
-    "bytes": 6759,
-    "sha256": "79aebd73d49a1cd6a9d481dc35ff6684542154df99af187ae28872f4ba3266f5"
+    "bytes": 6876,
+    "sha256": "2627c74f3b6480cc29a58011a1f7947e443adebfcb35cee87062b0b3c67422d7"
   },
   {
     "path": "external_projected_pipeline/configs/support-model.example.json",
-    "bytes": 6322,
-    "sha256": "5bee8f735ddddb80ff0184869c6e79629333edd57ba6eb10fac33a4d02a424f4"
+    "bytes": 6501,
+    "sha256": "a2c04bbfbdef8928574810762bf4852166d06b7f6c008044e9808747c9f62a53"
   },
   {
     "path": "external_projected_pipeline/execution_settings.py",
@@ -1251,8 +1311,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/anchored_hole_heights.py",
-    "bytes": 5866,
-    "sha256": "6b931433cce49191b1f9fd307f9c36ad422e66aae4b8a06b677cab684b4aab00"
+    "bytes": 6356,
+    "sha256": "a916c5389ba64919c0025e2727302aaa60274907d44011ce9766459e2c67c2d9"
   },
   {
     "path": "external_projected_pipeline/runtime/batch_compute_heights.py",
@@ -1266,13 +1326,13 @@
   },
   {
     "path": "external_projected_pipeline/runtime/batch_compute_manifest_support_heights.py",
-    "bytes": 17823,
-    "sha256": "516dc538ce14b3ec231944ed788fd078f4e02b58e5138ed45b8ac767b216ef11"
+    "bytes": 17882,
+    "sha256": "2e40882d33a4d87e28c700efd0bf4df4899bea989de0990b55ba34f057359d4f"
   },
   {
     "path": "external_projected_pipeline/runtime/batch_compute_projected_nearest_heights.py",
-    "bytes": 20913,
-    "sha256": "36c7b6abfb86157057a0765facfc610e50501dfeb4e4371460c4e1f13a2b0975"
+    "bytes": 20972,
+    "sha256": "ccba640fb30cd6bbac1a1e78b88d2eced771ddc6db3f035b926a9198116fe427"
   },
   {
     "path": "external_projected_pipeline/runtime/batch_expand_boundary_support_meshes.py",
@@ -1310,14 +1370,19 @@
     "sha256": "ca98f56e0faec9bc3e33875eceb154edc8ea31ac25fe2790722120f18d562a24"
   },
   {
+    "path": "external_projected_pipeline/runtime/calibration_workload.py",
+    "bytes": 10318,
+    "sha256": "4c022e565161abd715b406103b891b31ce8d59700453fbaf702e30fc18e05cf4"
+  },
+  {
     "path": "external_projected_pipeline/runtime/compatible_support_schedule.py",
     "bytes": 11007,
     "sha256": "6e033841bc1e218aabef737a27be477a929909c3372096427434599a879d1191"
   },
   {
     "path": "external_projected_pipeline/runtime/connected_patch_planner.py",
-    "bytes": 11643,
-    "sha256": "28b32fa53c27e402d2874968910d3640bc9b4ed9028aa2e18c9d3c6875f4483f"
+    "bytes": 13252,
+    "sha256": "24c63782f24b5770a3eae44ecf5ec1545b2036cd56e2af31918a3164a755aaf3"
   },
   {
     "path": "external_projected_pipeline/runtime/contact_support_height.py",
@@ -1345,14 +1410,19 @@
     "sha256": "b1af0c882793f76d3cabc6430f4388c86658afd2d67ec25d5e58ba5cf9c90e36"
   },
   {
+    "path": "external_projected_pipeline/runtime/draft_toolpaths.py",
+    "bytes": 2090,
+    "sha256": "6282bf29c92e75c5a4cc393bf637eacc644ac1a306f27eb458d6aef7f8cd0b52"
+  },
+  {
     "path": "external_projected_pipeline/runtime/early_path_reduction.py",
     "bytes": 10180,
     "sha256": "dab3ae8412e219e0d398d82b76f72ec9c379edc6454454da519dad43be06532f"
   },
   {
     "path": "external_projected_pipeline/runtime/export_input_guard.py",
-    "bytes": 15457,
-    "sha256": "3c253c4075323ec06e71aafd23f33ca44160990c2cccd77ece81c3990ae74869"
+    "bytes": 17078,
+    "sha256": "acfa5c35b44c55676ced01121f183b8065b7058fde012714bcfadf39734e2e4c"
   },
   {
     "path": "external_projected_pipeline/runtime/export_projected_manifest_support.py",
@@ -1380,19 +1450,29 @@
     "sha256": "84d0ee676a7e181de0af3814bfbf34480f15afe0db65a1cda468ca9445fa3e1c"
   },
   {
+    "path": "external_projected_pipeline/runtime/height_cache_budget.py",
+    "bytes": 4011,
+    "sha256": "a9df74d8ec380d8673473082016e36252dccb4def5528a3d3b708f9de295d45a"
+  },
+  {
     "path": "external_projected_pipeline/runtime/height_output_sidecars.py",
     "bytes": 3809,
     "sha256": "1d13dff3577622cba1b5dffd4634ffa90e700300286d1ad1c6f7d6aad351e6d1"
   },
   {
     "path": "external_projected_pipeline/runtime/height_warning_policy.py",
-    "bytes": 1969,
-    "sha256": "bbe79c7299e16f3241916e0d834dddbbb0e888db3dc8073895a06201f64acf9a"
+    "bytes": 4938,
+    "sha256": "ecccf3d0bae38c1e4988281594ab77a587fa25eadcc67a8496dcba00e573d7d4"
   },
   {
     "path": "external_projected_pipeline/runtime/machine_gcode_export.py",
-    "bytes": 70307,
-    "sha256": "812089d05ef63900037f32b2d15b86f5035a38b17376ff47bc04f62e8c5bef14"
+    "bytes": 70234,
+    "sha256": "0518a5dd8982841ca6f4bda524b25745120eb941cfc66f32ea6291e535f95402"
+  },
+  {
+    "path": "external_projected_pipeline/runtime/manifold_surface_patches.py",
+    "bytes": 5585,
+    "sha256": "75b779f065a2582199c5eb2ae068e9b3e6226ee23d86e291e9b5e561adbffe4c"
   },
   {
     "path": "external_projected_pipeline/runtime/mesh_distance_workflow.py",
@@ -1400,9 +1480,14 @@
     "sha256": "346ee0d3d2e1528c4612cbc6be1ef7666e084378d7e5a454bb1236f31388afc0"
   },
   {
+    "path": "external_projected_pipeline/runtime/mesh_hole_repair.py",
+    "bytes": 6371,
+    "sha256": "0e85afdc1f43911e7eb80e81eff36e1e7742320fc93a77f5aa173c42fa883be5"
+  },
+  {
     "path": "external_projected_pipeline/runtime/path_backing_audit.py",
-    "bytes": 11956,
-    "sha256": "5da2c88256da6d6f4288b2ebd270bd22f7ccb8885fdadb21e5f754bd589d5b0e"
+    "bytes": 12335,
+    "sha256": "f9b45ab630f3bdeb70e64ebb11f4e082cffca24e29a8ad0602f4898b9691ac4e"
   },
   {
     "path": "external_projected_pipeline/runtime/path_fragment_filter.py",
@@ -1411,13 +1496,13 @@
   },
   {
     "path": "external_projected_pipeline/runtime/projected_entry.py",
-    "bytes": 8634,
-    "sha256": "ee032f85ef6779d8debca341c599357b31a07aa99bd1c739ceb67e30b565d0e0"
+    "bytes": 8997,
+    "sha256": "96da1209c4d56678665628301dbbc30807d73b97f00bc295d4209a6f2b34c3a2"
   },
   {
     "path": "external_projected_pipeline/runtime/projection_mesh_repair.py",
-    "bytes": 4295,
-    "sha256": "4b7d6819f6b097286ff4c67ca76a179c73225dd2175a076516cbfcbfab7fb788"
+    "bytes": 5530,
+    "sha256": "857d02c96c4e6ea83f6f3754d25a59bc6a6f14cf260ee78a0a5c763fc07482f2"
   },
   {
     "path": "external_projected_pipeline/runtime/reference_geometry_cache.py",
@@ -1431,8 +1516,8 @@
   },
   {
     "path": "external_projected_pipeline/runtime/run_surface_pipeline.py",
-    "bytes": 99441,
-    "sha256": "b882cb07828c2a8619d92a578de54ee3cb822fb57f59f9381fa516d43482328b"
+    "bytes": 99782,
+    "sha256": "90f23ea889d7ad790877c1eccf011289a8679380684f4d44ac4cc6b198a54c3d"
   },
   {
     "path": "external_projected_pipeline/runtime/run_surface_pipeline_projected_hybrid.py",
@@ -1441,38 +1526,43 @@
   },
   {
     "path": "external_projected_pipeline/runtime/run_surface_pipeline_projected_manifest_support.py",
-    "bytes": 16798,
-    "sha256": "cb34d758776a50c81a1ee3a44946956cea1f1a72a42607877ad7692c79d7135b"
+    "bytes": 17470,
+    "sha256": "fcb0c2b8665503195b2682def4a3bbf91769e7e11c3d3de2d20b4a5adfee665f"
   },
   {
     "path": "external_projected_pipeline/runtime/support_height_validation.py",
-    "bytes": 33043,
-    "sha256": "588cf6802bcd096d9b44893eaed9fefe6853e9259f68112878b092fe1b761033"
+    "bytes": 34697,
+    "sha256": "655d43071e7b5e4b49c6bf7e9bb9b450287c8fd117586cc23132871304780496"
   },
   {
     "path": "external_projected_pipeline/runtime/support_hole_repair.py",
-    "bytes": 23715,
-    "sha256": "a1b864d7fe60c2c7d2c39ed1738eeeb88f891b3dbef1ddcfb1015890205fe2a9"
+    "bytes": 26105,
+    "sha256": "b8fb74b8e5c6c96fe6fc6bb8286b31087db6b3813e62a1f32b696cbc0c655ae0"
   },
   {
     "path": "external_projected_pipeline/runtime/support_preflight_cache.py",
-    "bytes": 5707,
-    "sha256": "12e689f7dc83d54bcd1bcde35e86f33879caeb9527e74378eecedbd219eabee2"
+    "bytes": 5808,
+    "sha256": "0d90275cb9fa2d5b6ca8f7d409aa6809a8db4a4ab3aa3789176218be35a22ef7"
   },
   {
     "path": "external_projected_pipeline/runtime/surface_field_pipeline.py",
-    "bytes": 31825,
-    "sha256": "b7cba75760b8d0172918480aaa9735318e51796e9b925b0bb29518546d791e5b"
+    "bytes": 38755,
+    "sha256": "686e48ead38b5201738fa4a1465f379dcc320648bb54c5f0f905d9cb161a298b"
   },
   {
     "path": "external_projected_pipeline/runtime/surface_field_support.py",
-    "bytes": 8995,
-    "sha256": "640d11f09ef717fff529844552e097e98acf0aab30f1ee2946334fb452f49b44"
+    "bytes": 9923,
+    "sha256": "944256cba6b35a4c3f85f9fe4d60cef283aab1586047866c42627744d841635e"
   },
   {
     "path": "external_projected_pipeline/runtime/surface_hatch_metric.py",
-    "bytes": 8363,
-    "sha256": "11e395654c34e50e38931aa04a3755d725ebad26fe21de4d7290113eece43e39"
+    "bytes": 9739,
+    "sha256": "a51330202656cd5a268ad78abad219cbecaceb98e58917577b5894347269e80d"
+  },
+  {
+    "path": "external_projected_pipeline/runtime/surface_metric_source.py",
+    "bytes": 3361,
+    "sha256": "096c019bd62442607f788c8af4e7742be3e7661a463b1d5978111f5940e3c5d3"
   },
   {
     "path": "external_projected_pipeline/runtime/surface_remesh.py",
@@ -1506,8 +1596,13 @@
   },
   {
     "path": "external_projected_pipeline/runtime/toolpath_export.py",
-    "bytes": 11382,
-    "sha256": "e7da004d27011bcde108ecb96f7fa43b8a6f8cf0c234d8dc338fdffb51749b9b"
+    "bytes": 12362,
+    "sha256": "6557178b98a2409519d5689e8c0a3428905b764ce3edd98388ef366cca78a9b3"
+  },
+  {
+    "path": "external_projected_pipeline/runtime/toolpath_order.py",
+    "bytes": 11286,
+    "sha256": "6c161ba4b31ddc6518a6e0388968aa1d14d673602ca8e2b1078153f9c9253232"
   },
   {
     "path": "external_projected_pipeline/runtime/visualize_layers_and_paths.py",
@@ -1518,6 +1613,11 @@
     "path": "external_projected_pipeline/tested_dependencies.json",
     "bytes": 357,
     "sha256": "90f5210488732974a66d65d8cc55e001fb2976bf5e348ffc078d071bf362a121"
+  },
+  {
+    "path": "external_projected_pipeline/tests/test_calibration.py",
+    "bytes": 4375,
+    "sha256": "6b79ca4bd532b0b6f71387063d08310ce3ae09ba3355707cbfb29c04124225db"
   },
   {
     "path": "external_projected_pipeline/tests/test_course_height_policy.py",
@@ -1556,8 +1656,8 @@
   },
   {
     "path": "standalone_bambu_layer_slicer/a1_single_nozzle/make_a1_3mf_folder.py",
-    "bytes": 13936,
-    "sha256": "dd7b9eaf7e4a8aa6d41ab6b369a7b35da4456808a815a60bc4c24f5a491a0fbd"
+    "bytes": 17177,
+    "sha256": "ba9ee10ccb4550110dce70b51e9046f1ea11ef1c5b7d354e1bf357369466e6d4"
   },
   {
     "path": "standalone_bambu_layer_slicer/a1_single_nozzle/pipeline_config.json",
@@ -1566,8 +1666,13 @@
   },
   {
     "path": "standalone_bambu_layer_slicer/a1_single_nozzle/prepare_a1_reference.py",
-    "bytes": 2478,
-    "sha256": "64d8c286048aa30e999628a2a39cf2a055cf85644f1d781b6cb6378b998aa817"
+    "bytes": 4284,
+    "sha256": "f28390bf00a411673f698d9f5c7d17be6081a6c0e75a9fd63787d5a43454245a"
+  },
+  {
+    "path": "standalone_bambu_layer_slicer/a1_single_nozzle/profiles/A1mini.json",
+    "bytes": 976,
+    "sha256": "962148566dff9cf6d18b964583fe8f1568de148514b4dc57b8de8fb80ae192e1"
   },
   {
     "path": "standalone_bambu_layer_slicer/a1_single_nozzle/reference/A1_sample.gcode.3mf",
@@ -1575,9 +1680,14 @@
     "sha256": "cd796723e5d8a888e5eacdc6163f182c9a7c6621b637859883cdcb9e0cc90c5d"
   },
   {
+    "path": "standalone_bambu_layer_slicer/a1_single_nozzle/reference/A1mini_sample.gcode.3mf",
+    "bytes": 37752,
+    "sha256": "b1d8b709e2dd1318cfe1a864d7f9d0acd53f02f61b5233a9b7e669630482085a"
+  },
+  {
     "path": "standalone_bambu_layer_slicer/a1_single_nozzle/run_pipeline.py",
-    "bytes": 5704,
-    "sha256": "be4039a6e87d6f1b96b0b9fc254272a8bfcc5baf8ba9589a1e1d7b76abcf61d3"
+    "bytes": 6037,
+    "sha256": "b51d3afb53414df9f04659864106ea9d9de11bf4e4ffe5e7d6077d8c69d0715d"
   },
   {
     "path": "standalone_bambu_layer_slicer/a1_single_nozzle/run_pipeline_motion_test.py",
@@ -1586,8 +1696,8 @@
   },
   {
     "path": "standalone_bambu_layer_slicer/common/assemble_layer_paths.py",
-    "bytes": 181089,
-    "sha256": "afaa4a28ada7b87cc336d4de93df0d34733a69e3b3794372616ebb4cef178508"
+    "bytes": 182016,
+    "sha256": "e84b48e1a5609305efb4044a90fb9e51f97bc80b55fc97a1de4fac1331369f6c"
   },
   {
     "path": "standalone_bambu_layer_slicer/common/make_h2d_3mf_folder.py",
@@ -1626,8 +1736,8 @@
   },
   {
     "path": "standalone_bambu_layer_slicer/common/verify_a1_motion.py",
-    "bytes": 7668,
-    "sha256": "2aaa91145923601d042e65eaf5ccd7f75334d94f5cd3abd238d5a1c03f1027f6"
+    "bytes": 7815,
+    "sha256": "579f53ba914012ebd464c840aa5af824c657f4547903f8b33d955e7699f35efd"
   },
   {
     "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/machineSetup/bambuH2D_post.gcode",

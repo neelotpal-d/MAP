@@ -40,6 +40,12 @@ def qualify(rows,source,path_dir,platform_mask,*,trigger,max_height,output_path)
     if not suspect.any():return selected,report
     data,mask=context(str(name))
     if mask.is_empty:return selected,report
+    if data['settings'].get('method','field')=='mesh':
+        # Mesh interpolation has no saved scalar field from which to derive
+        # adjacent-level bead thickness. Leave every point for the ordinary
+        # geometric validator; do not grant a bridge exemption or a fake height.
+        report.update(status='not_applicable',reason='Mesh interpolation has no adjacent-field bridge-height model; ordinary geometric height validation remains active.')
+        return selected,report
     current=float(source['scalar']);previous=float(previous)
     if not np.isfinite([current,previous]).all() or previous>=current-1e-12:raise ValueError('Hole bridge requires a strictly earlier support scalar.')
     from support_hole_repair import _context

@@ -64,7 +64,11 @@ class ExactSupportBVH:
                     shape.sample_cache_factory=NativePointCache
                     self.cache_backend='native'
                 elif cache_backend=='native':raise FileNotFoundError('Build the point cache with build_point_cache.py first.')
-        self.lib=ctypes.CDLL(str(path))
+        if __package__:
+            from .native_library import load_library
+        else:
+            from native_library import load_library
+        self.lib=load_library(path)
         p=ctypes.POINTER(ctypes.c_double)
         self.lib.support_bvh_create.argtypes=[ctypes.c_longlong,p,p,p];self.lib.support_bvh_create.restype=ctypes.c_void_p
         self.lib.support_bvh_destroy.argtypes=[ctypes.c_void_p]
@@ -96,9 +100,11 @@ class ExactSupportBVH:
 
     def near_sweep_faces(self,surface,geometry=None):
         triangles=np.asarray(surface.points)[surface.regular_faces]
-        centers=np.ascontiguousarray(triangles.mean(axis=1))
-        half=np.ascontiguousarray(np.max(abs(triangles-centers[:,None]),axis=1))
-        radius=np.ascontiguousarray(np.linalg.norm(triangles-centers[:,None],axis=2).max(axis=1))
+        # ctypes declares double pointers. Contours from ImageData may carry
+        # float32 points; interpreting those buffers as doubles reads past them.
+        centers=np.ascontiguousarray(triangles.mean(axis=1),dtype=np.float64)
+        half=np.ascontiguousarray(np.max(abs(triangles-centers[:,None]),axis=1),dtype=np.float64)
+        radius=np.ascontiguousarray(np.linalg.norm(triangles-centers[:,None],axis=2).max(axis=1),dtype=np.float64)
         result=np.empty(len(centers),np.uint8);p=ctypes.POINTER(ctypes.c_double)
         self.lib.support_bvh_overlap(self.handle,len(centers),centers.ctypes.data_as(p),half.ctypes.data_as(p),radius.ctypes.data_as(p),result.ctypes.data_as(ctypes.POINTER(ctypes.c_ubyte)),self.threads)
         return result.astype(bool)

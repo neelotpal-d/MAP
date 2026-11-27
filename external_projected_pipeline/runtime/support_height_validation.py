@@ -44,7 +44,15 @@ def resolve_height_settings(config):
         # only a fraction of the retained-geometry byte budget. Explicit saved
         # budgets still win; this is not a process-RSS or whole-stage cap.
         validation.setdefault('reference_cache_max_entries',512)
-        validation.setdefault('reference_cache_max_bytes',256*1024*1024)
+        if 'reference_cache_max_bytes' not in validation:
+            from height_cache_budget import available_memory_bytes, reference_budget
+            available = available_memory_bytes()
+            workers = int(result.get('layer_workers', 1))
+            validation['reference_cache_max_bytes'] = reference_budget(workers, available)
+            validation['reference_cache_budget_policy'] = dict(
+                mode='available_memory', workers=workers, available_memory_bytes=available,
+                aggregate_available_fraction=.25, per_worker_cap_bytes=4096*1024*1024,
+                scope='Estimated retained geometry; not process RSS.')
         for name in ('reference_cache_max_entries','reference_cache_max_bytes'):
             value=validation[name]
             if isinstance(value,bool) or not isinstance(value,int) or value<1:
@@ -80,9 +88,12 @@ def resolve_height_settings(config):
             contact['maximum_bead_height'] = validation['max_bead_height']
             result['contact_support_height'] = contact
         policy=validation.get('ambiguous_height_policy','threshold')
-        if policy not in ('threshold','error'):
-            raise ValueError('support_validation.ambiguous_height_policy must be threshold or error.')
+        if policy not in ('threshold','error','nominal_warn','threshold_warn'):
+            raise ValueError('support_validation.ambiguous_height_policy must be threshold, error, nominal_warn or threshold_warn.')
         validation['ambiguous_height_policy']=policy
+        if policy in ('nominal_warn','threshold_warn'):
+            validation['ambiguous_height_acceptance']='bounded_fallback_v1'
+            validation['ambiguous_fallback_height_mm']=nominal if policy=='nominal_warn' else validation['max_bead_height']
     result['support_validation'] = validation
     for name in ('max_height', 'nearest_direct_height'):
         value = result.get(name)
@@ -93,11 +104,16 @@ def resolve_height_settings(config):
 
 def assign_ambiguous_heights(rows, geometric_resolved, threshold, *, policy='threshold'):
     """Assign an extrusion fallback without asserting geometric support proof."""
-    if policy not in ('threshold','error') or not np.isfinite(threshold) or threshold<=0:
+    if policy not in ('threshold','error','nominal_warn','threshold_warn') or not np.isfinite(threshold) or threshold<=0:
         raise ValueError('Invalid ambiguous-height policy or threshold.')
     invalid_input=(~np.isfinite(rows[:,:6]).all(axis=1))|(np.linalg.norm(rows[:,3:6],axis=1)<=1e-12)
     missing_height=(~np.isfinite(rows[:,6]))|(rows[:,6]<=0)
-    fallback=((~geometric_resolved)|missing_height)&(~invalid_input) if policy=='threshold' else np.zeros(len(rows),bool)
+    if policy=='threshold':
+        fallback=((~geometric_resolved)|missing_height)&(~invalid_input)
+    elif policy in ('nominal_warn','threshold_warn'):
+        fallback=((~geometric_resolved)|missing_height)&(~invalid_input)
+    else:
+        fallback=np.zeros(len(rows),bool)
     rows[fallback,6]=threshold
     invalid=invalid_input|(~np.isfinite(rows[:,6]))|(rows[:,6]<=0)
     return (geometric_resolved|fallback)&~invalid,fallback,invalid
@@ -304,6 +320,10 @@ class HeightValidator:
             normal_miss_tolerance_degrees=config.get('normal_miss_tolerance_degrees', 3.),
             continuity_available=bool(config.get('model_solid')), reference_mesh_queries=0,
             check_height_mm=config['check_height'], max_bead_height_mm=config['max_bead_height'])
+        report.update(nominal_layer_height=config['nominal_layer_height'],
+            ambiguous_height_acceptance=config.get('ambiguous_height_acceptance',''),
+            ambiguous_fallback_height_mm=config.get('ambiguous_fallback_height_mm',config['max_bead_height']),
+            ambiguous_fallback_accepted_points=0)
         report.update({name:0 for name in self.cache_stats})
         if source.get('is_planar_base_layer') or not len(rows):
             report['seconds'] = time.perf_counter() - began
@@ -479,15 +499,18 @@ class HeightValidator:
         recovered |= bed
         support_verified=recovered.copy()
         selected_rows=rows[ids]
-        resolved,fallback,invalid=assign_ambiguous_heights(selected_rows,recovered,config['max_bead_height'],
+        resolved,fallback,invalid=assign_ambiguous_heights(selected_rows,recovered,
+            config.get('ambiguous_fallback_height_mm',config['max_bead_height']),
             policy=config.get('ambiguous_height_policy','threshold'))
         rows[ids]=selected_rows
         height_clamped[fallback]=True
         report.update(recovered_points=int(resolved.sum()), unresolved_points=int((~resolved).sum()),
             threshold_fallback_points=int(fallback.sum()),unverified_support_points=int((~support_verified).sum()),
             invalid_height_points=int(invalid.sum()),geometrically_verified_points=int(support_verified.sum()),
+            ambiguous_fallback_accepted_points=int((fallback & ~support_verified & ~invalid).sum())
+                if config.get('ambiguous_height_policy') in ('nominal_warn','threshold_warn') else 0,
             clamped_height_points=int(height_clamped.sum()),
-            unresolved_classification='invalid_height' if config.get('ambiguous_height_policy','threshold')=='threshold' else 'unsupported_or_bridge',
+            unresolved_classification='unsupported_or_bridge' if config.get('ambiguous_height_policy')=='error' else 'invalid_height',
             older_reference_layers=sorted({f'{self.catalog[i]["main"]}_{self.catalog[i]["sub"]}' for i in chosen if i >= 0}),
             seconds=time.perf_counter() - began)
         report.update({name:value-before[name] for name,value in self.cache_stats.items()})

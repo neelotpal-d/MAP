@@ -246,6 +246,7 @@ def run_manifest_height_stage(*, mesh_dir: Path, path_dir: Path, output_dir: Pat
     if validation_config.get('enabled'):
         for name in ('checked_points', 'recovered_points', 'unresolved_points', 'normal_miss_fallback_points',
                      'threshold_fallback_points','unverified_support_points','invalid_height_points','geometrically_verified_points',
+                     'ambiguous_fallback_accepted_points',
                      'normal_miss_actual_points', 'normal_miss_cap_points', 'clamped_height_points',
                      'uncapped_model_normal_points', 'above_cap_model_normal_points', 'contact_platform_flags_cleared',
                      'verified_support_normal_points','support_normal_over_limit_points',

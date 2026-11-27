@@ -11,7 +11,8 @@ or, for single-material folders:
 
 where material_number is normally 0 or 1. Files without a material suffix use
 single_material_default_material, which defaults to 1. The script keeps
-pre_code and post_code untouched, inserts snippets in sorted order, and emits a
+pre_code and post_code untouched, follows the saved toolpath order (or legacy
+main/sub order when no schedule exists), and emits a
 compact tool-change block whenever the physical tool changes.
 """
 
@@ -204,7 +205,20 @@ def discover_snippets(input_dir: Path, config: dict[str, Any]) -> list[Snippet]:
             )
         )
 
-    return sorted(snippets, key=lambda item: (item.main_index, item.sub_index, item.path.name))
+    snippets = sorted(snippets, key=lambda item: (item.main_index, item.sub_index, item.path.name))
+    schedule = input_dir / 'toolpath_order.json'
+    if schedule.is_file():
+        document = json.loads(schedule.read_text(encoding='utf8'))
+        if document.get('schema') != 'map.toolpath-order.v1':
+            raise ValueError('Unknown saved toolpath-order schema.')
+        rows = document['layers']
+        ranks = {(int(r['layer_main']), int(r['layer_sub'])): r['toolpath_order'] for r in rows}
+        if len(ranks) != len(rows) or any(type(v) is not int for v in ranks.values()) or sorted(ranks.values()) != list(range(len(rows))):
+            raise ValueError('Invalid saved bare-toolpath execution ranks.')
+        if {(s.main_index,s.sub_index) for s in snippets} != set(ranks):
+            raise ValueError('Bare files do not match their saved toolpath schedule.')
+        snippets.sort(key=lambda s: ranks[(s.main_index,s.sub_index)])
+    return snippets
 
 
 def snippet_content_kind(path: Path, encoding: str, require_deposition: bool) -> str:

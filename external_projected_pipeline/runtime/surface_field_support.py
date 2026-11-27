@@ -31,12 +31,13 @@ def prepare_inputs(config, base, folder, normal_mode):
     meshes = [folder/e['combined_mesh'] for e in entries]
     if normal_mode != 'field_gradient':
         return meshes, entries, metadata
-    from field_orientation import save_gradients, load_gradients
+    from field_orientation import save_gradients, load_gradients, orient_from_gradients
     root = resolve(base, config['compatible_inputs']['export_root'])
     rebuild_path = resolve(root, metadata.get('rebuild_pipeline', 'rebuild_pipeline.json'))
     rebuild = json.loads(rebuild_path.read_text(encoding='utf-8-sig')) if rebuild_path.is_file() else {}
     inputs = rebuild.get('input', {})
     model = support = None
+    preflight=[]
     for entry, mesh in zip(entries, meshes):
         source = Path(entry['source_dir'])/entry['source_mesh']
         sidecar = source.with_suffix('.field_gradients.npz')
@@ -73,7 +74,15 @@ def prepare_inputs(config, base, folder, normal_mode):
                     support = GridField.load(resolve(root, value))
                 _, gradients = support.evaluate_scalars_and_gradients(centers)
                 origin = 'Saved optimized trilinear support field'
+        try:
+            _,_,orientation=orient_from_gradients(V,F,gradients)
+        except ValueError as error:
+            failure=dict(status='failed',failed_mesh=mesh.name,source_mesh=str(source),checked_layers=len(preflight),error=str(error))
+            (folder/'field_normal_preflight.json').write_text(json.dumps(failure,indent=2),encoding='utf8')
+            raise ValueError(f'{mesh.name}: saved-field normal preflight failed: {error} Regenerate the support layers with field-normal contour validation; imported geometry needs an explicit validated normal orientation.') from error
+        preflight.append(dict(mesh=mesh.name,minimum_absolute_gradient_alignment=orientation['minimum_absolute_gradient_alignment']))
         save_gradients(mesh, gradients, origin)
+    (folder/'field_normal_preflight.json').write_text(json.dumps(dict(status='passed',checked_layers=len(preflight),layers=preflight),indent=2),encoding='utf8')
     return meshes, entries, metadata
 
 

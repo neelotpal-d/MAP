@@ -905,6 +905,7 @@ def main():
     previous_weight = None
     if not args.evaluate_only:
         for epoch in range(1, args.epochs+1):
+            learning_rate_used=float(optimizer.param_groups[0]['lr'])
             epoch_wall_start = time.perf_counter()
             mining_seconds = 0.
             if stress and stress.sampling != 'fps':
@@ -1063,7 +1064,7 @@ def main():
                                         stress=stress_loss,
                                         witness_replay=replay_loss,
                                         online_witness=online_witness_loss,
-                                        base=base, variation=variation, small_gradient=small,
+                                        base=base, anchor=anchor, variation=variation, small_gradient=small,
                                         gradient_norm=unit_norm,
                                         curvature=curvature, orientation=orientation,
                                         orientation_surface=surface_orientation,
@@ -1072,7 +1073,18 @@ def main():
             if scheduler is not None:
                 scheduler.step()
             sync(device)
+            means={name:float(value) for name,value in sums.items()}
+            weights=dict(stress=args.stress_weight if stress else 0.,support=args.support_weight,
+                base=args.base_weight,anchor=args.anchor_weight,variation=gradient_regularization_scale*args.variation_weight,
+                small_gradient=gradient_regularization_scale*args.small_gradient_weight,
+                gradient_norm=gradient_norm_weight,curvature=topology_regularization_scale*args.curvature_weight,
+                orientation=orientation_weight,collision=epoch_weight,
+                online_witness=epoch_weight if online_witnesses is not None else 0.,
+                witness_replay=epoch_weight*args.replay_weight if replay is not None else 0.)
             record(dict(event="train", epoch=epoch, seconds=time.perf_counter()-epoch_start,
+                        schema='map.losses.v1',learning_rate_used=learning_rate_used,phase='main',
+                        raw={name:means[name] for name in weights},weights=weights,
+                        weighted={name:means[name]*weight for name,weight in weights.items()},
                         epoch_wall_seconds=time.perf_counter()-epoch_wall_start,
                         mining_seconds=mining_seconds,
                         mean_collision_active_pairs=collision_active_pairs/args.steps_per_epoch,
@@ -1093,7 +1105,7 @@ def main():
                         online_witness_pairs=len(online_witnesses) if online_witnesses is not None else 0,
                         steps=args.steps_per_epoch,
                         stress_points=len(stress.points_epoch) if stress else 0,
-                        **{name: float(value) for name, value in sums.items()}))
+                        **means))
             # Checkpoints are self-describing; optimizer state retained for future continuation.
             save_latest = epoch % args.save_every == 0 or epoch == args.epochs
             save_snapshot = args.snapshot_every > 0 and (epoch % args.snapshot_every == 0 or epoch == args.epochs)

@@ -524,6 +524,7 @@ def _group_scalar_loss_from_outputs(
 def _fused_train_scalar_field(module, *args, **kwargs) -> None:
     """Train with one first-derivative forward for compatible regular losses."""
 
+    from trainingMetrics import EpochLossAccumulator,effective_weights,write_epoch
     signature = inspect.signature(module._hard_collision_original_train)
     bound = signature.bind_partial(*args, **kwargs)
     values = bound.arguments
@@ -604,6 +605,7 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
                     f"learning rate={optimizer.param_groups[0]['lr']:.3e}"
                 )
 
+            learning_rate_used=float(optimizer.param_groups[0]['lr'])
             epoch_tool_points = values.get("tool_points_model")
             local_sets = values.get("local_tool_point_sets")
             if (
@@ -640,6 +642,8 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
             batch_count = 0
             base_gradient_diagnostic = None
             norm_batch_snapshots = []
+            epoch_metrics=EpochLossAccumulator()
+            scalar_loss_factor=0.
             loss_sums = {
                 "base_direction": None,
                 "base_scalar": None,
@@ -685,9 +689,9 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
                     orientation.after_step()
                     epoch_loss += loss.detach()
                     batch_count += 1
-                    for name in loss_sums:
-                        value = loss.detach() if name == 'collision' else loss.detach()*0
-                        loss_sums[name] = value if loss_sums[name] is None else loss_sums[name]+value
+                    terms={name:loss.detach()*0 for name in loss_sums}
+                    terms.update(collision=collision_loss,stress=loss.detach()*0)
+                    epoch_metrics.add(terms)
                     continue
                 if orientation is not None:
                     build_direction = orientation.direction().detach().reshape(1,3)
@@ -878,9 +882,11 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
                 )
                 if collision_loss is not None:
                     loss = loss + epoch_collision_weight * collision_loss
+                strength_loss=zero
                 if strength_provider is not None:
                     stress_gradients = grads[slices['stress']] if fps_active else input_grads
-                    loss = loss+strength_provider(batch_input, stress_gradients)
+                    strength_loss=strength_provider(batch_input, stress_gradients)
+                    loss = loss+strength_loss
                 should_measure_base_interference = (
                     module.PRINT_BASE_GRADIENT_INTERFERENCE
                     and (epoch + 1) % module.BASE_GRADIENT_INTERFERENCE_EVERY_EPOCHS == 0
@@ -936,29 +942,16 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
 
                 # Accumulate detached GPU values and synchronize only once per
                 # reporting epoch, rather than once per component per batch.
-                if module.DEBUG_PRINT_LOSS_BREAKDOWN:
-                    components = {
-                        "base_direction": module.BASE_DIRECTION_WEIGHT * base_direction_loss,
-                        "base_scalar": module.BASE_SCALAR_WEIGHT * base_scalar_loss,
-                        "surface_direction": module.SURFACE_DIRECTION_WEIGHT * surface_loss,
-                        "support_free": module.SUPPORT_FREE_SURFACE_WEIGHT * support_loss,
-                        "group_scalar": scalar_loss_factor * module.SURFACE_GROUP_SCALAR_WEIGHT * group_loss,
-                        "edge_scalar": scalar_loss_factor * module.SURFACE_EDGE_SCALAR_WEIGHT * edge_loss,
-                        "gradient_ratio": module.GRADIENT_BAND_RATIO_WEIGHT * ratio_loss,
-                        "gradient_floor": module.GRADIENT_BAND_FLOOR_WEIGHT * floor_loss,
-                        "build_slope": module.BUILD_DIRECTION_SLOPE_WEIGHT * build_slope_loss,
-                        "input_curvature": module.INPUT_CURVATURE_WEIGHT * curvature_loss,
-                        "gradient_variation": getattr(module, 'GRADIENT_VARIATION_WEIGHT', 0.) * variation_loss,
-                        "small_gradient": getattr(module, 'SMALL_GRADIENT_WEIGHT', 0.) * small_gradient_loss,
-                        "collision": zero if collision_loss is None else epoch_collision_weight * collision_loss,
-                    }
-                    for name, component in components.items():
-                        detached_component = component.detach()
-                        loss_sums[name] = (
-                            detached_component
-                            if loss_sums[name] is None
-                            else loss_sums[name] + detached_component
-                        )
+                components = {
+                    "base_direction": base_direction_loss,"base_scalar": base_scalar_loss,
+                    "surface_direction": surface_loss,"support_free": support_loss,
+                    "group_scalar": group_loss,"edge_scalar": edge_loss,
+                    "gradient_ratio": ratio_loss,"gradient_floor": floor_loss,
+                    "build_slope": build_slope_loss,"input_curvature": curvature_loss,
+                    "gradient_variation": variation_loss,"small_gradient": small_gradient_loss,
+                    "collision": zero if collision_loss is None else collision_loss,"stress":strength_loss,
+                }
+                epoch_metrics.add(components)
 
             if scheduler is not None:
                 scheduler.step()
@@ -983,6 +976,10 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
             if getattr(module, "SHOW_NORM_CONTROL_BATCHES_EACH_EPOCH", False):
                 module.visualize_norm_control_batches(norm_batch_snapshots, epoch)
             mean_epoch_loss = float((epoch_loss / max(batch_count, 1)).cpu())
+            metric=epoch_metrics.record(epoch+1,mean_epoch_loss,
+                effective_weights(module,epoch_collision_weight,scalar_loss_factor,strength_provider,frame_only),
+                learning_rate_used,'frame' if frame_only else 'main')
+            write_epoch(values.get('checkpoint_path'),metric)
             if strength_provider is not None:
                 strength_provider.end_epoch(scalar_net)
             if (
@@ -990,8 +987,7 @@ def _fused_train_scalar_field(module, *args, **kwargs) -> None:
                 and (epoch + 1) % module.LOSS_BREAKDOWN_EVERY_EPOCHS == 0
             ):
                 breakdown = " ".join(
-                    f"{name}={float((value / max(batch_count, 1)).cpu().item()) if value is not None else 0.:.3e}"
-                    for name, value in loss_sums.items()
+                    f"{name}={value:.3e}" for name,value in metric['weighted'].items()
                 )
                 print(f"epoch={epoch + 1}/{values['epochs']} total={mean_epoch_loss:.4e} {breakdown}")
             else:

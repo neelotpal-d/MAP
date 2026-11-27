@@ -215,6 +215,26 @@ def compute_path_normals(
     return path_normals
 
 
+def compute_strand_normals(V, F, strands, *, tolerance=1e-12, candidate_triangles=8):
+    """Amortize the same exact normal query over independent path strands.
+
+    Mesh preparation and closest-triangle policy are unchanged. The returned
+    groups retain their original order, including empty strands; no path segment
+    is inserted between groups.
+    """
+    paths = [np.asarray(p, dtype=np.float64) for p in strands]
+    if any(p.ndim != 2 or p.shape[1] != 3 for p in paths):
+        raise ValueError('Each strand must have shape (k, 3).')
+    if candidate_triangles <= 0:
+        raise ValueError('candidate_triangles must be positive.')
+    lengths = [len(p) for p in paths]
+    if not any(lengths):
+        return [np.empty((0, 3), dtype=np.float64) for p in paths]
+    normals = compute_path_normals(V, F, np.vstack(paths), tolerance=tolerance,
+        candidate_triangles=candidate_triangles)
+    return np.split(normals, np.cumsum(lengths)[:-1])
+
+
 def path_with_normals(
     V: FloatArray,
     F: IntArray,

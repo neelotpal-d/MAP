@@ -395,6 +395,7 @@ def run_nearest_surface_height_stage(args: argparse.Namespace) -> Path:
             recovered_points=sum(r['support_validation']['recovered_points'] for r in results))
         for name in ('normal_miss_fallback_points', 'normal_miss_actual_points', 'normal_miss_cap_points', 'clamped_height_points',
                      'threshold_fallback_points','unverified_support_points','invalid_height_points','geometrically_verified_points',
+                     'ambiguous_fallback_accepted_points',
                      'uncapped_model_normal_points', 'above_cap_model_normal_points'):
             metadata['support_validation'][name] = sum(r['support_validation'][name] for r in results)
     metadata_path = output_dir / "batch_3axis.meta.json"

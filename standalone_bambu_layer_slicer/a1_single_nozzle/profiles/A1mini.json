@@ -1,0 +1,15 @@
+{
+  "profile_name": "Bambu Lab A1 mini - single material PLA - 0.4 mm nozzle",
+  "printer_model": "Bambu Lab A1 mini",
+  "printer_model_id": "N1",
+  "build_size_mm": 180.0,
+  "plate_center_mm": [90.0, 90.0, 0.0],
+  "machine_name": "bambuA1mini",
+  "reference_3mf": "reference/A1mini_sample.gcode.3mf",
+  "nozzle_diameter_mm": 0.4,
+  "maximum_z_speed_mm_s": 30.0,
+  "export_z_speed_mm_s": 20.0,
+  "source": "https://github.com/bambulab/BambuStudio/blob/master/resources/profiles/BBL/machine/Bambu%20Lab%20A1%20mini%200.4%20nozzle.json",
+  "startup_source": "Bambu Studio A1 mini machine_start_gcode and machine_end_gcode templates, compiled by installed Bambu Studio from its PLA Basic / Textured PEI profiles.",
+  "notes": "Uses A1 mini startup and shutdown, 180 mm build limits and X90 Y90 centering. MAP retains its conservative 30 mm/s print, 150 mm/s travel and 500 mm/s2 acceleration defaults. This profile does not define or certify a fitted nonplanar tool envelope."
+}

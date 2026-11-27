@@ -248,6 +248,7 @@ def run(args):
             platform_base_radius_factor=args.platform_base_radius_factor,platform_base_height=args.platform_base_height,
             build_direction=direction, vtk_threads_per_worker=args.vtk_threads_per_worker, maximum_trunk_diameter=args.maximum_trunk_diameter,skip_unrooted_contacts=args.skip_unrooted_contacts,planar_platform_bases=args.planar_platform_bases,platform_base_layer_height=args.platform_base_layer_height,
             layer_seed_spacing=args.layer_seed_spacing,adaptive_layer_tolerance=args.adaptive_layer_tolerance,
+            trim_boundary_tolerance_mm=args.trim_boundary_tolerance_mm,
             maximum_platform_trunk_diameter=args.maximum_platform_trunk_diameter,
             include_support_gradients=args.include_support_gradients,
             support_layer_spacing=args.support_layer_spacing if args.support_layer_spacing is not None else min(args.layer_spacing,args.maximum_support_layer_height),
@@ -393,6 +394,7 @@ def parse_args(argv=None):
     parser.add_argument("--tree-spacing", type=float, default=1.0, help="Support solid preview grid spacing; does not set layer extraction resolution.")
     parser.add_argument('--layer-seed-spacing',type=float,default=1.,help='Independent fallback layer seed spacing; relaxed FEM layers use the transfer mesh directly.')
     parser.add_argument('--adaptive-layer-tolerance',type=float,default=.05,help='Local layer-outline detail target in mm; exact clearance checks remain active.')
+    parser.add_argument('--trim-boundary-tolerance-mm',type=float,default=0.,help='Retain verified whole-face boundary deviations within this physical mm budget with warnings; zero is strict.')
     parser.add_argument("--side-clearance", type=float, default=0.4)
     parser.add_argument("--contact-gap", type=float, default=0.2)
     parser.add_argument('--fast-clearance','--fast-mode',dest='fast_clearance',action='store_true',

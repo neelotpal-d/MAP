@@ -120,6 +120,30 @@ def plan_connected_patches(planner):
             tags.append(roles)
             offset += len(points)
 
+        # Plan complete disconnected patches before joining their output arrays.
+        # This is a standard toolpath decision, shared by every exporter.
+        from toolpath_order import nearby_order
+        patch_schedule = list(range(len(rows)))
+        patch_order_report = dict(reordered_groups=0,patches_moved=0)
+        order_enabled=os.environ.get('MAP_ORDER_PATCHES','1')!='0'
+        if len(rows)>1 and order_enabled:
+            nonempty=[r for r in reports if r['generated_points']]
+            locked=[bool(r['metadata'].get('support_reference_additions')) or
+                    any('repair' in str(t) or 'hatch' in str(t) for t in ts)
+                    for r,ts in zip(nonempty,tags)]
+            patch_schedule,patch_order_report=nearby_order([0]*len(rows),
+                [(p[0,:3],p[-1,:3]) for p in rows],locked)
+            original_offsets=np.r_[0,np.cumsum([len(p) for p in rows])]
+            local_breaks=[[b-int(original_offsets[i]) for b in breaks
+                           if original_offsets[i]<b<original_offsets[i+1]] for i in range(len(rows))]
+            rows=[rows[i] for i in patch_schedule];widths=[widths[i] for i in patch_schedule]
+            tags=[tags[i] for i in patch_schedule]
+            new_breaks=[];offset=0
+            for rank,i in enumerate(patch_schedule):
+                if rank:new_breaks.append(offset)
+                new_breaks.extend(offset+b for b in local_breaks[i]);offset+=len(rows[rank])
+            breaks=new_breaks
+            reports=[nonempty[i] for i in patch_schedule]+[r for r in reports if not r['generated_points']]
         points = np.vstack(rows) if rows else np.empty((0, 6))
         profile = np.concatenate(widths) if widths else np.empty(0)
         roles = np.concatenate(tags) if tags else np.empty(0, dtype=object)
@@ -135,6 +159,12 @@ def plan_connected_patches(planner):
         break_file.write_text(''.join(f'{value}\n' for value in breaks), encoding='utf-8')
 
         metadata = dict(reports[0]['metadata'])
+        if any(report['metadata'].get('surface_metric_mesh') for report in reports):
+            # A combined path is not the first patch. Its source must outlive
+            # optional scratch files, and overlapping disconnected charts must
+            # still be evaluated separately by the hatch-volume calculation.
+            metadata['surface_metric_mesh']=str(mesh_path.resolve())
+            metadata['surface_metric_components']='connected_regions'
         # Layer-level diagnostics refer to all patches, not just the first one.
         metadata.pop('projected_degenerate_artifact', None)
         artifacts = [dict(report['metadata']['projected_degenerate_artifact'], patch_index=report['patch_index'])
@@ -163,12 +193,6 @@ def plan_connected_patches(planner):
             metadata['support_hole_repair']=dict(mask_count=sum(r['mask_count'] for r in repairs),
                 field_lift_points=sum(r['field_lift_points'] for r in repairs),
                 maximum_physical_field_error_mm=max(r['maximum_physical_field_error_mm'] for r in repairs),
-                maximum_chart_y_shift_mm=max(r.get('maximum_chart_y_shift_mm',0.) for r in repairs),
-                initial_mesh_samples=sum(r.get('initial_mesh_samples',0) for r in repairs),
-                maximum_initial_normalized_field_error_mm=max((r['maximum_initial_normalized_field_error_mm'] for r in repairs
-                    if r.get('maximum_initial_normalized_field_error_mm') is not None),default=None),
-                field_lift_seconds=sum(r.get('field_lift_seconds',0.) for r in repairs),
-                field_normal_seconds=sum(r.get('field_normal_seconds',0.) for r in repairs),
                 minimum_model_distance_mm=min(clearance) if clearance else None)
         metadata.update(path_file=output.name, path_point_count=len(points),
                         source_mesh_bounds=source_bounds,
@@ -181,7 +205,8 @@ def plan_connected_patches(planner):
                         path_tag_block_count=int(np.count_nonzero(np.r_[True, roles[1:] != roles[:-1]])) if len(roles) else 0,
                         path_break_file=break_file.name if breaks else None, path_break_count=len(breaks),
                         connected_patch_count=len(patches), connected_patches=reports,
-                        patch_order='PyVista connected-region order; complete each patch before travel to next')
+                        patch_order=('Endpoint proximity' if order_enabled else 'PyVista connected-region order')+'; complete each patch before travel to next',
+                        patch_ordering=dict(patch_order_report,enabled=order_enabled))
         if not retain:metadata['connected_patch_artifacts']='memory_only; original layer retained; failed patch inputs saved on error'
         return output, metadata
     return run

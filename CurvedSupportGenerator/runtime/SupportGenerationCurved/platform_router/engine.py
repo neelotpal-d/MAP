@@ -178,7 +178,7 @@ def route_model(pipeline,output,argv,*,support_field_source=None,maximum_steps=4
         save(output/'tip_sizing_report.json',tip_report)
         report['adaptive_tip_coverage']=tip_report
     graph.save(output/'support_centerlines.vtp')
-    report.update(routing_mode='platform_first',field_source='conservative_grid' if data is not None else 'model_local_direction',
+    report.update(contact_selection=context.saved['skeleton_experiment'].get('contact_selection'),routing_mode='platform_first',field_source='conservative_grid' if data is not None else 'model_local_direction',
         support_field_source=str(support_field_source) if support_field_source else None,
         routing_audit=audit,complete_workflow_seconds=time.perf_counter()-started,
         contact_prefix_regenerated=True,maximum_components=None,

@@ -153,26 +153,49 @@ def main(pipeline, output, argv=None, clean=False, field_factory=None):
         (dot < -np.cos(np.deg2rad(args.overhang_angle))) &
         (centers[:,1] > args.plate + args.minimum_support_height + args.clearance))
     area = np.linalg.norm(np.cross(triangles[:,1]-triangles[:,0], triangles[:,2]-triangles[:,0]), axis=1)
-    # One face-centre contact per occupied spatial bucket; keep the largest face.
-    # This is a sampled contact set, not a roof coverage certificate.
-    buckets = {}
-    for index in candidate_ids[np.argsort(-area[candidate_ids], kind='stable')]:
-        key = tuple(np.floor(centers[index] / args.contact_spacing).astype(np.int64))
-        buckets.setdefault(key, int(index))
-    chosen = np.asarray(sorted(buckets.values()), dtype=int)
-    if len(chosen) > args.maximum_contacts:
-        raise ValueError(f'{len(chosen)} contacts exceed maximum_contacts={args.maximum_contacts}; increase contact spacing or the limit.')
-    seeds = centers[chosen] + (args.clearance+1e-5) * normals[chosen]
-    accepted = distance(seeds) >= args.clearance-2e-6 if len(seeds) else np.zeros(0, dtype=bool)
-    seeds = seeds[accepted]
-    if not len(seeds):
-        raise ValueError('No usable overhang contacts above the platform. Check the scalar direction, overhang angle and minimum support height.')
     landing = ModelLandingCheck(query, normals, field, distance, gap=args.clearance,
         min_up_dot=args.landing_min_up_dot, contact_radius=args.root_contact_radius,
         minimum_contact_radius=args.root_min_contact_radius)
     if getattr(field,'has_scalar_grid',False):
         from .platform_router.routing_field import make_landing
         landing=make_landing(field,distance,vars(args))
+    def protected_validator(seeds, contact_gradients):
+        end = args.contact_gradient_length + args.contact_transition_length
+        if end <= 0:
+            return np.ones(len(seeds), dtype=bool)
+        trial, _ = grow(seeds, field, distance, [0,1,0], args.plate, gap=args.clearance,
+            step=args.step, angle_degrees=args.angle, merge_distance=args.merge_distance,
+            max_steps=int(np.ceil(end/args.step))+2,
+            platform_downward_bias=args.platform_downward_bias, prefer_platform=args.prefer_platform,
+            contact_gradient_length=args.contact_gradient_length,
+            contact_transition_length=args.contact_transition_length, contact_gradients=contact_gradients,
+            clearance_escape_band=args.clearance_escape_band,
+            clearance_escape_weight=args.clearance_escape_weight, landing_check=landing)
+        parents = {int(a):int(b) for a,b in trial.lines.reshape(-1,3)[:,1:]}
+        valid = []; rooted = []
+        for seed in range(len(seeds)):
+            node = seed
+            while node in parents:
+                node = parents[node]
+            rooted.append(bool(trial['is_root'][node]))
+            valid.append(bool(trial['is_root'][node] or trial['contact_path_length'][node] >= end-1e-8))
+        return np.asarray(valid), np.asarray(rooted)
+
+    # Select a feasible protected neck before growing. Every occupied
+    # overhang bucket remains represented, including stalled candidates for inspection.
+    from .contact_selection import select_contacts
+    chosen, contact_points, contact_gradients, contact_selection = select_contacts(
+        candidate_ids, centers, normals, gradients, area, field, distance,
+        spacing=args.contact_spacing, gap=args.clearance,
+        fixed_length=args.contact_gradient_length, angle=args.angle,
+        plate=args.plate, maximum_contacts=args.maximum_contacts,
+        triangles=triangles,
+        gradient_evaluator=lambda p: native.evaluate_scalars_and_gradients(p)[1],
+        overhang_angle=args.overhang_angle, protected_validator=protected_validator, retain_stalled=True)
+    seeds = contact_points + (args.clearance+1e-5) * normals[chosen]
+    accepted = np.ones(len(seeds), dtype=bool)
+    if not len(seeds):
+        raise ValueError('No usable overhang contacts above the platform. Check the scalar direction, overhang angle and minimum support height.')
     print(f'Growing {len(seeds)} contacts directly from model; no preserved tree required.', flush=True)
     if args.reroute_source is None:
         print(f'Contact stages: fixed contact-gradient {args.contact_gradient_length:g} mm; transition {args.contact_transition_length:g} mm; '
@@ -183,7 +206,7 @@ def main(pipeline, output, argv=None, clean=False, field_factory=None):
             platform_downward_bias=args.platform_downward_bias,
             prefer_platform=args.prefer_platform,
             contact_gradient_length=args.contact_gradient_length, contact_transition_length=args.contact_transition_length,
-            contact_gradients=gradients[chosen][accepted],
+            contact_gradients=contact_gradients,
             clearance_escape_band=args.clearance_escape_band, clearance_escape_weight=args.clearance_escape_weight,
             landing_check=landing, progress=lambda status: print(json.dumps({'stage':'growth_before_recovery', **status}), flush=True))
     else:
@@ -235,6 +258,7 @@ def main(pipeline, output, argv=None, clean=False, field_factory=None):
         native_descent_band_mm=field.scalar_band,
         exterior_descent_policy='sampled_build_height_and_local_direction_cone',
         selected_overhang_faces=len(candidate_ids), contact_bucket_count=len(chosen),
+        contact_selection=contact_selection,
         rejected_seed_clearance_count=int((~accepted).sum()), contact_spacing_mm=args.contact_spacing,
         model_query_backend='vtk', unique_field_points=field.evaluated, total_seconds=time.perf_counter()-started,
         native_direction_source='Boundary Taylor routing approximation' if mode=='tetrahedral' else 'Neural near-model queries')

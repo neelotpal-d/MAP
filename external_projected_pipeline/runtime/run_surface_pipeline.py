@@ -1939,6 +1939,8 @@ def run_height_stage_5axis(
 def main() -> None:
     args = build_parser().parse_args()
     config, base_dir = load_config(args.config)
+    from draft_toolpaths import validate_outputs
+    draft = validate_outputs(config, base_dir)
 
     paths_cfg = require_section(config, "paths")
     materials_cfg_raw = config.get("materials")
@@ -1986,7 +1988,7 @@ def main() -> None:
     )
     if clear_workers_between_stages:
         cleanup_stage_workers(stage_name="remesh stage")
-    support_mesh_dir = run_support_expansion_stage(
+    support_mesh_dir = contour_mesh_dir if draft else run_support_expansion_stage(
         input_dir=contour_mesh_dir,
         output_dir=expanded_support_dir,
         expand_cfg=expand_cfg,
@@ -2022,6 +2024,11 @@ def main() -> None:
             metadata_filename="batch_paths.meta.json",
             material_entries=material_entries,
         )
+    if draft:
+        from draft_toolpaths import write_draft
+        import json
+        write_draft(toolpaths_dir, json.loads((toolpaths_dir / 'batch_paths.meta.json').read_text(encoding='utf8')))
+        return
     if height_mode == "3axis":
         run_height_stage(
             mesh_dir=support_mesh_dir,

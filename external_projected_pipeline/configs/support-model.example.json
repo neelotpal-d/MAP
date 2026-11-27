@@ -15,7 +15,7 @@
     "support_layers": "support_layers",
     "model_manifest": "model_layer_manifest.json",
     "support_manifest": "support_layer_manifest.json",
-    "sublayer_order": "proximity",
+    "sublayer_order": "index",
     "material_name": "same_material"
   },
   "paths": {
@@ -172,8 +172,12 @@
       "alternate_angle_degrees": 90.0
     },
     "hole_repair": {
-      "enabled": false,
+      "enabled": true,
+      "method": "mesh",
       "field_source": null
+    },
+    "backing_check": {
+      "enabled": false
     },
     "backing_repair": {
       "enabled": false
@@ -201,6 +205,7 @@
     "platform_height_factor": 1.5,
     "nearest_direct_factor": 1.5,
     "support_validation": {
+      "ambiguous_height_policy": "nominal_warn",
       "enabled": true,
       "check_height_factor": 1.75,
       "max_bead_height_factor": 1.5,
@@ -214,5 +219,8 @@
   "execution": {
     "blas_threads_per_process": 1,
     "keep_patch_artifacts": false
+  },
+  "toolpath_ordering": {
+    "enabled": true
   }
 }

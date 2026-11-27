@@ -1,7 +1,7 @@
 """Experimental layer planning using existing surface-field solvers.
 
-Both planners can be compared through this entry with the same layer-normal
-ray height audit. Explicit travel breaks are retained; machine export is gated.
+Both planners use nearest-first heights, with backward local-normal rays for
+larger distances. Explicit travel breaks are retained; machine export is gated.
 """
 from pathlib import Path
 import json,time,shutil
@@ -10,9 +10,9 @@ from multiprocessing import get_context
 import numpy as np
 import igl
 from mesh_distance_workflow import load_obj_mesh
-from connected_patch_planner import surface_components
-from toolpath_export import compute_path_normals
-from test_hybrid_contours import (solve_hybrid_boundary_field,solve_parallel_field,
+from manifold_surface_patches import surface_components, solve_unsigned_boundary_field as solve_hybrid_boundary_field
+from toolpath_export import compute_path_normals, compute_strand_normals
+from test_hybrid_contours import (solve_parallel_field,
     build_parallel_triangle_cache,stitch_segments_into_fragment_polylines,encode_path_tag_blocks)
 from test_hybrid_contours_vectorized import (extract_parallel_segments_with_boundary_values_vectorized,
     clip_parallel_segments_vectorized)
@@ -71,19 +71,28 @@ def frame(vertices,faces,angle):
     return np.column_stack((tangent,normal,across))
 
 def solve_surface_infill(local,faces,plane,backend):
-    """Retain the requested solver; recover a signed-heat factorization failure."""
+    """Retain the requested solver; recover known finite-operator breakdowns."""
     options=dict(level_set_constraint='None',soft_level_set_weight=-1.,tolerance=1e-8)
     try:
         field,_,_=solve_parallel_field(local,faces,'z',2,plane,backend=backend,**options)
+        if not np.isfinite(field).all():raise ValueError('Nonfinite surface infill field.')
         return field,backend,None
-    except ValueError as exc:
-        if backend!='signed_heat' or 'factorization failed' not in str(exc):raise
-        # Both solvers work on the original surface. Never substitute an XZ
-        # projection or remove troublesome triangles from a folded layer.
-        field,_,_=solve_parallel_field(local,faces,'z',2,plane,backend='vector_heat_stripe',**options)
-        print(f'WARNING: Signed-heat factorization failed on a {len(faces)}-triangle patch; '
-              'used the surface vector-heat solver. Inspect field diagnostics.',flush=True)
-        return field,'vector_heat_stripe',str(exc)
+    except (ValueError,RuntimeError) as exc:
+        reason=str(exc);text=reason.lower()
+        if backend=='signed_heat' and 'factorization failed' in text:
+            field,used,detail=solve_surface_infill(local,faces,plane,'vector_heat_stripe')
+            print(f'WARNING: Signed-heat factorization failed on a {len(faces)}-triangle patch; '
+                  f'used the surface {used} solver. Inspect field diagnostics.',flush=True)
+            return field,used,reason+('; '+detail if detail else '')
+        known_nonfinite=('checkfinite() failure' in text or text.startswith('nonfinite surface infill field'))
+        if backend not in {'signed_heat','vector_heat_stripe'} or not known_nonfinite:raise
+        from manifold_surface_patches import signed_fast_marching_field
+        field=signed_fast_marching_field(local,faces,plane,tolerance=1e-8)
+        if not np.isfinite(field).all():raise ValueError('Nonfinite signed fast-marching field.')
+        print(f'WARNING: {backend} produced a non-finite heat operator/field on a {len(faces)}-triangle patch; '
+              'used signed fast marching on the original surface. Inspect field diagnostics.',flush=True)
+        return field,'fast_marching_signed',reason
+
 
 def surface_paths(vertices,faces,settings):
     vertices=np.asarray(vertices,dtype=np.float64);faces=np.asarray(faces,dtype=np.int64)
@@ -100,14 +109,27 @@ def surface_paths(vertices,faces,settings):
         started=time.perf_counter()
         # Reuse the earlier continuous-boundary fast marching and selected infill
         # solvers. Only their adapter/extraction/serialization is new.
-        boundary,loops,_,_=solve_hybrid_boundary_field(V,F,backend='potpourri_fast_marching_unsigned',tolerance=1e-8)
+        closed=len(igl.boundary_facets(F)[0])==0
+        if closed:
+            boundary=None;loops=[]
+        else:
+            boundary,loops,_,_=solve_hybrid_boundary_field(V,F,backend='potpourri_fast_marching_unsigned',tolerance=1e-8)
         parts=[];part_roles=[]
-        for i in range(count):
+        for i in range(0 if closed else count):
             level=inset+i*wall_width
             curves=loops if level==0 else extract_isocontour_polylines(V,F,boundary,level)
             parts.extend(curves);part_roles.extend(['boundary_loop']*len(curves))
-        gradient_stats={}
-        if settings['pattern']!='contours':
+        gradient_stats=dict(closed_surface_component=closed,boundary_distance_defined=not closed)
+        if closed:
+            gradient_stats.update(boundary_contours_skipped_reason='Closed surface has no perimeter.',
+                contour_only_no_deposition=settings['pattern']=='contours')
+        cutoff=(inset+count*wall_width+.5*(width-wall_width)-overlap) if count else 0.
+        if not closed and not np.isfinite(boundary).all():raise ValueError('Nonfinite surface boundary distance.')
+        # The raster clip interpolates this boundary field on triangles. Its
+        # maximum is attained at a vertex, so no inset raster can survive below
+        # this cutoff. Keep contours and avoid an unnecessary plane-field solve.
+        has_infill_domain=closed or float(np.max(boundary,initial=0.))>=cutoff-1e-8
+        if settings['pattern']!='contours' and has_infill_domain:
             basis=frame(V,F,settings['angle']);local=(V-V.mean(axis=0))@basis
             plane=float((local[:,2].min()+local[:,2].max())*.5)
             # A source plane through mesh vertices can produce duplicated edge
@@ -122,23 +144,28 @@ def surface_paths(vertices,faces,settings):
             # physical surface spacing only where gradient magnitude is near1.
             gradient=np.asarray(igl.grad(V,F)@field).reshape(3,-1).T
             norms=np.linalg.norm(gradient,axis=1)
-            gradient_stats={'gradient_norm_p05':float(np.percentile(norms,5)),
+            gradient_stats.update({'gradient_norm_p05':float(np.percentile(norms,5)),
                 'gradient_norm_median':float(np.median(norms)),'gradient_norm_p95':float(np.percentile(norms,95)),
-                'infill_backend':used_backend,'infill_fallback_reason':fallback_reason}
-            cache=build_parallel_triangle_cache(V,F,field,boundary)
-            cutoff=(inset+count*wall_width+.5*(width-wall_width)-overlap) if count else 0.
+                'infill_backend':used_backend,'infill_fallback_reason':fallback_reason})
+            # The extractor's boundary channel is unused on a closed surface.
+            # Keep it finite, then retain every extracted segment without a
+            # fictitious boundary distance or boundary-inset clipping.
+            cache=build_parallel_triangle_cache(V,F,field,np.zeros(len(V)) if closed else boundary)
             levels=np.arange(np.ceil(field.min()/pitch),np.floor(field.max()/pitch)+1)*pitch
             for level in levels:
                 segments=extract_parallel_segments_with_boundary_values_vectorized(cache,float(level),tolerance=1e-8)
-                clipped=clip_parallel_segments_vectorized(segments,cutoff,tolerance=1e-8)
+                clipped=list(zip(segments.start_xyz,segments.end_xyz)) if closed else clip_parallel_segments_vectorized(segments,cutoff,tolerance=1e-8)
                 curves=stitch_segments_into_fragment_polylines(clipped,tolerance=1e-8)
                 parts.extend(curves);part_roles.extend(['sparse_infill' if settings['sparse'] else 'inner_raster']*len(curves))
+        if settings['pattern']!='contours' and not has_infill_domain:
+            gradient_stats.update(infill_skipped_reason='No inset raster domain at the requested wall/bead widths',
+                maximum_boundary_distance_mm=float(np.max(boundary,initial=0.)),raster_inset_cutoff_mm=float(cutoff))
         kept=0;sampling_reports=[];input_points=0;output_points=0
-        for p,role in zip(parts,part_roles):
-            p=split_subdivide(p,sample_step)
-            if len(p)<2:continue
+        sampled=[(split_subdivide(p,sample_step),role) for p,role in zip(parts,part_roles)]
+        sampled=[(p,role) for p,role in sampled if len(p)>=2]
+        normal_groups=compute_strand_normals(V,F,[p for p,role in sampled])
+        for (p,role),normals in zip(sampled,normal_groups):
             input_points+=len(p)
-            normals=compute_path_normals(V,F,p)
             if settings['reduce_waypoints'] and sampling is not None:
                 ids,report=reduce_surface_strand(p,normals,sampling)
                 p=p[ids];normals=normals[ids];sampling_reports.append(report)
@@ -184,6 +211,11 @@ def plan_job(job):
             rows,widths,tags,breaks,diagnostics,profile=support_paths(V,F,s,job['entry'],job['support_config'])
         else:
             rows,widths,tags,breaks,diagnostics=surface_paths(V,F,s)
+        infill_records=[entry for component in diagnostics for entry in component.get('field_diagnostics',[component])]
+        used_infill_backends=sorted({d['infill_backend'] for d in infill_records if d.get('infill_backend')})
+        infill_fallbacks=[dict(backend=d['infill_backend'],reason=d['infill_fallback_reason']) for d in infill_records if d.get('infill_fallback_reason')]
+        closed_components=sum(bool(d.get('closed_surface_component')) for d in infill_records)
+        boundary_backend=('not_run' if not infill_records else 'not_applicable_closed_surface' if closed_components==len(infill_records) else 'potpourri_fast_marching_unsigned')
         path=out/(mesh.stem+'.txt');np.savetxt(path,rows,fmt='%.10f')
         np.savetxt(out/(mesh.stem+'.widths.txt'),widths,fmt='%.10f')
         tagfile=out/(mesh.stem+'.tags.txt');tagfile.write_text(''.join(f'{a} {b} {tag}\n' for a,b,tag in encode_path_tag_blocks(tags)),encoding='utf8')
@@ -191,8 +223,11 @@ def plan_job(job):
         meta=dict(path_file=path.name,path_point_count=len(rows),width_profile_file=mesh.stem+'.widths.txt',
             path_tag_file=tagfile.name,path_break_file=breakfile.name,path_break_count=len(breaks),
             contour_spacing=s['spacing'],parallel_spacing=s['pitch'],width=s['spacing'],
-            planner_backend='surface_field',boundary_field_backend='potpourri_fast_marching_unsigned',
-            parallel_field_backend=('mixed' if any(d.get('infill_fallback_reason') for d in diagnostics) else s['field_backend']),
+            planner_backend='surface_field',boundary_field_backend=boundary_backend,
+            closed_surface_components=closed_components,
+            contour_only_closed_components=sum(bool(d.get('contour_only_no_deposition')) for d in infill_records),
+            parallel_field_backend=(used_infill_backends[0] if len(used_infill_backends)==1 else 'mixed' if used_infill_backends else 'not_run'),
+            actual_parallel_field_backends=used_infill_backends,infill_solver_fallbacks=infill_fallbacks,
             requested_parallel_field_backend=s['field_backend'],field_diagnostics=diagnostics,
             model_half_width_inset=s['inset'],outer_contour_center_offset=.5*s['spacing'] if s['inset'] else 0.,
             infill_wall_overlap=s['overlap'],height_aware_waypoint_reduction=(
@@ -221,6 +256,7 @@ def plan_job(job):
                 angle_degrees=s['angle']-90,alternate_angle_degrees=None,model_half_width_inset=s['inset'],
                 wall_attachment_overlap=s['overlap'],point_reduction=dict(enabled=s['reduce_waypoints'])))
     stored=np.loadtxt(path,ndmin=2) if path.stat().st_size else np.empty((0,6))
+    if stored.shape[1]<6 or not np.isfinite(stored).all():raise ValueError(f'{mesh.name}: planned surface path contains invalid or nonfinite coordinates/normals.')
     broken=set(map(int,(out/meta['path_break_file']).read_text().split())) if meta.get('path_break_file') else set()
     edges=np.array([i not in broken for i in range(1,len(stored))],bool)
     samples=.5*(stored[:-1,:3]+stored[1:,:3])[edges]
@@ -228,6 +264,9 @@ def plan_job(job):
     sq,_,_=tree.squared_distance(V,F,samples) if len(samples) else (np.empty(0),None,None)
     distance=np.sqrt(np.maximum(np.asarray(sq).reshape(-1),0))
     meta['path_geometry_audit']=dict(midpoint_samples=len(samples),off_surface_midpoints=int((distance>.01).sum()),maximum_midpoint_distance_mm=float(distance.max()) if len(distance) else 0.,tolerance_mm=.01)
+    if meta['path_geometry_audit']['off_surface_midpoints']:
+        audit=meta['path_geometry_audit']
+        raise ValueError(f"{mesh.name}: planned surface path leaves the layer at {audit['off_surface_midpoints']} segment midpoints (maximum {audit['maximum_midpoint_distance_mm']:.6g} mm; limit 0.01 mm). Inspect strand breaks and waypoint sampling.")
     main,sub=key(mesh)
     meta.update(layer_main=main,layer_sub=sub,source_mesh=mesh.name,path_file=path.name,normal_orientation=orientation,planning_seconds=time.perf_counter()-started)
     if job.get('entry'):
@@ -239,46 +278,74 @@ def plan_job(job):
 def height_job(job):
     started=time.perf_counter();layer=job['layer'];src=Path(job['path_dir']);out=Path(job['output'])
     file=src/layer['path_file'];rows=np.loadtxt(file,ndmin=2) if file.stat().st_size else np.empty((0,6))
-    points=rows[:,:3];normal=rows[:,3:6];normal=normal/np.maximum(np.linalg.norm(normal,axis=1)[:,None],1e-30)
+    maximum=float(job['maximum_height']);direct=float(job.get('nearest_direct_height',.3))
+    if not np.isfinite([maximum,direct]).all() or maximum<=0 or direct<0:
+        raise ValueError('Invalid nearest/direct height settings.')
+    direct=min(direct,maximum)
+    points=rows[:,:3];normal=rows[:,3:6];length=np.linalg.norm(normal,axis=1)
+    if rows.shape[1]!=6 or not np.isfinite(rows).all() or np.any(length<=1e-12):
+        raise ValueError('Layer-normal paths require finite XYZ and nonzero normals.')
+    normal=normal/np.maximum(length[:,None],1e-30)
     direction=-normal;best=np.full(len(points),np.inf);nearest=np.full(len(points),np.inf)
-    source=np.full(len(points),-1,dtype=int);edge_recovered=np.zeros(len(points),bool)
+    source=np.full(len(points),-1,dtype=int);ray_source=source.copy();edge_recovered=np.zeros(len(points),bool)
+    references=[]
     for idx,path in enumerate(job['references']):
         V,F=load_obj_mesh(path);tree=igl.AABB();tree.init(V,F)
         if not len(points):continue
-        hit,_,_=tree.intersect_ray_first(V,F,points,direction);hit=np.asarray(hit).reshape(-1);ids=np.flatnonzero(hit>=0)
-        if len(ids):
-            distances=_triangle_ray_distances(points[ids],direction[ids],V[F[hit[ids]]])
-            valid=(distances>1e-7)&(distances<best[ids]);selected=ids[valid]
-            best[selected]=distances[valid];source[selected]=idx
         sq,closest_faces,_=tree.squared_distance(V,F,points)
         distance=np.sqrt(np.maximum(np.asarray(sq).reshape(-1),0))
-        nearest=np.minimum(nearest,distance)
+        closer=distance<nearest;nearest[closer]=distance[closer];source[closer]=idx
+        references.append((idx,V,F,tree,np.asarray(closest_faces).reshape(-1),distance))
+    # Match the fixed-axis nearest-first policy. Close finite layer edges must
+    # not become zero heights just because their backward normal ray misses.
+    ray_ids=np.flatnonzero((nearest>direct)|(nearest<=1e-7))
+    for idx,V,F,tree,closest_faces,distance in references:
+        if not len(ray_ids):break
+        hit,_,_=tree.intersect_ray_first(V,F,points[ray_ids],direction[ray_ids]);hit=np.asarray(hit).reshape(-1)
+        local=np.flatnonzero(hit>=0);ids=ray_ids[local]
+        if len(ids):
+            distances=_triangle_ray_distances(points[ids],direction[ids],V[F[hit[local]]])
+            valid=(distances>1e-7)&(distances<best[ids]);selected=ids[valid]
+            best[selected]=distances[valid];ray_source[selected]=idx
         # Shared-edge float ray misses: test the nearest triangle against the
         # ORIGINAL ray in double precision. Never substitute nearest distance.
-        candidates=np.flatnonzero((best>distance+1e-6)&np.isfinite(distance))
+        candidates=ray_ids[(best[ray_ids]>distance[ray_ids]+1e-6)&np.isfinite(distance[ray_ids])]
         if len(candidates):
-            candidate_faces=np.asarray(closest_faces).reshape(-1)[candidates]
+            candidate_faces=closest_faces[candidates]
             checked=_triangle_ray_distances(points[candidates],direction[candidates],V[F[candidate_faces]])
             valid=np.isfinite(checked)&(checked<best[candidates])&(abs(checked-distance[candidates])<=1e-4)
-            selected=candidates[valid];best[selected]=checked[valid];source[selected]=idx;edge_recovered[selected]=True
+            selected=candidates[valid];best[selected]=checked[valid];ray_source[selected]=idx;edge_recovered[selected]=True
+    # As in fixed-axis planning, retain the nearest estimate when a farther
+    # directional query does not improve it. Limits below still flag large gaps.
+    height=nearest.copy();height[nearest<=1e-7]=np.inf
+    ray_used=best<height
+    height[ray_used]=best[ray_used];source[ray_used]=ray_source[ray_used]
     # Platform only on the first supplied main (or without earlier geometry).
     # Paired first-main parts can be disjoint, yet each starts on the bed.
-    # Do not replace a later ray miss
-    # through an unsupported gap with a short nearest distance or a fabricated cap.
+    # Later layers keep measured nearest distances, without a fabricated bed cap.
     platform=np.zeros(len(points),bool)
     if not job['references'] or job.get('allow_platform',False):
         d=np.divide(points[:,1]-job['platform'],normal[:,1],out=np.full(len(points),np.inf),where=normal[:,1]>1e-8)
-        valid=(d>1e-7)&(d<best);best[valid]=d[valid];platform[valid]=True
-    miss=~np.isfinite(best);too_high=(best>job['maximum_height'])&~miss
-    unresolved=miss|too_high;heights=np.where(miss,0.,best)
+        valid=(d>1e-7)&(d<height);height[valid]=d[valid];source[valid]=-1;platform[valid]=True
+    missing=(~np.isfinite(height))|(height<=1e-7);too_high=(height>maximum)&~missing
+    unresolved=missing|too_high;heights=np.where(missing,0.,height)
+    ray_required=(nearest>direct)|(nearest<=1e-7)
+    ray_miss=ray_required&~np.isfinite(best)&~platform
+    nearest_used=~missing&~ray_used&~platform
+    direct_used=nearest_used&(nearest<=direct)
     name=f"{layer['layer_main']}_{layer['layer_sub']}_5axis.txt"
     np.savetxt(out/name,np.column_stack((rows,heights)),fmt='%.10f')
     for field in ['width_profile_file','path_tag_file','path_break_file']:
         if layer.get(field):shutil.copyfile(src/layer[field],out/layer[field])
     np.savez_compressed(out/(Path(name).stem+'.height_validation.npz'),normal_ray_height=best,
-        nearest_distance=nearest,unresolved=unresolved,normal_miss=miss,above_limit=too_high,platform=platform,reference=source,shared_edge_ray_recovered=edge_recovered)
+        nearest_distance=nearest,resolved_height=height,nearest_direct=direct_used,nearest_fallback=nearest_used&~direct_used,
+        normal_ray_required=ray_required,normal_ray_used=ray_used&~platform,
+        unresolved=unresolved,normal_miss=ray_miss,missing_height=missing,above_limit=too_high,platform=platform,reference=source,shared_edge_ray_recovered=edge_recovered)
     return dict(layer,output_path_file=name,reference_layers=[Path(p).stem for p in job['references']],
-        support_validation=dict(unresolved_points=int(unresolved.sum()),normal_miss_points=int(miss.sum()),above_limit_points=int(too_high.sum()),shared_edge_ray_recovered=int(edge_recovered.sum())),
+        support_validation=dict(unresolved_points=int(unresolved.sum()),missing_height_points=int(missing.sum()),
+            normal_miss_points=int(ray_miss.sum()),above_limit_points=int(too_high.sum()),
+            nearest_direct_points=int(direct_used.sum()),nearest_fallback_points=int((nearest_used&~direct_used).sum()),
+            normal_ray_query_points=len(ray_ids),shared_edge_ray_recovered=int(edge_recovered.sum())),
         height_seconds=time.perf_counter()-started,max_height=float(heights.max()) if len(heights) else 0.)
 
 def parallel_map(fn,jobs,workers):
@@ -287,6 +354,8 @@ def parallel_map(fn,jobs,workers):
 
 def run(config_path):
     begin=time.perf_counter();config_path=Path(config_path);c=json.loads(config_path.read_text(encoding='utf-8-sig'));base=config_path.parent
+    from draft_toolpaths import validate_outputs, write_draft
+    draft = validate_outputs(c, base)
     paired=c.get('pipeline_variant')=='support-model' or 'compatible_inputs' in c
     approach=c.get('planning_approach','projected')
     if approach not in {'projected','surface_field'}:raise ValueError('Unknown planning approach.')
@@ -371,19 +440,28 @@ def run(config_path):
             normal_orientation=normal_mode,
             orientation_reference=ref,orientation_reference_is_next=rank==0))
         if paired:jobs[-1].update(entry=entry_lookup[(main,sub)],support_config=c['support_paths'])
-    path_dir.mkdir(parents=True,exist_ok=True);heights.mkdir(parents=True,exist_ok=True)
+    path_dir.mkdir(parents=True,exist_ok=True)
+    if not draft:heights.mkdir(parents=True,exist_ok=True)
     print(f'[surface workflow] {approach}, {len(jobs)} layers, {workers} workers',flush=True)
     t=time.perf_counter();layers=parallel_map(plan_job,jobs,workers);planning=time.perf_counter()-t
     meta=dict(batch_kind='experimental_model_paths',planning_approach=approach,width=width,contour_spacing=width,layers=layers,
         remeshing=remesh_report,
-        experimental=True,machine_export_supported=False,normal_source='Saved field-gradient oriented mesh; explicit winding overrides and legacy config mode supported',model_lift=0.,model_lift_axis='y')
+        experimental=True,machine_export_supported=False,tool_motion='layer_normal',normal_source='Saved field-gradient oriented mesh; explicit winding overrides and legacy config mode supported',model_lift=0.,model_lift_axis='y')
     if paired:
         meta.update(batch_kind='experimental_surface_model_support_paths',support_model=dict(same_material=True,
             source_metadata=paired_metadata,contact_gap_correction=False,backing_repair=False,hole_repair=False))
     write_json(path_dir/'batch_paths.meta.json',meta)
+    if draft:
+        meta['timings']=dict(remesh_wall_seconds=remesh_report['seconds'],planning_wall_seconds=planning,
+                             height_wall_seconds=None,height_status='not_evaluated',total_wall_seconds=time.perf_counter()-begin)
+        return write_draft(path_dir,meta)
     heights_cfg=c.get('heights_3axis',{});window=int(heights_cfg.get('previous_main_window',2));nominal=float(heights_cfg.get('nominal_layer_height',.2))
     maximum=float(c.get('surface_field',{}).get('maximum_normal_height',1.5*nominal))
     if window<1 or maximum<=0 or not np.isfinite(maximum):raise ValueError('Invalid normal-height search settings.')
+    direct=heights_cfg.get('nearest_direct_height')
+    direct=float(nominal*float(heights_cfg.get('nearest_direct_factor',1.5)) if direct is None else direct)
+    if not np.isfinite(direct) or direct<0:raise ValueError('Nearest-direct height must be finite and nonnegative.')
+    direct=min(direct,maximum)
     hj=[]
     mesh_lookup={key(m):m for m in meshes}
     for layer in layers:
@@ -393,15 +471,17 @@ def run(config_path):
             from surface_field_support import height_references
             refs=height_references(layer,layers,mesh_lookup,mains,ranks,window)
         hj.append(dict(layer=layer,path_dir=str(path_dir),output=str(heights),references=refs,
-            platform=float(heights_cfg.get('platform_value',0)),maximum_height=maximum,
+            platform=float(heights_cfg.get('platform_value',0)),maximum_height=maximum,nearest_direct_height=direct,
             allow_platform=paired and layer['layer_main']==mains[0]))
     height_workers=int(heights_cfg.get('layer_workers',workers))
     if height_workers<1:raise ValueError('Height workers must be positive.')
     t=time.perf_counter();results=parallel_map(height_job,hj,height_workers);height_seconds=time.perf_counter()-t
-    meta.update(batch_kind='experimental_layer_normal_heights',height_mode='5axis',height_definition='first positive ray hit along negative layer normal; platform ray only on first layer',
+    meta.update(batch_kind='experimental_layer_normal_heights',height_mode='5axis',height_definition='nearest earlier surface within the direct threshold; otherwise minimum of nearest distance and positive negative-normal ray hit; platform ray only on first layer',
         effective_settings=dict(planning_workers=workers,height_workers=height_workers,per_layer=[j['settings'] for j in jobs],
             short_fragment_filter=False,smoothing=False,solid_continuity_check=False),
-        maximum_normal_height=maximum,shared_edge_recovery_distance_tolerance_mm=1e-4,layers=results,support_validation={'unresolved_points':sum(r['support_validation']['unresolved_points'] for r in results)},
+        maximum_normal_height=maximum,nearest_direct_height=direct,shared_edge_recovery_distance_tolerance_mm=1e-4,layers=results,
+        support_validation={name:sum(r['support_validation'].get(name,0) for r in results) for name in
+            ('unresolved_points','missing_height_points','normal_miss_points','above_limit_points','nearest_direct_points','nearest_fallback_points','normal_ray_query_points','shared_edge_ray_recovered')},
         timings=dict(remesh_wall_seconds=remesh_report['seconds'],planning_wall_seconds=planning,height_wall_seconds=height_seconds,total_wall_seconds=time.perf_counter()-begin),
         limitations=['No model/support contact-gap extrusion correction or backing/hole repair.','No swept tool or machine kinematics check.',
             'Normals use geometry and selected orientation policy; validate against slicing field.',

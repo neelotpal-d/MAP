@@ -123,10 +123,15 @@ def main():
         raise SystemExit('Usage: projected_entry.py CONFIG.json')
     config_path = Path(sys.argv[1]).resolve()
     config = json.loads(config_path.read_text(encoding='utf-8-sig'))
+    # This worker and its spawned planners share the standard ordering choice.
+    import os
+    os.environ['MAP_ORDER_PATCHES']='1' if config.get('toolpath_ordering',{}).get('enabled',True) else '0'
     variant = config.get('pipeline_variant', 'support-model' if 'compatible_inputs' in config else 'projected')
     if config.get('planning_approach') == 'surface_field' or config.get('tool_motion') == 'layer_normal':
         from surface_field_pipeline import run
         run(config_path)
+        from toolpath_order import finalize_job
+        finalize_job(config_path)
         return
     state = install_model_controls(variant)
     state['root'] = config
@@ -148,6 +153,8 @@ def main():
             return original_heights(**dict(kwargs, heights_cfg=settings))
         pipeline.run_height_stage = height_stage
         pipeline.main()
+    from toolpath_order import finalize_job
+    finalize_job(config_path)
 
 
 if __name__ == '__main__':

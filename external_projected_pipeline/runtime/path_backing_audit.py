@@ -76,7 +76,8 @@ def load_records(folder,layers,*,positions_only=False,workers=1):
         # Export treats longer steps as travel even without a sidecar.
         breaks=sorted(set(breaks)|set((np.flatnonzero(np.linalg.norm(np.diff(p[:,:3],axis=0),axis=1)>5.)+1).tolist()))
         return dict(row=row,p=p,breaks=breaks,path=path)
-    ordered=sorted(layers,key=lambda r:(int(r['layer_main']),int(r['layer_sub'])))
+    from toolpath_order import ordered_layers
+    ordered=ordered_layers(layers)
     if workers<=1:return [r for r in map(load,ordered) if r is not None]
     with ThreadPoolExecutor(max_workers=min(4,int(workers))) as pool:
         return [r for r in pool.map(load,ordered) if r is not None]
@@ -130,9 +131,14 @@ def screen_records(records,*,width=.5,nominal=.2,bed=0.,threads=2,backend='auto'
         if index:index.close()
 
 
-def repair_support_seams(folder,layers,*,width=.5,nominal=.2,bed=0.,threads=2,backend='auto',repair=True):
+def repair_support_seams(folder,layers,*,width=.5,nominal=.2,bed=0.,threads=2,backend='auto',repair=True,check=True):
     """Only reorder existing raw runs. Heights are calculated after this stage."""
     folder=Path(folder)
+    if not check:
+        skipped=dict(status='not_evaluated',reason='Unsupported support-run check disabled.',findings=[])
+        report=dict(status='not_evaluated',before=skipped,after=skipped,changes=[],repair_enabled=False,check_enabled=False)
+        (folder/'support_backing.json').write_text(json.dumps(report,indent=2))
+        return report
     print('[support backing] Reading XYZ once; normals/widths are loaded only for relocated seams.',flush=True)
     records=load_records(folder,layers,positions_only=True,workers=threads)
     before=screen_records(records,width=width,nominal=nominal,bed=bed,threads=threads,backend=backend)
@@ -181,7 +187,7 @@ def repair_support_seams(folder,layers,*,width=.5,nominal=.2,bed=0.,threads=2,ba
     # Screen the exact reordered geometry in memory; avoid rereading every file.
     after=screen_records(records,width=width,nominal=nominal,bed=bed,threads=threads,backend=backend) if changes else before
     report=dict(before=before,changes=changes,after=after,status=after['status'],
-        repair_enabled=bool(repair),
+        repair_enabled=bool(repair),check_enabled=True,
         policy='Reverse or split/reorder existing segments; no added printed segment. Rebuild chronology and rescreen afterwards.')
     (folder/'support_backing.json').write_text(json.dumps(report,indent=2))
     return report

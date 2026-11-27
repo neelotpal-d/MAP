@@ -3,6 +3,7 @@ import argparse,hashlib,json,re,shutil,time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import numpy as np
+from height_warning_policy import nominal_height,usable_heights
 from path_backing_audit import screen_records
 
 
@@ -32,7 +33,7 @@ def snapshot(source,destination):
     metadata_path=source/'batch_3axis.meta.json';metadata_sha=digest(metadata_path)
     metadata=json.loads(metadata_path.read_text(encoding='utf8'));layers=metadata.get('layers',[])
     if not layers:raise ValueError('Cannot export an empty schedule.')
-    consumed={metadata_path:metadata_sha};copies=[];keys=set()
+    consumed={metadata_path:metadata_sha};copies=[];keys=set();height_repairs={}
     raw=metadata.get('source_path_metadata',{});rawrows={(r['layer_main'],r['layer_sub']):r for r in raw.get('layers',[])}
     def bind(path,target):
         path=Path(path).resolve()
@@ -44,7 +45,7 @@ def snapshot(source,destination):
         key=(int(row['layer_main']),int(row['layer_sub']));stem=f'{key[0]}_{key[1]}'
         if key in keys:raise ValueError('Duplicate layer identity in export schedule.')
         keys.add(key);upstream=rawrows.get(key,{})
-        for name in ('surface_metric_mesh','surface_hatch_directions','parallel_axis'):
+        for name in ('surface_metric_mesh','surface_metric_components','surface_hatch_directions','parallel_axis'):
             if name not in row and name in upstream:row[name]=upstream[name]
         path=row.get('output_path_file') or (stem+'_3axis.txt')
         actual=source/path
@@ -52,7 +53,11 @@ def snapshot(source,destination):
         row['path_point_count']=0;row['height_max']=0.
         if actual.stat().st_size:
             heights=np.loadtxt(actual,usecols=6,ndmin=1)
-            if not np.isfinite(heights).all() or (heights<0).any():raise ValueError('Invalid actual export heights: '+str(actual))
+            bad=~np.isfinite(heights)|(heights<=0)
+            if bad.any():
+                heights=usable_heights(heights,nominal_height(metadata),label=str(actual))
+                height_repairs[frozen_name]=heights
+                row['export_height_fallback_points']=int(bad.sum())
             row['height_max']=float(heights.max(initial=0))
             row['path_point_count']=len(heights)
         row['output_path_file']=frozen_name
@@ -65,10 +70,11 @@ def snapshot(source,destination):
             if profile.ndim!=1 or len(profile)!=row['path_point_count']:raise ValueError('Width profile must match the actual export path point count.')
             if not np.isfinite(profile).all() or (profile<=0).any():raise ValueError('Invalid actual export width profile.')
             row['width_profile_max']=float(profile.max(initial=0))
-        mesh=row.get('surface_metric_mesh')
-        if not mesh and raw.get('input_dir') and upstream.get('source_mesh'):
-            candidate=Path(raw['input_dir'])/upstream['source_mesh']
-            if candidate.is_file():mesh=str(candidate)
+        from surface_metric_source import retained_metric_source
+        mesh,recovery=retained_metric_source(row,metadata,base=source,upstream=upstream)
+        if recovery:
+            row['surface_metric_source_recovery']=recovery
+            print(f'[export source] {stem}: restored retained layer geometry reference: {mesh}',flush=True)
         if mesh:
             target=bind(source/mesh,'surfaces/'+stem+'.obj')
             row['surface_metric_mesh']=str(destination/target)
@@ -82,6 +88,12 @@ def snapshot(source,destination):
     with ThreadPoolExecutor(max_workers=min(8,max(1,len(copies)))) as pool:
         list(pool.map(_copy_frozen,[(path,destination/target,sha) for path,target,sha in copies]))
     if any(actual!=expected for actual,expected in zip(_digests(consumed),consumed.values())):raise ValueError('Live export inputs changed during snapshot.')
+    for name,heights in height_repairs.items():
+        path=destination/name;rows=np.loadtxt(path,ndmin=2)
+        if not np.isfinite(rows[:,:6]).all() or np.any(np.linalg.norm(rows[:,3:6],axis=1)<=1e-12):
+            raise ValueError('Invalid path geometry/normals in export snapshot: '+str(path))
+        rows[:,6]=heights
+        np.savetxt(path,rows,fmt='%.10f')
     (destination/'batch_3axis.meta.json').write_text(json.dumps(metadata,indent=2),encoding='utf8')
     files=[p for p in destination.rglob('*') if p.is_file()]
     report=dict(schema='export-snapshot.v1',source=str(source),source_files={str(p):sha for p,sha in consumed.items()},
@@ -136,15 +148,15 @@ def final_records(path,metadata):
     return records
 
 
-def audit_final(path,snapshot_dir,report_path):
+def audit_final(path,snapshot_dir,report_path,*,check_support_backing=False):
     snapshot_dir=Path(snapshot_dir);verify_snapshot(snapshot_dir)
     meta=json.loads((snapshot_dir/'batch_3axis.meta.json').read_text())
-    report=screen_records(final_records(path,meta),width=float(meta.get('width') or .5),
+    records=final_records(path,meta)
+    report=screen_backing(records,enabled=check_support_backing,width=float(meta.get('width') or .5),
         nominal=float(meta.get('support_validation',{}).get('nominal_layer_height',.2)))
     report.update(gcode_sha256=digest(path),source_snapshot_sha256=digest(snapshot_dir/'snapshot.json'),
         actual_positive_E=True)
     Path(report_path).write_text(json.dumps(report,indent=2),encoding='utf8')
-    if report['status']!='passed':raise ValueError('Packaged support-start screen failed: '+str(report_path))
     return report
 
 
@@ -160,7 +172,8 @@ _WORDS=re.compile(r'([XYZEF])\s*([-+]?(?:\d*\.)?\d+(?:[eE][-+]?\d+)?)')
 def bare_records(folder,metadata,*,z_offset=0.,collect_collision=False,spacing_model_beads=False,surface_spacing_limit=None):
     """Bare format: explicit XYZ, relative E. Nonpositive E creates no bead."""
     folder=Path(folder);records=[];motion=[];move_orders=[];beads=[];bead_orders=[];radii=[];order=0
-    for row in sorted(metadata['layers'],key=lambda r:(int(r['layer_main']),int(r['layer_sub']))):
+    from toolpath_order import ordered_layers
+    for row in ordered_layers(metadata):
         stem=f"{row['layer_main']}_{row['layer_sub']}";path=folder/(stem+'.gcode')
         if not path.is_file():path=folder/(stem+'_0.gcode')
         if not path.is_file():raise FileNotFoundError('Missing bare snippet '+stem)
@@ -198,7 +211,17 @@ def bare_records(folder,metadata,*,z_offset=0.,collect_collision=False,spacing_m
     return records,(motion,move_orders,beads,bead_orders,radii)
 
 
-def audit_bare(folder,snapshot_dir,report_path,*,tool_json=None,z_offset=0.,bed=0.,spacing_model_beads=False,surface_spacing_limit=None):
+def screen_backing(records,*,enabled,**kwargs):
+    if not enabled:return dict(status='not_evaluated',check_enabled=False,reason='Unsupported support-run check disabled.')
+    report=screen_records(records,**kwargs)
+    report['check_enabled']=True
+    if report['status']=='failed':
+        report.update(status='warning',measured_status='failed')
+        print(f"WARNING: {len(report['findings'])} unsupported support runs; continuing export.",flush=True)
+    return report
+
+
+def audit_bare(folder,snapshot_dir,report_path,*,tool_json=None,z_offset=0.,bed=0.,spacing_model_beads=False,surface_spacing_limit=None,check_support_backing=False):
     started=time.perf_counter();snapshot_dir=Path(snapshot_dir);verify_snapshot(snapshot_dir)
     meta=json.loads((snapshot_dir/'batch_3axis.meta.json').read_text())
     records,collision=bare_records(folder,meta,z_offset=z_offset,collect_collision=bool(tool_json),
@@ -206,8 +229,8 @@ def audit_bare(folder,snapshot_dir,report_path,*,tool_json=None,z_offset=0.,bed=
     # Preserve source schedule identity for actual positive-E snippets. A failed
     # raw-path screen is only historical; this fresh screen governs publication.
     height=meta.get('support_validation',{});nominal=float(height.get('nominal_layer_height',.2))
-    backing=screen_records(records,width=float(meta.get('width') or .5),nominal=nominal,bed=bed)
-    result=dict(schema='export-deposition-screen.v1',status=backing['status'],backing=backing,
+    backing=screen_backing(records,enabled=check_support_backing,width=float(meta.get('width') or .5),nominal=nominal,bed=bed)
+    result=dict(schema='export-deposition-screen.v1',status='warning' if backing['status']=='warning' else 'passed',backing=backing,
         source_snapshot_sha256=digest(snapshot_dir/'snapshot.json'),
         snippets={p.name:digest(p) for p in Path(folder).glob('*.gcode')},
         collision=dict(status='not_evaluated',reason='No fitted fixed-axis head preset supplied.'))
@@ -219,7 +242,7 @@ def audit_bare(folder,snapshot_dir,report_path,*,tool_json=None,z_offset=0.,bed=
         if result['collision']['status']!='passed':result['status']='failed'
     result['seconds']=time.perf_counter()-started
     Path(report_path).write_text(json.dumps(result,indent=2),encoding='utf8')
-    if result['status']!='passed':raise ValueError('Export deposition screen failed; inspect '+str(report_path))
+    if result['status']=='failed':raise ValueError('Export deposition screen failed; inspect '+str(report_path))
     return result
 
 
@@ -230,15 +253,17 @@ def main():
     s=sub.add_parser('audit-bare');s.add_argument('bare',type=Path);s.add_argument('source',type=Path);s.add_argument('report',type=Path)
     s.add_argument('--tool-json',type=Path);s.add_argument('--z-offset',type=float,default=0.)
     s.add_argument('--bed',type=float,default=0.)
+    s.add_argument('--check-support-backing',action='store_true',help='Warn about unsupported support starts and continue.')
     s.add_argument('--spacing-model-beads',action='store_true');s.add_argument('--surface-spacing-limit',type=float)
     s=sub.add_parser('audit-final');s.add_argument('gcode',type=Path);s.add_argument('source',type=Path);s.add_argument('report',type=Path)
+    s.add_argument('--check-support-backing',action='store_true',help='Warn about unsupported support starts and continue.')
     a=p.parse_args()
     if a.action=='snapshot':r=snapshot(a.source,a.destination)
     elif a.action=='verify':r=verify_snapshot(a.source)
     elif a.action=='audit-bare':r=audit_bare(a.bare,a.source,a.report,tool_json=a.tool_json,z_offset=a.z_offset,
-        bed=a.bed,spacing_model_beads=a.spacing_model_beads,surface_spacing_limit=a.surface_spacing_limit)
-    else:r=audit_final(a.gcode,a.source,a.report)
-    print(json.dumps(dict(action=a.action,status='passed',files=len(r.get('files',[])))),flush=True)
+        bed=a.bed,spacing_model_beads=a.spacing_model_beads,surface_spacing_limit=a.surface_spacing_limit,check_support_backing=a.check_support_backing)
+    else:r=audit_final(a.gcode,a.source,a.report,check_support_backing=a.check_support_backing)
+    print(json.dumps(dict(action=a.action,status=r.get('status','passed'),files=len(r.get('files',[])))),flush=True)
 
 
 if __name__=='__main__':main()

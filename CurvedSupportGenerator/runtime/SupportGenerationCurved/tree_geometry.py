@@ -217,6 +217,112 @@ class TaperedTree:
             self._primitive_buckets.append((cKDTree(self.midpoints.data[ids]),ids,
                                             float(np.max(self.primitive_search_radius[ids]))))
 
+    def possible_intersection_triangles(self, triangles):
+        """Conservative primitive lower bounds for whole-triangle exclusion."""
+        triangles=np.asarray(triangles,dtype=float).reshape(-1,3,3)
+        possible=np.zeros(len(triangles),bool)
+        if not len(triangles):return possible
+        if self.geometry_mode!='hard':return np.ones(len(triangles),bool)
+        centers=triangles.mean(axis=1)
+        half=np.max(abs(triangles-centers[:,None]),axis=1)
+        reach=np.linalg.norm(triangles-centers[:,None],axis=2).max(axis=1)
+        length=np.sqrt(self.segment_length_squared)
+        slope=np.divide(abs(self.radius_delta),length,out=np.zeros_like(length),where=length>1e-8)
+        # A bridge radius uses smoothstep(depth/3); its maximum derivative is
+        # |ra-rb|/2. Distance to a segment is 1-Lipschitz and cap planes are affine.
+        slope[self.model_bridge]=abs(self.radius_delta[self.model_bridge])*.5
+        lipschitz=np.maximum(1+slope,float(np.linalg.norm(self.direction)))
+        for first in range(0,len(triangles),2048):
+            block=np.arange(first,min(first+2048,len(triangles)))
+            for tree,source_ids,radius in self._primitive_buckets:
+                active=block[~possible[block]]
+                if not len(active):break
+                pairs=cKDTree(centers[active]).sparse_distance_matrix(tree,radius+float(reach[active].max())+1e-9,output_type='ndarray')
+                for start in range(0,len(pairs),20000):
+                    part=pairs[start:start+20000];rr=active[part['i']];pp=source_ids[part['j']]
+                    q=centers[rr];offset=q-self.midpoints.data[pp]
+                    keep=(~possible[rr])&np.all(abs(offset)<=self.primitive_half_extent[pp]+half[rr]+1e-9,axis=1)
+                    keep&=np.sum(offset*offset,axis=1)<=(self.primitive_search_radius[pp]+reach[rr])**2+1e-9
+                    rr,pp,q=rr[keep],pp[keep],q[keep]
+                    if not len(rr):continue
+                    squared=self.segment_length_squared[pp]
+                    t=np.clip(np.divide(np.einsum('ni,ni->n',q-self.a[pp],self.segment_delta[pp]),squared,
+                        out=np.zeros(len(rr)),where=squared>1e-16),0.,1.)
+                    lower=self.primitive(q,pp,t)-lipschitz[pp]*reach[rr]
+                    possible[rr[(lower<=1e-9)|~np.isfinite(lower)]]=True
+        return possible
+
+    def certified_inside_triangles(self, triangles, inset=0.):
+        """Certify containment in one convex primitive region and model keepout.
+
+        Three inside vertices of a union may belong to different branches.
+        A single frustum/cap (or an inscribed constant-radius capsule) gives
+        a whole-face certificate; model clearance uses a distance bound.
+        """
+        triangles=np.asarray(triangles,dtype=float).reshape(-1,3,3)
+        safe=np.zeros(len(triangles),dtype=bool)
+        if not len(triangles) or self.geometry_mode!='hard' or self.side_gap!=self.contact_gap:return safe
+        if not hasattr(self,'_certificate_closed_model'):
+            self._certificate_closed_model=hasattr(self.mesh,'n_open_edges') and self.mesh.n_open_edges==0
+        if not self._certificate_closed_model:return safe
+        inset=float(inset)
+        if not np.isfinite(inset) or inset<0:raise ValueError('Nonnegative finite inside-certificate inset required.')
+        direction_norm=float(np.linalg.norm(self.direction))
+        if direction_norm<1e-12:return safe
+        required=self.side_gap+inset
+        model_min=float((np.asarray(self.mesh.points)@self.direction).min())
+        height=np.einsum('nki,i->nk',triangles,self.direction)
+        model_safe=model_min-height.max(axis=1)>=(required+1e-5)*direction_norm
+        near=np.flatnonzero(~model_safe)
+        if len(near):
+            longest=np.linalg.norm(triangles[near]-np.roll(triangles[near],-1,axis=1),axis=2).max(axis=1)
+            distance=self.bounded_distance(triangles[near].reshape(-1,3),required+float(longest.max())+1e-4).reshape(-1,3)
+            # Signed distance is 1-Lipschitz. One vertex bounds the whole
+            # triangle since no point is farther than its longest edge.
+            model_safe[near]=(distance.max(axis=1)-longest>=required+1e-4)
+        model_safe&=(height>=self.plate+inset).all(axis=1)
+        if self.maximum_projection is not None:model_safe&=(height<=self.maximum_projection-inset).all(axis=1)
+        ids=np.flatnonzero(model_safe)
+        if not len(ids):return safe
+        centers=triangles.mean(axis=1)
+        def candidates():
+            # Certification needs no grouped/sorted reduction. Bound working
+            # memory and stop querying faces once a primitive certifies them.
+            for first in range(0,len(ids),2048):
+                block=ids[first:first+2048]
+                for tree,source_ids,radius in self._primitive_buckets:
+                    active=block[~safe[block]]
+                    if not len(active):break
+                    pairs=cKDTree(centers[active]).sparse_distance_matrix(tree,radius+1e-9,output_type='ndarray')
+                    for start in range(0,len(pairs),20000):
+                        part=pairs[start:start+20000]
+                        yield active[part['i']],source_ids[part['j']]
+        for rr,pp in candidates():
+            q=centers[rr]
+            keep=(~safe[rr])&np.all(abs(q-self.midpoints.data[pp])<=self.primitive_half_extent[pp]+1e-9,axis=1)
+            keep&=np.sum((q-self.midpoints.data[pp])**2,axis=1)<=self.primitive_search_radius[pp]**2+1e-9
+            rr,pp,q=rr[keep],pp[keep],q[keep]
+            if not len(rr):continue
+            delta=self.segment_delta[pp];length=self.segment_length_squared[pp]
+            center_t=np.clip(np.divide(np.einsum('ni,ni->n',q-self.a[pp],delta),length,out=np.zeros(len(rr)),where=length>1e-16),0.,1.)
+            keep=self.primitive(q,pp,center_t)<=-inset-1e-9
+            rr,pp=rr[keep],pp[keep]
+            if not len(rr):continue
+            xyz=triangles[rr];delta=self.segment_delta[pp];length=self.segment_length_squared[pp]
+            raw=np.divide(np.einsum('nki,ni->nk',xyz-self.a[pp,None],delta),length[:,None],
+                out=np.zeros((len(rr),3)),where=length[:,None]>1e-16)
+            t=np.clip(raw,0.,1.)
+            distance=np.linalg.norm(xyz-self.a[pp,None]-t[:,:,None]*delta[:,None],axis=2)
+            constant=(distance<=np.minimum(self.ra[pp],self.rb[pp])[:,None]-inset-1e-9).all(axis=1)
+            same_region=((raw<=0).all(axis=1)|(raw>=1).all(axis=1)|((raw>=0)&(raw<=1)).all(axis=1))&~self.model_bridge[pp]
+            eligible=constant|same_region
+            if not eligible.any():continue
+            rr=rr[eligible];pp=pp[eligible];xyz=xyz[eligible];t=t[eligible]
+            values=self.primitive(xyz.reshape(-1,3),np.repeat(pp,3),t.reshape(-1)).reshape(-1,3)
+            inside=(values<=-inset-1e-9).all(axis=1)
+            safe[rr[inside]]=True
+        return safe
+
     def _candidate_pairs(self, query):
         """Return conservative point/primitive pairs using size-bucketed trees."""
         query_tree=cKDTree(query)
@@ -685,7 +791,9 @@ def boundary_roots(lo, hi, lower_values, upper_values, geometry, iterations=14, 
 
 
 def clip_layer(surface, geometry, iterations=14, root_method="bisect"):
-    surface = surface.triangulate().clean()
+    # Coincident clipping junctions can differ by roundoff after repeated roots.
+    # Weld sub-nanometre discrepancies before the next conforming refinement.
+    surface = surface.triangulate().clean(tolerance=1e-9, absolute=True)
     if not surface.n_cells:
         return pv.PolyData()
     points = np.asarray(surface.points, dtype=float)
@@ -737,15 +845,25 @@ def subset_triangles(surface, mask):
     faces = faces[area > 1e-12]
     if not len(faces):
         return pv.PolyData()
-    result=pv.PolyData(np.asarray(surface.points), np.column_stack((np.full(len(faces), 3), faces)).ravel())
+    # Compact exact coordinates with owned buffers. Repeated transient VTK
+    # clean-filter outputs corrupted the Windows heap in the clipping replay.
+    used, compact = np.unique(faces, return_inverse=True)
+    points, inverse = unique_rows_inverse(np.asarray(surface.points)[used])
+    cells = inverse[compact].reshape(-1, 3)
+    result=pv.PolyData(np.array(points,copy=True), np.column_stack((np.full(len(cells), 3), cells)).ravel(),deep=True)
     if _BATCH_LAYER_ID in surface.point_data:
-        result[_BATCH_LAYER_ID]=np.asarray(surface[_BATCH_LAYER_ID])
-    return result.clean(polys_to_lines=False, lines_to_points=False)
+        representative=np.full(len(points),len(used),dtype=np.intp)
+        np.minimum.at(representative,inverse,np.arange(len(used)))
+        result[_BATCH_LAYER_ID]=np.asarray(surface[_BATCH_LAYER_ID])[used[representative]]
+    return result
 
 
 def sampled_face_violations(surface, geometry):
     if not surface.n_cells:
         return np.zeros(0, dtype=bool)
+    if getattr(geometry,'trim_boundary_tolerance_mm',0.):
+        from .trim_tolerance import classify_faces
+        return classify_faces(surface,geometry)[0]
     triangles = np.asarray(surface.points)[surface.regular_faces]
     probes = np.concatenate((triangles.mean(axis=1)[:, None, :], (triangles + np.roll(triangles, -1, axis=1)) / 2), axis=1)
     return np.any(geometry.evaluate(probes.reshape(-1, 3)).reshape(-1, 4) > 1e-6, axis=1)
@@ -762,13 +880,15 @@ def subdivide_preserving_coordinates(surface):
     return result
 
 
-def subdivide_selected_faces(surface, selected):
+def subdivide_selected_faces(surface, selected, *, maximum_triangles=None):
     """Split marked face edges on both sides, including neighbouring faces.
 
     Refining an extracted patch and merging it back leaves hanging vertices:
     clean() merges coincident points but cannot split the neighbouring edge.
     Red/green triangle templates keep the original surface conforming while
     concentrating refinement around nonlinear clipping boundaries.
+    Return None if the exact conforming output count would exceed a supplied
+    triangle budget, before allocating that output mesh.
     """
     faces = np.asarray(surface.regular_faces)
     selected = np.asarray(selected, dtype=bool)
@@ -781,6 +901,8 @@ def subdivide_selected_faces(surface, selected):
     inverse = inverse.reshape(-1, 3)
     split = np.zeros(len(edges), dtype=bool)
     split[inverse[selected].ravel()] = True
+    if maximum_triangles is not None and len(faces)+int(split[inverse].sum())>maximum_triangles:
+        return None
     marked = edges[split]
     points = np.asarray(surface.points, dtype=float)
     mid_ids = np.full(len(edges), -1, dtype=int)
@@ -811,21 +933,89 @@ def subdivide_selected_faces(surface, selected):
     return result
 
 
-def refine_clipped_layer(result, geometry, root_method, *, initial_bad=None):
+def subdivide_face_neighbourhood(surface, selected):
+    """Red-refine affected vertex stars before applying conforming templates."""
+    touched = np.zeros(surface.n_points, dtype=bool)
+    touched[surface.regular_faces[np.asarray(selected, dtype=bool)].ravel()] = True
+    return subdivide_selected_faces(surface, touched[surface.regular_faces].any(axis=1))
+
+
+def refine_clipped_layer(result, geometry, root_method, *, initial_bad=None, _detail_retry=True):
     """Refine nonlinear excursions without tearing shared triangle edges."""
-    # Refine locally before conservatively discarding any unresolved faces;
-    # the old three-round patch split could leave visible missing strips.
-    for _ in range(6):
+    # A failed interior probe does not make the whole triangle invalid. Only
+    # discard unresolved facets after their longest edge is at most 10 microns;
+    # coarse faces can contain substantial valid material between branches.
+    removed = 0
+    for _ in range(16):
         bad = sampled_face_violations(result, geometry) if initial_bad is None else initial_bad
         initial_bad = None
         if not np.any(bad):
-            return result, 0
-        result = clip_layer(subdivide_selected_faces(result, bad), geometry, root_method=root_method)
+            return result, removed
+        xyz = np.asarray(result.points)[result.regular_faces]
+        longest = np.linalg.norm(xyz - np.roll(xyz, -1, axis=1), axis=2).max(axis=1)
+        small = bad & (longest <= .01)
+        if small.any():
+            removed += int(small.sum())
+            result = subset_triangles(result, ~small)
+            if not result.n_cells:return pv.PolyData(), removed
+            bad = sampled_face_violations(result, geometry)
+            if not bad.any():return result, removed
+        # Red-refine the vertex neighbourhood too. Repeated green splits can
+        # leave long neighbours whose new diagonals cross a nonconvex gap;
+        # discarding those faces later also removes substantial valid strips.
+        candidate = subdivide_face_neighbourhood(result, bad)
+        # A nonlinear face can contain several disconnected inside regions.
+        # Splitting it may create children whose vertices are all outside even
+        # though a swept branch passes through their interiors. Discover those
+        # features before clipping; clipping first irreversibly deletes them.
+        if all(hasattr(geometry, name) for name in ('ra', 'rb', 'midpoints')):
+            from .layer_extraction import adaptive_candidate
+            candidate, _ = adaptive_candidate(candidate, geometry, tolerance=.05)
+        result = clip_layer(candidate, geometry, root_method=root_method)
         if not result.n_cells:
-            return pv.PolyData(), 0
+            return pv.PolyData(), removed
     bad = sampled_face_violations(result, geometry)
-    removed = int(np.count_nonzero(bad))
-    if removed:
+    if bad.any():
+        xyz = np.asarray(result.points)[result.regular_faces]
+        longest = np.linalg.norm(xyz - np.roll(xyz, -1, axis=1), axis=2).max(axis=1)
+        if (longest[bad] > .01).any():
+            if _detail_retry and all(hasattr(geometry,name) for name in ('ra','rb','midpoints')) and not hasattr(geometry,'roof'):
+                # Refine only connected regions containing the unresolved gap.
+                # Cold components stay byte-for-byte geometrically unchanged.
+                from scipy.sparse import coo_matrix
+                from scipy.sparse.csgraph import connected_components
+                from .layer_extraction import adaptive_candidate
+                faces=result.regular_faces
+                edges=np.stack((faces,np.roll(faces,-1,axis=1)),axis=-1).reshape(-1,2)
+                _,labels=connected_components(coo_matrix((np.ones(len(edges),bool),(edges[:,0],edges[:,1])),
+                    shape=(result.n_points,result.n_points)),directed=False)
+                active=np.isin(labels[faces[:,0]],np.unique(labels[faces[bad].ravel()]))
+                candidate=subset_triangles(result,active);unchanged=subset_triangles(result,~active)
+                print('[support layers] Refining an unresolved boundary at 0.005 mm detail.',flush=True)
+                candidate,detail=adaptive_candidate(candidate,geometry,tolerance=.005,maximum_passes=12,
+                    maximum_triangles=1_000_000-unchanged.n_cells)
+                xyz=np.asarray(candidate.points)[candidate.regular_faces]
+                coarse=np.linalg.norm(xyz-np.roll(xyz,-1,axis=1),axis=2).max(axis=1)>.01
+                certify=getattr(geometry,'certified_inside_triangles',None)
+                if coarse.any() and (certify is None or not certify(xyz[coarse]).all()):
+                    raise ValueError('Support boundary detail budget exhausted; no unresolved coarse material was discarded.')
+                candidate=clip_layer(candidate,geometry,root_method=root_method)
+                resolved,extra=refine_clipped_layer(candidate,geometry,root_method,_detail_retry=False)
+                if not resolved.n_cells:
+                    resolved=unchanged
+                elif unchanged.n_cells:
+                    labels_new=None
+                    if _BATCH_LAYER_ID in resolved.point_data and _BATCH_LAYER_ID in unchanged.point_data:
+                        labels_new=np.concatenate((resolved[_BATCH_LAYER_ID],unchanged[_BATCH_LAYER_ID]))
+                    cells=np.vstack((resolved.regular_faces,unchanged.regular_faces+resolved.n_points))
+                    resolved=pv.PolyData(np.vstack((resolved.points,unchanged.points)),
+                        np.column_stack((np.full(len(cells),3),cells)).ravel(),deep=True)
+                    if labels_new is not None:resolved[_BATCH_LAYER_ID]=labels_new
+                resolved.field_data['nonlinear_clip_detail_recovery_mm']=[.005]
+                resolved.field_data['nonlinear_clip_detail_budget_reached']=[bool(detail['triangle_budget_reached'])]
+                return resolved,removed+extra
+            raise ValueError('Nonlinear clipping refinement exhausted with unresolved facets larger than 0.01 mm; no coarse material was discarded.')
+        removed += int(bad.sum())
         result = subset_triangles(result, ~bad)
     return result, removed
 
@@ -865,6 +1055,9 @@ def scalar_clip_layer(surface, geometry):
 def scalar_face_violations(surface, geometry):
     if not surface.n_cells:
         return np.zeros(0, dtype=bool)
+    if getattr(geometry,'trim_boundary_tolerance_mm',0.):
+        from .trim_tolerance import classify_faces
+        return classify_faces(surface,geometry,include_vertices=True)[0]
     outside = geometry.evaluate(surface.points) > 1e-6
     return np.any(outside[surface.regular_faces], axis=1) | sampled_face_violations(surface, geometry)
 
@@ -927,12 +1120,15 @@ class CachedLayerField:
         return np.asarray(values)[inverse]
 
 
-def extract_one_layer(geometry, active, index, value, directory, spacing, roof_layer_spacing, layer_trim, layer_compression="zlib", platform_settings=None,layer_role_indices=None,spatial_platform=False,role_regions=None,planar_base_settings=None,adaptive_layer_tolerance=None,_prepared=None,_return_surface=False):
+def extract_one_layer(geometry, active, index, value, directory, spacing, roof_layer_spacing, layer_trim, layer_compression="zlib", platform_settings=None,layer_role_indices=None,spatial_platform=False,role_regions=None,planar_base_settings=None,adaptive_layer_tolerance=None,_prepared=None,_return_surface=False,trim_boundary_tolerance_mm=None):
     """Independent task; optional surface handoff is for a local consumer only.
 
     Pooled callers keep the default metadata-only result to avoid mesh IPC.
     """
     started = time.perf_counter()
+    if trim_boundary_tolerance_mm is not None:
+        from .trim_tolerance import configured
+        geometry.trim_boundary_tolerance_mm=configured(trim_boundary_tolerance_mm)
     if _prepared is not None:
         surface,local,removed,candidate_seconds,shared_trim_seconds=_prepared
     elif hasattr(geometry, "roof"):
@@ -947,7 +1143,8 @@ def extract_one_layer(geometry, active, index, value, directory, spacing, roof_l
     adaptive_report = None
     if _prepared is None and adaptive_layer_tolerance is not None and not hasattr(geometry, 'roof'):
         from .layer_extraction import adaptive_candidate
-        candidate, adaptive_report = adaptive_candidate(candidate, local, adaptive_layer_tolerance)
+        candidate, adaptive_report = adaptive_candidate(candidate, local, adaptive_layer_tolerance,
+            reject_model_clearance=True)
     if _prepared is None:
         candidate_seconds = time.perf_counter() - started
     trim_started = time.perf_counter()
@@ -982,7 +1179,8 @@ def extract_one_layer(geometry, active, index, value, directory, spacing, roof_l
         removed+=base_removed
         trim_seconds+=time.perf_counter()-base_cut_started
     validation_started = time.perf_counter()
-    vertex_bad = centroid_bad = 0
+    vertex_bad = centroid_bad = geometry_bad_faces = 0
+    trim_report=None
     if surface.n_points:
         values = local.evaluate(surface.points)
         vertex_bad = int(np.count_nonzero(values > 1e-6))
@@ -991,6 +1189,19 @@ def extract_one_layer(geometry, active, index, value, directory, spacing, roof_l
         # are reused instead of rounding-different VTK cell-center queries.
         centers = np.asarray(surface.points)[surface.regular_faces].mean(axis=1)
         centroid_bad = int(np.count_nonzero(local.evaluate(centers) > 1e-6))
+        if getattr(local,'trim_boundary_tolerance_mm',0.):
+            from .trim_tolerance import classify_faces,record as record_trim
+            bad,accepted,trim_report=classify_faces(surface,local,include_vertices=True,vertex_values=values)
+            geometry_bad_faces=int(bad.sum())
+            rejected_vertices=np.unique(surface.regular_faces[bad])
+            vertex_bad=int((~np.isfinite(values[rejected_vertices])|(values[rejected_vertices]>1e-6)).sum())
+            center_values=local.evaluate(centers)
+            centroid_bad=int((bad&(~np.isfinite(center_values)|(center_values>1e-6))).sum())
+            record_trim(surface,trim_report)
+            if trim_report['accepted_faces']:
+                import json
+                print(json.dumps(dict(stage='support_trim_approximation',layer=int(index),
+                    warning='Retained bounded support-boundary approximation; triangles were not deleted.',**trim_report)),flush=True)
     validation_seconds = time.perf_counter() - validation_started
     path = Path(directory) / f"{index}.vtp"
     from .layer_roles import roles_for,mark_surface
@@ -1017,12 +1228,13 @@ def extract_one_layer(geometry, active, index, value, directory, spacing, roof_l
              "is_model_base_layer":model_base,
              "file": str(path.resolve()), "points": surface.n_points,
              "cells": surface.n_cells, "area": float(surface.area),
-             "y_span": float(np.ptp(surface.points[:, 1])) if surface.n_points else 0},
+             "y_span": float(np.ptp(surface.points[:, 1])) if surface.n_points else 0,
+             "trim_boundary_approximation":trim_report},
             "timing": {"layer": int(index), "candidate_seconds": candidate_seconds,
              "trim_seconds": trim_seconds, "validation_seconds": validation_seconds,
              "serialization_seconds": serialization_seconds, "adaptive_extraction":adaptive_report,
              "total_seconds": time.perf_counter() - started+(candidate_seconds+trim_seconds if _prepared is not None else 0)},
-            "removed": removed, "vertex_bad": vertex_bad, "centroid_bad": centroid_bad, "platform_flange": flange_report,
+            "removed": removed, "vertex_bad": vertex_bad, "centroid_bad": centroid_bad, "geometry_bad_faces":geometry_bad_faces, "platform_flange": flange_report,
             "requested": previous_requested + (local.requested if isinstance(local, CachedLayerField) else 0),
             "evaluated": previous_evaluated + (local.evaluated if isinstance(local, CachedLayerField) else 0)}
     if _return_surface:
@@ -1032,6 +1244,8 @@ def extract_one_layer(geometry, active, index, value, directory, spacing, roof_l
 
 def extract_layer_batch(geometry,active,tasks,**settings):
     """Trim disconnected layer components together, retaining their identities."""
+    from .trim_tolerance import configured
+    geometry.trim_boundary_tolerance_mm=configured(settings.get('trim_boundary_tolerance_mm',getattr(geometry,'trim_boundary_tolerance_mm',0.)))
     if (len(tasks)<2 or hasattr(geometry,'roof') or settings.get('platform_settings') is not None
             or geometry.geometry_mode!='hard' or not settings['layer_trim'].startswith('surface_scalar')):
         return [extract_one_layer(geometry,active,index,value,**settings) for index,value in tasks]
@@ -1044,7 +1258,8 @@ def extract_layer_batch(geometry,active,tasks,**settings):
         adaptive_report=None
         if settings.get('adaptive_layer_tolerance') is not None:
             from .layer_extraction import adaptive_candidate
-            candidate,adaptive_report=adaptive_candidate(candidate,local,settings['adaptive_layer_tolerance'])
+            candidate,adaptive_report=adaptive_candidate(candidate,local,settings['adaptive_layer_tolerance'],
+                reject_model_clearance=True)
         candidate_reports.append(adaptive_report)
         candidate_times.append(time.perf_counter()-started)
         if candidate.n_cells:
@@ -1111,7 +1326,7 @@ def export_geometry(source, mesh, schedule, indices, output, spacing=1, side_gap
                     geometry_mode="hard", branch_blend=0.3, clearance_blend=0.1, rim_blend=0.1,
                     roof_mode="none", roof_terminal=3939, roof_radius=3, roof_thickness=0.6, roof_rounding=0.1, roof_layer_spacing=0.1,
                     layer_trim="checked", geometry_threads=8, layer_workers=0, layer_compression="zlib",
-                    branch_sizing="preserved", branch_diameter=5., branch_diameter_angle=5., platform_flange="none", support_speed=80., minimum_support_height=None, build_plate_projection=None,support_ceiling="none",tip_alignment="legacy",tip_length=3.,contact_layers_below=3,field_evaluator=None,field_mode='analytic_y',transfer_domain=None,layer_batch_size=1,model_distance_backend='exact',geometry_query_batch_size=2000,trim_pair_pruning=False,model_tree_mode='struts',skeleton_source=None,allow_stalled_skeleton=False,support_field_mode='native_blend',model_root_foot_radius=0.,model_root_foot_alignment=.95,model_root_foot_shape='conformal',platform_base_radius_factor=0.,platform_base_height=.6,build_direction=(0.,1.,0.),vtk_threads_per_worker=None,maximum_trunk_diameter=None,skip_unrooted_contacts=False,planar_platform_bases=False,platform_base_layer_height=.2,layer_seed_spacing=1.,adaptive_layer_tolerance=.05,maximum_platform_trunk_diameter=None,include_support_gradients=True,support_layer_spacing=.2,maximum_support_layer_height=.5,support_gradient_probe_spacing=2.,slicing_mode='sampled',model_layer_spacing=.2,_planning_model_volume=None):
+                    branch_sizing="preserved", branch_diameter=5., branch_diameter_angle=5., platform_flange="none", support_speed=80., minimum_support_height=None, build_plate_projection=None,support_ceiling="none",tip_alignment="legacy",tip_length=3.,contact_layers_below=3,field_evaluator=None,field_mode='analytic_y',transfer_domain=None,layer_batch_size=1,model_distance_backend='exact',geometry_query_batch_size=2000,trim_pair_pruning=False,model_tree_mode='struts',skeleton_source=None,allow_stalled_skeleton=False,support_field_mode='native_blend',model_root_foot_radius=0.,model_root_foot_alignment=.95,model_root_foot_shape='conformal',platform_base_radius_factor=0.,platform_base_height=.6,build_direction=(0.,1.,0.),vtk_threads_per_worker=None,maximum_trunk_diameter=None,skip_unrooted_contacts=False,planar_platform_bases=False,platform_base_layer_height=.2,layer_seed_spacing=1.,adaptive_layer_tolerance=.05,maximum_platform_trunk_diameter=None,include_support_gradients=True,support_layer_spacing=.2,maximum_support_layer_height=.5,support_gradient_probe_spacing=2.,slicing_mode='sampled',model_layer_spacing=.2,_planning_model_volume=None,trim_boundary_tolerance_mm=0.):
     output = Path(output)
     started = time.perf_counter()
     if maximum_platform_trunk_diameter is not None:
@@ -1119,6 +1334,8 @@ def export_geometry(source, mesh, schedule, indices, output, spacing=1, side_gap
             raise ValueError('Platform trunk diameter cap must be finite and at least the minimum branch diameter.')
         if skeleton_source is None:
             raise ValueError('A platform trunk diameter cap requires an imported skeleton.')
+    from .trim_tolerance import configured
+    trim_boundary_tolerance_mm=configured(trim_boundary_tolerance_mm)
     if not np.isfinite([layer_seed_spacing,adaptive_layer_tolerance]).all() or min(layer_seed_spacing,adaptive_layer_tolerance)<=0:
         raise ValueError('Layer seed spacing and adaptive tolerance must be finite and positive.')
     nonplanar=field_mode!='analytic_y'
@@ -1380,6 +1597,7 @@ def export_geometry(source, mesh, schedule, indices, output, spacing=1, side_gap
     requested_worker_threads = vtk_threads_per_worker if vtk_threads_per_worker is not None else max(1, geometry_threads // workers)
     worker_threads = effective_geometry_threads(requested_worker_threads)
     settings = {"directory": str(directory), "spacing": layer_seed_spacing,"role_regions":role_regions,"planar_base_settings":physical_bases,
+                "trim_boundary_tolerance_mm":trim_boundary_tolerance_mm,
                 "adaptive_layer_tolerance":adaptive_layer_tolerance,
                 "layer_role_indices":layer_role_indices,
                 "spatial_platform":nonplanar,
@@ -1411,6 +1629,8 @@ def export_geometry(source, mesh, schedule, indices, output, spacing=1, side_gap
     try:
         for number, result in enumerate(results, 1):
             item, timing = result["manifest"], result["timing"]
+            if result.get('geometry_bad_faces',0):
+                raise ValueError(f"Layer {item['layer']}: support geometry exceeds its verified trimming tolerance.")
             if nonplanar:
                 from .nonplanar import slice_error
                 item.update(slice_error(pv.read(item['file']).triangulate(),slice_evaluator,item['scalar']))
@@ -1431,6 +1651,9 @@ def export_geometry(source, mesh, schedule, indices, output, spacing=1, side_gap
         if executor is not None:
             executor.shutdown(wait=True, cancel_futures=True)
     report.update({"geometry_spacing": spacing, "vertex_constraint_violations": vertex_violations,
+        "trim_boundary_tolerance_mm":trim_boundary_tolerance_mm,
+        "trim_accepted_faces":sum((r.get('trim_boundary_approximation') or {}).get('accepted_faces',0) for r in manifest),
+        "trim_maximum_deviation_bound_mm":max(((r.get('trim_boundary_approximation') or {}).get('maximum_deviation_bound_mm',0.) for r in manifest),default=0.),
         "support_role_classification":"connected_patch_endpoint_proximity_v1",
         "support_role_regions":role_regions,
         "layer_trim": layer_trim, "solid_preview_seconds": preview_seconds,
@@ -1503,6 +1726,7 @@ def main():
     parser.add_argument("--layer-trim", choices=("checked", "surface_scalar", "surface_scalar_bisect"), default="checked")
     parser.add_argument('--layer-seed-spacing',type=float,default=1.)
     parser.add_argument('--adaptive-layer-tolerance',type=float,default=.05)
+    parser.add_argument('--trim-boundary-tolerance-mm',type=float,default=0.,help='Physical whole-face support-boundary deviation budget; zero keeps strict trimming.')
     parser.add_argument("--geometry-threads", type=int, default=8)
     parser.add_argument("--layer-compression", choices=("zlib", "lz4", "none"), default="zlib")
     parser.add_argument("--layer-workers", type=int, default=0, help="Layer processes; 0 selects four for >=32 layers, otherwise one.")
@@ -1546,7 +1770,7 @@ def main():
                              args.layer_trim, args.geometry_threads, args.layer_workers, args.layer_compression,
                              args.branch_sizing, args.branch_diameter, args.branch_diameter_angle, args.platform_flange, args.support_speed,
                              args.minimum_support_height,None,args.support_ceiling,args.tip_alignment,args.tip_length,args.contact_layers_below,field_evaluator,args.field_mode,layer_batch_size=args.layer_batch_size,
-                             layer_seed_spacing=args.layer_seed_spacing,adaptive_layer_tolerance=args.adaptive_layer_tolerance)
+                             layer_seed_spacing=args.layer_seed_spacing,adaptive_layer_tolerance=args.adaptive_layer_tolerance,trim_boundary_tolerance_mm=args.trim_boundary_tolerance_mm)
     elapsed = time.perf_counter() - started
     np.savetxt(output/'main_scalar_values.txt',schedule)
     (output / "summary.json").write_text(json.dumps({"mesh": cfg["input"]["mesh"], "field_mode":args.field_mode,"envelope": {"build_direction": cfg["domain"]["build_direction"]}, "tree_geometry": report, "total_seconds": elapsed}, indent=2))

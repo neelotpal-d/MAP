@@ -38,7 +38,7 @@ def main() -> int:
         report = resolve(base_dir, config.get("motion_verification_report", "motion_verification.json"))
         run([sys.executable, str(H2D_HELPERS / "verify_a1_motion.py"),
              str(resolve(base_dir, gcode)), str(report), "--maximum-z-speed",
-             str(assemble_config.get("travel_z_speed_limit", 20.))])
+             str(assemble_config.get("travel_z_speed_limit", 20.)),"--build-size",str(config.get('build_size',256.))])
     if args.assemble_only:
         return 0
     if config.get("run_package", True):
@@ -60,13 +60,16 @@ def prepare_reference(base_dir: Path, config: dict[str, Any], assemble: dict[str
     post = assemble.get("post_code")
     if not pre or not post:
         raise ValueError("assemble.pre_code and assemble.post_code are required with reference_3mf")
-    run([
+    command=[
         sys.executable,
         str(HERE / "prepare_a1_reference.py"),
         "--reference", str(resolve(base_dir, reference)),
         "--pre-output", str(resolve(base_dir, pre)),
         "--post-output", str(resolve(base_dir, post)),
-    ])
+    ]
+    if 'shutdown_minimum_z' in config:
+        command.extend(['--minimum-shutdown-z',str(config['shutdown_minimum_z']),'--build-size',str(config.get('build_size',256.))])
+    run(command)
 
 
 def write_assemble_config(base_dir: Path, assemble: dict[str, Any], config: dict[str, Any]) -> Path:
@@ -105,6 +108,7 @@ def make_package_command(
         command.extend(["--filament-color", str(package["filament_color"])])
     if 'bed_leveling_margin' in package:
         command.extend(['--bed-leveling-margin', str(package['bed_leveling_margin'])])
+    if 'build_size' in package:command.extend(['--build-size',str(package['build_size'])])
     if package.get("spiral_mode_preview", False):
         command.append("--spiral-mode-preview")
     if package.get("overwrite", True):

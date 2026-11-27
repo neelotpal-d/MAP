@@ -4,6 +4,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SETTINGS = {
+    "trim_boundary_tolerance_mm",
+    "correct_layer_scalar",
     "slicing_mode",
     "include_support_gradients", "support_layer_spacing", "maximum_support_layer_height", "support_gradient_probe_spacing",
     "layer_seed_spacing", "adaptive_layer_tolerance",

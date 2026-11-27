@@ -139,23 +139,14 @@ def collect_toolpath_files(folder: Path) -> dict[LayerKey, Path]:
 
 
 def assert_resolved_support_heights(metadata, *, start_main, end_main):
-    from height_warning_policy import check_height_outliers
+    from height_warning_policy import check_height_outliers,check_height_issues
     check_height_outliers(metadata, start_main=start_main, end_main=end_main)
-    layers = metadata.get('layers', [])
-    count = sum(row.get('support_validation', {}).get('unresolved_points', 0) for row in layers
-        if start_main <= int(row['layer_main']) <= end_main)
-    if not layers:
-        count = metadata.get('support_validation', {}).get('unresolved_points', 0)
-    if count:
-        raise ValueError(f'{count} unresolved supporting-height points in main range {start_main}..{end_main}. '
-            'Inspect *.height_validation.npz diagnostics; bridge extrusion has not been defined.')
-    fallback=sum(row.get('support_validation',{}).get('threshold_fallback_points',0) for row in layers
-        if start_main<=int(row['layer_main'])<=end_main) if layers else metadata.get('support_validation',{}).get('threshold_fallback_points',0)
-    if fallback:
-        print(f'[height warning] {fallback} ambiguous points use threshold extrusion heights; geometric support is unverified.')
+    check_height_issues(metadata,start_main=start_main,end_main=end_main)
 
 
 def load_batch_metadata(toolpath_dir: Path) -> dict[str, object]:
+    from height_warning_policy import check_draft_paths
+    check_draft_paths(toolpath_dir)
     if (toolpath_dir / '.causal_lift_in_progress').exists():
         raise ValueError('Causal nozzle lift is incomplete in this folder; wait for completion before exporting.')
     metadata_path = toolpath_dir / "batch_3axis.meta.json"
@@ -248,7 +239,7 @@ def load_machine_profile(machine_dir: Path, machine_name: str) -> MachineProfile
     )
 
 
-def load_path_rows(path_file: Path) -> np.ndarray:
+def load_path_rows(path_file: Path, fallback_height=.2) -> np.ndarray:
     if path_file.stat().st_size == 0:
         return np.empty((0, 7), dtype=np.float64)
     data = np.loadtxt(path_file, dtype=np.float64)
@@ -256,8 +247,10 @@ def load_path_rows(path_file: Path) -> np.ndarray:
         data = data[None, :]
     if data.ndim != 2 or data.shape[1] < 7:
         raise ValueError(f"Path file must contain x y z nx ny nz h columns: {path_file}")
-    if not np.isfinite(data[:,:7]).all() or np.any(data[:,6]<0):
-        raise ValueError(f'Path coordinates/normals/heights must be finite and heights nonnegative: {path_file}')
+    if not np.isfinite(data[:,:6]).all() or np.any(np.linalg.norm(data[:,3:6],axis=1)<=1e-12):
+        raise ValueError(f'Path coordinates/normals must be finite and normals nonzero: {path_file}')
+    from height_warning_policy import usable_heights
+    data[:,6]=usable_heights(data[:,6],fallback_height,label=str(path_file))
     return np.asarray(data[:, 0:7], dtype=np.float64)
 
 
@@ -725,6 +718,8 @@ def emit_export(
     machine = load_machine_profile(machine_dir, machine_name)
     toolpath_files = collect_toolpath_files(toolpath_dir)
     selected_keys = selected_layer_keys(list(toolpath_files.keys()), start_main=start_main, end_main=end_main)
+    from toolpath_order import order_keys
+    selected_keys = order_keys(selected_keys, batch_metadata)
     if not selected_keys:
         raise FileNotFoundError(
             f"No *_3axis.txt files found in main-index range {start_main}..{end_main}"
@@ -762,7 +757,8 @@ def emit_export(
 
     for key in selected_keys:
         path_file = toolpath_files[key]
-        rows = load_path_rows(path_file)
+        from height_warning_policy import nominal_height
+        rows = load_path_rows(path_file,nominal_height(batch_metadata))
         width_profile = infer_width_profile_from_metadata(
             batch_metadata,
             key,
@@ -1025,7 +1021,8 @@ def _emit_bare_layer(key, path_file, *, toolpath_dir, output_dir, batch_metadata
                      surface_spacing_correction=False,max_surface_spacing=2.,
                      writer_factory=None):
     """Convert one independent layer using the unchanged serial calculations."""
-    rows = load_path_rows(path_file)
+    from height_warning_policy import nominal_height
+    rows = load_path_rows(path_file,nominal_height(batch_metadata))
 
     output_stem = key.stem
     if include_material_index_in_name:
@@ -1215,6 +1212,8 @@ def emit_bare_export(
     machine = load_machine_profile(machine_dir, machine_name)
     toolpath_files = collect_toolpath_files(toolpath_dir)
     selected_keys = selected_layer_keys(list(toolpath_files.keys()), start_main=start_main, end_main=end_main)
+    from toolpath_order import order_keys
+    selected_keys = order_keys(selected_keys, batch_metadata)
     if not selected_keys:
         raise FileNotFoundError(
             f"No *_3axis.txt files found in main-index range {start_main}..{end_main}"
@@ -1294,6 +1293,8 @@ def emit_bare_export(
         finally:
             pool.shutdown(wait=True, cancel_futures=True)
 
+    from toolpath_order import write_bare_order
+    write_bare_order(output_dir, batch_metadata, selected_keys)
     print(f"Exported bare G-code files: {output_dir}")
     print(f"Machine: {machine.machine_name}")
     print(f"Main index range: {start_main} -> {end_main}")

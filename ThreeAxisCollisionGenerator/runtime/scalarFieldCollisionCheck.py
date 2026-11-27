@@ -899,6 +899,14 @@ def main() -> None:
     colliding_origin_indices = np.nonzero(collision_mask_np)[0]
 
     print(f"Colliding origins: {colliding_origin_indices.size}/{candidate_points_world.shape[0]}")
+    if args.config_path is not None:
+        report_path = Path(args.config_path).with_suffix('.report.json')
+        report = dict(roots_checked=int(candidate_points_world.shape[0]),
+                      colliding_roots=int(colliding_origin_indices.size), invalid_gradient_roots=0,
+                      tool=tool_bounds_world,
+                      limitation='Point-sampled nominal tool check; continuous motion is not certified.')
+        report_path.write_text(json.dumps(report, indent=2), encoding='utf8')
+        print(json.dumps(dict(event='nominal_collision_result', report=str(report_path.resolve()))), flush=True)
     if colliding_origin_indices.size == 0:
         return
 

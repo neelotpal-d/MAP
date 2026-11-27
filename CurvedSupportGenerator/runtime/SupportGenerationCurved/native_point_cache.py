@@ -11,7 +11,11 @@ class NativePointCache:
     def __init__(self, geometry):
         self.geometry = geometry
         self.requested = self.evaluated = 0
-        self.lib = ctypes.CDLL(str(LIBRARY))
+        if __package__:
+            from .native_library import load_library
+        else:
+            from native_library import load_library
+        self.lib = load_library(LIBRARY)
         dp = ctypes.POINTER(ctypes.c_double); ip = ctypes.POINTER(ctypes.c_int64)
         self.lib.point_cache_create.restype = ctypes.c_void_p
         self.lib.point_cache_destroy.argtypes = [ctypes.c_void_p]

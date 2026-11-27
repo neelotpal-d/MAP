@@ -1,5 +1,39 @@
 # Multi-axis field generator
 
+## Joint layer/path beta
+
+The interface adds **Slicing > Field generation > Model > Neural > Joint layers + paths (beta)**.
+It trains a layer scalar `f` and a path scalar `g`, with path tangent
+`normalize(cross(gradient(f), gradient(g)))`. The first beta uses the tested
+unnormalized cross/dot stress losses, delayed stress and geodesic ramps,
+and one-time original-row FPS with a separate stress holdout. It omits
+collision and support objectives. Geometry regularization is evaluated at
+the selected stress positions; this beta is not the full standard optimizer.
+
+The default layer network is 128 x 10 and the path network 128 x 15.
+Planar initialization is free to bend/rotate after warm-up. Loading a saved
+initializer preserves its architecture and requires matching normalization.
+Both final checkpoints, per-epoch logs, held-out metrics and weighted
+loss-gradient diagnostics are retained in the job's `run` directory.
+
+Run a prepared beta job from this package's parent directory:
+
+```text
+python -m MultiAxisFieldGenerator.joint_cli --job /path/to/joint_job.json --device auto
+```
+
+`--dry-run` validates the configuration without starting training. The job
+stores model, initialization, training and preview settings separately.
+Existing run directories are protected. Reopen completed results using
+**Jobs > Open saved result > Open joint layer/path beta result**.
+
+The returned field mesh contains `slicer_value` and `neural_path_value`.
+Layer/path previews are evenly spaced scalar contours for inspection, not
+a manufactured layer-height schedule or an extrusion plan. They are tagged
+as experimental and machine export is blocked. Local curvature outliers are
+reported without claiming a physical path defect or a printing guarantee.
+Backend source: [MAP](https://github.com/neelotpal-d/MAP).
+
 Portable configurable snapshot of the five-axis cone/cylinder collision
 workflow, with support-free, stress-tangent and combined objectives. The
 original Fertility experiment is unchanged. Python and dependencies are

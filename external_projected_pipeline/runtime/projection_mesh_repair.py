@@ -4,6 +4,31 @@ import shapely
 from surface_hatch_metric import _identical_height_contacts
 
 
+def _overlap_pair_batches(base, count, target=32768):
+    """Keep each conservative bbox query small, process its pairs in batches.
+
+    Concatenate only returned indices in their original order. Retain the
+    one-million worst-case query limit; do not increase the spatial query size
+    based on an assumed average triangle overlap. Pending indices are bounded
+    by target plus one query; full output chunks contain at most target pairs.
+    """
+    query_batch=max(1,min(2048,1000000//max(1,count)))
+    aa=[];bb=[];pending=0
+    for start in range(0,count,query_batch):
+        pair=base.tree.query(base.projected_triangle_polygons[start:start+query_batch])
+        a,b=pair[0]+start,pair[1];keep=a<b;a,b=a[keep],b[keep]
+        if not len(a):continue
+        aa.append(a);bb.append(b);pending+=len(a)
+        if pending>=target:
+            a=np.concatenate(aa);b=np.concatenate(bb)
+            stop=(len(a)//target)*target
+            for first in range(0,stop,target):yield a[first:first+target],b[first:first+target]
+            aa=[a[stop:].copy()] if stop<len(a) else []
+            bb=[b[stop:].copy()] if stop<len(b) else []
+            pending=len(a)-stop
+    if pending:yield np.concatenate(aa),np.concatenate(bb)
+
+
 def _overlap_summary(base,tolerance):
     """Cheap bbox/topology/affine tests precede exact GEOS intersections.
 
@@ -11,15 +36,15 @@ def _overlap_summary(base,tolerance):
     empty GEOS intersections. No candidate is lost by dropping the expensive
     intersects predicate from the broad phase.
     """
-    tri=base.vertices[base.faces[base.face_indices]];xz=tri[:,:,[0,2]]
+    # This advanced index copies the entire face array. Prepare it once, not
+    # once per bbox batch (large meshes may use batches of only 1-3 faces).
+    chart_faces=base.faces[base.face_indices]
+    tri=base.vertices[chart_faces];xz=tri[:,:,[0,2]]
     bad=np.zeros(len(base.faces),bool);worst=0.;worst_faces=None;worst_point=None;slope=None
     # Target ~1M bbox pairs (16MB indices); larger meshes query one triangle.
     # Summarize each batch instead of accumulating all pair/vertex arrays.
-    batch=max(1,min(2048,1000000//max(1,len(tri))))
-    for start in range(0,len(tri),batch):
-        pair=base.tree.query(base.projected_triangle_polygons[start:start+batch]);a,b=pair[0]+start,pair[1]
-        keep=a<b;a,b=a[keep],b[keep]
-        skip=_identical_height_contacts(base.faces[base.face_indices],xz,a,b);a,b=a[~skip],b[~skip]
+    for a,b in _overlap_pair_batches(base,len(tri)):
+        skip=_identical_height_contacts(chart_faces,xz,a,b);a,b=a[~skip],b[~skip]
         if not len(a):continue
         if slope is None:slope=np.linalg.solve(xz[:,1:]-xz[:,:1],(tri[:,1:,1]-tri[:,:1,1])[...,None])[...,0]
         other=tri[b,0,1,None]+np.einsum('nki,ni->nk',xz[a]-xz[b,0,None],slope[b]);use=np.max(abs(tri[a,:,1]-other),axis=1)>tolerance

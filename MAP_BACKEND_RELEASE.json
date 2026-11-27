@@ -1,0 +1,1907 @@
+{
+  "schema": "map.backend-content.v1",
+  "version": "backends-2026-11-27-r2",
+  "repository": "https://github.com/neelotpal-d/MAP",
+  "files": [
+    {
+      "path": "CurvedSupportGenerator/AUTHORS.md",
+      "bytes": 209,
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+    },
+    {
+      "path": "CurvedSupportGenerator/COLLISION_MODES.md",
+      "bytes": 4210,
+      "sha256": "e3fb5d7baafd008e12cc8227c6e0f81e6ae7a7d5043dd06f9abb7a94a1f1d427"
+    },
+    {
+      "path": "CurvedSupportGenerator/README.md",
+      "bytes": 8404,
+      "sha256": "a82a3e3ad93c5df5e8c8be8ca0023f1abc962c5a964a35df02d24d502d77dd44"
+    },
+    {
+      "path": "CurvedSupportGenerator/__init__.py",
+      "bytes": 97,
+      "sha256": "e51420553def9637ce8dfa8e8439a1767bd7e0b7d5fbdd0cbce9f088cb6a8c0b"
+    },
+    {
+      "path": "CurvedSupportGenerator/__main__.py",
+      "bytes": 80,
+      "sha256": "3d2438ae92f4746e9ffaa1f837b1fe803f6281091d1f31f8c95643716f257d9a"
+    },
+    {
+      "path": "CurvedSupportGenerator/build_native.py",
+      "bytes": 4592,
+      "sha256": "a7520b8294ad6c1faf05382b6f7dbfd4a437bac49573fb7c0f72927f514d5ac1"
+    },
+    {
+      "path": "CurvedSupportGenerator/cli.py",
+      "bytes": 6041,
+      "sha256": "4ecbf4ffcd6bd66a5581c01059f5c6011fe64951041f2c3ad0ea959172b9d57d"
+    },
+    {
+      "path": "CurvedSupportGenerator/example_job.json",
+      "bytes": 1608,
+      "sha256": "304be6f2d9e97a2e1d97ec201de4074e696539186440ae5ace2f4fceb30eac65"
+    },
+    {
+      "path": "CurvedSupportGenerator/example_tetrahedral_job.json",
+      "bytes": 1239,
+      "sha256": "78cedb92ac17005a249c2f666b16388038d9b0e7bd6e9db7eefc026b43bd0d2f"
+    },
+    {
+      "path": "CurvedSupportGenerator/requirements.txt",
+      "bytes": 112,
+      "sha256": "b6fdbb16957b6a6a8c4fde49db4d8ec1ed19f225146e30d3f243fe0899b26855"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/__init__.py",
+      "bytes": 66,
+      "sha256": "ff7ad877a5e768fd2355a52981aa906fb90f5bd1643479897877f172cc2b45dd"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/adaptive_tips.py",
+      "bytes": 3263,
+      "sha256": "0e70a6963bdadec5ca0e2e90cd579bb53888cb1289f50a67135e2884fca25b74"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/array_uniqueness.py",
+      "bytes": 802,
+      "sha256": "26ef5abe9c9d1ff913ffb445b044d5ed171be1b621c55989db8534f60bc5fd4f"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/bambu_sizing.py",
+      "bytes": 8246,
+      "sha256": "b87d5fd9542664dd79b225e74751dafea9191fafe21af9c7311feec52e7aee95"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/boundary.py",
+      "bytes": 1933,
+      "sha256": "e6c129610690d0b03af778cc9f9572275f284c1ce3fa50638ffefb1bef38880e"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/collision_points.py",
+      "bytes": 7500,
+      "sha256": "94276665a3955ae6ffca4194a8c8c26ac068e70d1008f05f68f49ec483067e48"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/collision_tool.py",
+      "bytes": 5794,
+      "sha256": "0300dc72999a2dab33877e1538c8e5d0faa8d7ec236db755dacb8f1be21c1676"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/compatible_export.py",
+      "bytes": 21655,
+      "sha256": "20ce5aca8fe59985a8e71f47d6e04918afdb06535b29d6f16148a20e93e85527"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/config.py",
+      "bytes": 5048,
+      "sha256": "f9a6c6e6491d4605eb64eb981f6b2344cfbd9fcc049cd5147de1fb6d4b366ac9"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/conservative_domain.py",
+      "bytes": 15315,
+      "sha256": "6f552b0205fbc243f1b2fadcf11bec08cee5fd3552151f602060547f80e80d9a"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/conservative_field.py",
+      "bytes": 19893,
+      "sha256": "8581a73477a217488387261347bce80e1f8d03f50bc1ad6cc1b987ba7a2435e2"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/contact_coverage.py",
+      "bytes": 6083,
+      "sha256": "5ebf3a591886a7a50c1955b119f24cc4462f1c9246ce549a9c8740f29fbb3f8b"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/contact_direction_guide.py",
+      "bytes": 4726,
+      "sha256": "2eadae84b7365b68f9b523edfd529eb36fd03396c25ecdd187f020f746608002"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/contact_selection.py",
+      "bytes": 8141,
+      "sha256": "4c54b4a94d9245873a638501e4821a3cc967a88dc833e8a178f5a36c89d62cdb"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/distance_certificate.py",
+      "bytes": 5156,
+      "sha256": "0477b29f39e310c9c9df5e478e3842bc9c353286811554c51eb8e75e09dbe65d"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/envelope.py",
+      "bytes": 8292,
+      "sha256": "6816199ab3c0b1b2c085c5e4596be3cd2ccde1afad90382a9a56c6e1c08de00a"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/exact_point_cache.cpp",
+      "bytes": 3527,
+      "sha256": "fe1d2711bd0723977d5b05fe2c95c06826a5505487968172a8cc38c1d0dbb3f9"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/exact_support_bvh.py",
+      "bytes": 6886,
+      "sha256": "6defb462e2f0cbf8744462a1e933a2f9d76b258ce04eb270403cddf8eaebeb72"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/field_grid.py",
+      "bytes": 2931,
+      "sha256": "67d07f723fc71f17e91437a638e46a71e0c22eed6d0ea722e5f0147caae67588"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/generate.py",
+      "bytes": 44036,
+      "sha256": "b84112fdedcb803dc293626f281a726cba419f7e0361674ec6c6ec63f0f03601"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/grid_distance_certificate.py",
+      "bytes": 2542,
+      "sha256": "5bbea47a16f2ce6c67c79fb241804abb910811a0dc302e603efcd8e9b3a97e29"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/landing_checks.py",
+      "bytes": 6500,
+      "sha256": "5c8bcb997b09a279088b1c420065569024ebd3af206957aab2e77f182c7133f8"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_extraction.py",
+      "bytes": 8299,
+      "sha256": "26b020ede474deeb59f056b49230131427ec62456634406f6a7e49b322670ba0"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_projection.py",
+      "bytes": 18020,
+      "sha256": "09f02fc03e1276842748734abe0c4c85ed7eaa9d3ef7ce851c500a785af38168"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_quality.py",
+      "bytes": 5156,
+      "sha256": "0786f2629f2b56305283c0909822f0013e23204e0646a01e52c8cbcbf5c0756d"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_roles.py",
+      "bytes": 8314,
+      "sha256": "6c9d4c2bcf41e38e134a2acfff27a6308f3851b133576d668fe38880fd9f79a6"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layer_viewers.py",
+      "bytes": 6728,
+      "sha256": "0bfed9f706730e61eaa4d42f92aca72d6e9215b5c291f3d89290c2ceddcf351c"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/layers.py",
+      "bytes": 4488,
+      "sha256": "2e0b6e72c621f4452845a7edb3a15949d563bb29a89040ef687eab0788ceefcc"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/local_contact_foot.py",
+      "bytes": 8919,
+      "sha256": "f92bfb8f914abc5501e128cdce2cebc58cfa52e4a4770cc23683accd5f37e799"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/merged_model_tree.py",
+      "bytes": 7380,
+      "sha256": "604c74dac2f78b81d50abd90409440560062a31ca4a925cbe58f8e35ca9ff143"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/mesh_queries.py",
+      "bytes": 5245,
+      "sha256": "73ef58dfd21bf8b0cb5c6b12b069b97ea120b400f8ce513ae3c8c16dfdf6f4c6"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/model_bridges.py",
+      "bytes": 3095,
+      "sha256": "117713f5e26fbc7f9f8d7b2d365cb3e353198b94ed19aea3bb780362df151a20"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/model_skeleton.py",
+      "bytes": 18584,
+      "sha256": "e656005f98dd08f8d9ee578886dde36b12d331db4d63cdde4ca321a0aef30134"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/native_library.py",
+      "bytes": 982,
+      "sha256": "48705b92d12a5aaec95c3bb18a1db2a11d2666c49e12d25d1de23c35b8f19cfa"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/native_model.py",
+      "bytes": 3777,
+      "sha256": "83f32f6002d80dfea833f29f8b72c6067537cb05a8b0681c3e849029980bdc2c"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/native_point_cache.py",
+      "bytes": 3113,
+      "sha256": "ca3fd625b4687654cb59dd6904a493de925d289f9172e1998490251baaae40b7"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/neural_support.py",
+      "bytes": 20151,
+      "sha256": "27294f6d6e3eae300723a44d79dd459c0a537088e842958cdfd6cc386e706c2b"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/nonplanar.py",
+      "bytes": 2213,
+      "sha256": "460e0dc33b5e2066749516ff84233ac9baaf477c39338b6737fca2577b6511e3"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/online_slicing.py",
+      "bytes": 10896,
+      "sha256": "6e82a46b6e7a6245cc6ef67a9e2199eea1560b3dce10221a420bd9392445886b"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/output.py",
+      "bytes": 4735,
+      "sha256": "57df26a08f45d8f519d236608cc85ab381f9313935b1c6b473cb3d097922096a"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/planar_bases.py",
+      "bytes": 4476,
+      "sha256": "c69af270a109b20a46a4c9cc03be78c7f681e527add3069bff9a9742d19d667d"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/__init__.py",
+      "bytes": 81,
+      "sha256": "d869c46d3471b9554aac13c0a649f5943e36df777b7b6b5b85034628473af6ef"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/acceleration.py",
+      "bytes": 10152,
+      "sha256": "3e2bbe50667c9fca2accdfc98410e5ac76da175e685b3671aba0841fe21c5d0c"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/batched_route_curves.py",
+      "bytes": 3740,
+      "sha256": "1b3049f00ddfe1ccf0952a022aa4f7e00d3dd31dded30a58c79a338b5b34b7a9"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/batched_support_field.py",
+      "bytes": 2910,
+      "sha256": "cf46ab075f787852baed730d995ea98bff641467a31379e7c06e6e81a22f98b7"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/context.py",
+      "bytes": 2695,
+      "sha256": "ce564b365f02f174268277198d25c7d116dad1b032a0743e3cd0123f2db9b439"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/corridor_graph_routes.py",
+      "bytes": 7619,
+      "sha256": "abaab734ad8118fc38f730b60c0cadb034e86dbd061d729487a4ae6dcdc7ca33"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/engine.py",
+      "bytes": 14561,
+      "sha256": "e6447913517a9691d7adcfdca89e07f88949a7ae923377fd51f28ba4e1913e82"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/fast_platform_grafts.py",
+      "bytes": 13432,
+      "sha256": "7a316223a1010bf7c70444d7723ebe3dbba0ea8c51d4f34b654bba0ed108f6e0"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/fast_platform_pipeline.py",
+      "bytes": 6214,
+      "sha256": "3ceae4e1368bc94ba2ea43a66662629356648e25c5bc9a19900952fe55636093"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/growing_platform_index.py",
+      "bytes": 4750,
+      "sha256": "ed30350630188393f62b331a62318f6d6eca959cd57ebd2ea546575df0c8d9a9"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/incremental_obstacle_routes.py",
+      "bytes": 6599,
+      "sha256": "dae58d78c9a8965ca7cf1960be32db808d60d0e1c12ed94a5d5a8930d4113018"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/lazy_obstacle_routes.py",
+      "bytes": 6502,
+      "sha256": "627af46b48c830e0a36c89607121b3cc4668d71bd1e767c13b83427ff4db6755"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/lazy_route_curves.py",
+      "bytes": 5410,
+      "sha256": "60be33077b0a8593549d7a1497357337b0cb43604edc668efec6947270519824"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/optimized_obstacle_routes.py",
+      "bytes": 11463,
+      "sha256": "8af9eeea3e70d59cf7d1ee74169dfd62186c9094ff86db0ccb5abe58debf501a"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/platform_corridor_graph.py",
+      "bytes": 6349,
+      "sha256": "4f5745184268e24eaa7eb374c2321eb39654adf0146e61ec41ba58d15ae3d570"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/promotion_sources.json",
+      "bytes": 3433,
+      "sha256": "bc0720d2da77e52a1a71037735bd49ccebdf1917cc64c88f86471595a3bb1fe0"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/routing_field.py",
+      "bytes": 12203,
+      "sha256": "7594dcaab5dec2fae584012584a84affed38eb7b014a3f125914a60988ca4440"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/support_direction_certificate.py",
+      "bytes": 5735,
+      "sha256": "46a904ab9c4f5ccb6d5b6678bfea93cc00f34756e19d6a268c1366cbb89d852a"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/tracked_support_forest.py",
+      "bytes": 1091,
+      "sha256": "5b05fdc6286b3dadbf41239e6c65224871fdd51425676a0fc38f3287f0e09121"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/try_depth_dependent_merging.py",
+      "bytes": 14238,
+      "sha256": "170253efb5f4a80c39ae9c6d4aef438321570064b188d5954d25d3d387987cc0"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/try_obstacle_side_routes.py",
+      "bytes": 10101,
+      "sha256": "5b4990c40e9a31266be8e45637c3c9a931b53ffa7995ba3100ba7420a80482a9"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/try_platform_first.py",
+      "bytes": 25190,
+      "sha256": "7d049a7de2dcf64fceee84f28d24f213cdbb35e71a9adc278c884e49f36fccc1"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/try_stronger_platform_merging.py",
+      "bytes": 6455,
+      "sha256": "3c87c47caf2c2e027a83b32ab8d95d4a6abc979c373b8f3f9428521fbe38aada"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/progressive_skeleton.py",
+      "bytes": 30705,
+      "sha256": "16281080cfba94c80b923c0ae00465322f2b0b801328cd75d93a8f94cab3508c"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/roof.py",
+      "bytes": 10457,
+      "sha256": "478ea31ede1a9e41b26569fcf911a3a9f40a2e8e7d0b0d0f8d13cf9ef7af0611"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/root_foot.py",
+      "bytes": 11717,
+      "sha256": "91920dd782faa3268e0b8f2f6b5fc9e7ba3982cfe6c592df79b516d0ebd5f190"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/saved_field_layers.py",
+      "bytes": 25432,
+      "sha256": "30b477db2421be692ad377b863804f039a2327705d26906bdf7ee3eaeb0b1d6d"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/separated_posts.py",
+      "bytes": 9708,
+      "sha256": "dc2e669686b22b93f02f7acf913d52a0272d86ac2233eb2ab5264908efd3802d"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/side_clearance.py",
+      "bytes": 12684,
+      "sha256": "85cbc23b3a534a354bf05cb2c1105b0e2725f3c177ace8d070dce68e00f34227"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/skeleton_geometry.py",
+      "bytes": 13191,
+      "sha256": "b22e7602cb9cb4e5f4d5b4406855ec392942371a9d80107e66fa8484c4d22623"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/skeleton_planner.py",
+      "bytes": 22899,
+      "sha256": "4c414e176454a2ba23f9080bbf5bd1e35169c114561e7ce555b8347d61e7fd2f"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/spatial_roles.py",
+      "bytes": 4480,
+      "sha256": "c94d7a5565ede9777cd0c18fa5beb326b08eafdf0055085746f8abc9449834fc"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/stalled_recovery.py",
+      "bytes": 32410,
+      "sha256": "ab77ab089f764475c7c16b784c210c3b0515b3e9281f576eebdb7fc71fd0ce8c"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/support_region.py",
+      "bytes": 1970,
+      "sha256": "bb5b737510ecfe313452730aa07d6b3dfbcb246e468b8ec29d128e9d876545c4"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/support_schedule.py",
+      "bytes": 7033,
+      "sha256": "32491631124c428a5a8f019a6ee496277d54a618bec4958f7e5c45e74801a89d"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/support_union_bvh_ordered.cpp",
+      "bytes": 6996,
+      "sha256": "474717e2bb4cea6aa08bad6757d3ec9c0b52ee1b6bc2d7a72d135bbd18f568a0"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/tip_geometry.py",
+      "bytes": 1916,
+      "sha256": "fe45b2300d4fbcd3805c2e681d9cee8de3447921fecd4520ce8658085c3dd4bd"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/trajectories.py",
+      "bytes": 3818,
+      "sha256": "a927f04a3e37a3b11743a2818a571b2419ded2bf9cb82c30a512c9719b2bad1b"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/transfer.py",
+      "bytes": 10018,
+      "sha256": "0ebfc37d7735e34ba8e6a7ce23fe2850ad6ffe99169aed3bd9ece7b2efb7120d"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/transferred_field.py",
+      "bytes": 4698,
+      "sha256": "9e3dd283eb003f5f54ac69f44318655792be35f000e4834b6fe1900dbef99cc5"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/transition_recovery.py",
+      "bytes": 11489,
+      "sha256": "acfa40802654b2e324ce54fb4ea037b90db4485ac52d860dcc1f0a10934b42a9"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/tree_geometry.py",
+      "bytes": 117502,
+      "sha256": "013664f577438a3224ed79648eab615a7c05ac220ac7dd6a970d53488e6e8703"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/triangle_proof_cache.py",
+      "bytes": 2265,
+      "sha256": "2e0da7108205710cbed01e8690f7d3e4ad8c63fda546d600399f25a7a759c661"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/trim_tolerance.py",
+      "bytes": 3456,
+      "sha256": "c0638f2410cdad818606d58825a8059757cd27780611494ff0c631e4da33ba34"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/trunk_shift.py",
+      "bytes": 6155,
+      "sha256": "8085a89efec18ad6284447b94f249c12e2075468dcdd261bbd3cdba7a06b4ce1"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/Brim.cpp",
+      "bytes": 104382,
+      "sha256": "1afdc658991cb13a673f584182ca2537b4eafc3729032a557d17292f513d0248"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/ExPolygon.cpp",
+      "bytes": 22515,
+      "sha256": "bab9c32c6100744c9f26b0b586f430ac291f5cee80037f97957c86e2a152148c"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/LICENSE",
+      "bytes": 34520,
+      "sha256": "57c8ff33c9c0cfc3ef00e650a1cc910d7ee479a8bc509f6c9209a7c2a11399d6"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/README.md",
+      "bytes": 842,
+      "sha256": "e6dff78e04676736d4f59384ac70dfcdb5074468bbc20610bd10a1460015fda3"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/upstream_bambu/Support/TreeSupport.cpp",
+      "bytes": 250672,
+      "sha256": "dccf0a121de443fdfa0c84a7577908325af528c8ac7ce3c45cae891ac13dc05c"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationVoxel/__init__.py",
+      "bytes": 78,
+      "sha256": "5a3588d031ab6a090cd481b328144e0769b47517cf6f1d80b1cf7dc2d14a076a"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationVoxel/config.py",
+      "bytes": 13061,
+      "sha256": "618b9e1049cb7a1ca801fd4469b7f572f5ab1a1e2dd85e4d2ee17b64411dcb78"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationVoxel/contacts.py",
+      "bytes": 11635,
+      "sha256": "9f6eb0cf9bd17bf79074b7cba220192774627330191c99192194096d977a91f6"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/SupportGenerationVoxel/model_field.py",
+      "bytes": 14062,
+      "sha256": "f39f80689fbb1e5c8a22d3ebe1a47edcee3bd454433c7698f7845376abe85db5"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/runtimeEnv.py",
+      "bytes": 563,
+      "sha256": "b069823de1b844be6e1a04053abd4809aec95302c5d40bac06ccf277c01c6a6b"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/scalarNetUtils.py",
+      "bytes": 11341,
+      "sha256": "a3ad3399b09ef848d43552c3c7d8c719a3ab6c9b7d5b9b5d97d2e13b31d7a7a5"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/siren_pytorch/LICENSE",
+      "bytes": 1066,
+      "sha256": "02cf6ed7df17f94fafa61e67a089ee51faac006db35ffa173c70e6763c253cf6"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/siren_pytorch/__init__.py",
+      "bytes": 77,
+      "sha256": "e4faf2787f1ae2fd54455a6630301f89725d5f982a81df6a62a5c76f2a07ed5b"
+    },
+    {
+      "path": "CurvedSupportGenerator/runtime/siren_pytorch/siren_pytorch.py",
+      "bytes": 6651,
+      "sha256": "90d10eb865dabb0f1f0aef171206034a7b442d728967313442f0117512a3f487"
+    },
+    {
+      "path": "CurvedSupportGenerator/skeleton.py",
+      "bytes": 2325,
+      "sha256": "5e389e8638a8e44b871596d7a748c1bb9f4a72da04988cf889be12a8e1aa6e47"
+    },
+    {
+      "path": "CurvedSupportGenerator/tools/tool3p6.json",
+      "bytes": 268,
+      "sha256": "12c201d0ca4f023b2b422648fe823484344cdec033e0bfe721ebd1e81387ea1d"
+    },
+    {
+      "path": "CurvedSupportGenerator/tools/tool4.json",
+      "bytes": 268,
+      "sha256": "7578c1bcf3ed911596eae4320b99a34881e766c06741eb72c4af7eb5caa72d5a"
+    },
+    {
+      "path": "CurvedSupportGenerator/tools/tool8.json",
+      "bytes": 303,
+      "sha256": "7c3e281da4b48ef34196b133c30c37c41d678f1443f099dba471bd545e09ce09"
+    },
+    {
+      "path": "CurvedSupportGenerator/workflow.py",
+      "bytes": 4605,
+      "sha256": "93c568dd90e89f3a13befbb87fd3c912bf6e5f07cf408f93fe1ebf67745cf81d"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/.gitignore",
+      "bytes": 38,
+      "sha256": "c3d282d32e0459e2f8fc51942eb3009656c22a75ec8a7272575bab000e3ad9bb"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/AUTHORS.md",
+      "bytes": 209,
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/README.md",
+      "bytes": 21369,
+      "sha256": "0c00d77cdaea548d51f461798cb29547168bf7bc00b04b0bb77e18078cf69c94"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/__init__.py",
+      "bytes": 79,
+      "sha256": "1edc4adc8038f94a679f02320bffc2d9d4ec7450684aa34ddeadfae7bfe289af"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/__main__.py",
+      "bytes": 47,
+      "sha256": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/build_initializer.py",
+      "bytes": 323,
+      "sha256": "970759eb2a027844f79eb50dbb312754b2874d42dfc06cc12ad13d9207218322"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/build_sdf.py",
+      "bytes": 399,
+      "sha256": "4cf03f56e68e7e45dc74a7d860d019b8f7836bdc90a89a4e2eb92318ba84b795"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/cli.py",
+      "bytes": 9479,
+      "sha256": "5b21603592944f255c976b226ed79e26d67bfbe345fd850c22aa6a44b05ae2d9"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/example_job.json",
+      "bytes": 892,
+      "sha256": "703e602eaab7eb69a9cf6c745eecf5e6ec7051d491dc761f59889f611ae67a73"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/example_no_collision_job.json",
+      "bytes": 527,
+      "sha256": "af0c3a53afe8cdaefb7ee2afc2c6e2ba3f4111f5f8117b6688b7092d7416a6b5"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/example_stress_job.json",
+      "bytes": 1022,
+      "sha256": "1344b78ff1da6a036f8a44ef36850a1a9856ff5f72364208a121d47a6edfc8cf"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/examples/fertility_job.json",
+      "bytes": 704,
+      "sha256": "ab2d77eea7c691f807cb057b6fdae95a60f4917b5a9a72624f82262cfaa65aa9"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/joint_cli.py",
+      "bytes": 6048,
+      "sha256": "852cd05386209a34f5723d87551e7336dfed3df37b767ad8bfa4192c8d313d25"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/pack.py",
+      "bytes": 1149,
+      "sha256": "5834359d9f9422740ab7bf1e47cda89c3d1e39124fe59dfd8aa51dea1deb0383"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/requirements.txt",
+      "bytes": 48,
+      "sha256": "ac7eeec9f0e18d64db4b4273ead32527fc0dc19b59fb05994619af2e334edb41"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/build_checkpoint.py",
+      "bytes": 20452,
+      "sha256": "05fd9473daa478ca3d7dec46c5bdc9785e5c3d4c150e241ba5dd753997a3bf43"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/collision.py",
+      "bytes": 20411,
+      "sha256": "a477a7c5bb152dcdb261a8ee38d062f08f500981a9a762bc1e82c4467b151949"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/collision_settings.py",
+      "bytes": 524,
+      "sha256": "6144dd1babd8cc5df24842be2133100de2a4a7e69eda65287f3d838e13ff19fc"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/fields.py",
+      "bytes": 3395,
+      "sha256": "493fcd63545f436fdde1e808ec98b00b8b2603fdf0b7dccf370acf60ff419a9f"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/joint_path_beta.py",
+      "bytes": 22047,
+      "sha256": "f100f169bf6a17bea727d1bba19922cb59fe52e882cc6b275f5e8070d859f0d0"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/joint_path_geometry.py",
+      "bytes": 2145,
+      "sha256": "a26423208413753f63260ea9a6467ab9d36aa677dc99c83f590859db2e019b0f"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/plotting.py",
+      "bytes": 940,
+      "sha256": "47b2adfcab1c1a116281ce84061a8e3975eab699fd84f482c277f8f040b817d5"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/root_sampling.py",
+      "bytes": 11987,
+      "sha256": "ec0d8af401636486b0b5ae5dc782524ac938aa2ac2ac993c815bd04916f145aa"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/run_model.py",
+      "bytes": 74461,
+      "sha256": "d85e388991fbd0888d17f6c3de932d02dd480342740712b8fe33474f789a37d5"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/sdf_sampling.py",
+      "bytes": 1378,
+      "sha256": "768fe3cc854521a7d2ebda538c307545c32112276b582ec96d2280668c44f397"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/slicing.py",
+      "bytes": 3593,
+      "sha256": "8d4ff806fc0657e00914bb0df0effa44cf3e8f465ee19dba305321407ecbb2ff"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/stress.py",
+      "bytes": 11329,
+      "sha256": "5ae4699afdf713594514c488e57a2aa4e080a55519d61d3e5efc5884a7722387"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/surface_regions.py",
+      "bytes": 721,
+      "sha256": "77f14b1a9c9cd2169c0ea003e5649fbf539183b7665efb9fa9e7f93ba283308e"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/validate_nominal_collision.py",
+      "bytes": 21462,
+      "sha256": "e8e07c12dd1b0c00290fab623fc65586e82eb7321c521536a6b3802c4caae782"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/validate_sdf.py",
+      "bytes": 10883,
+      "sha256": "80ff0cb827d4e80a5c6e3b479acc76e1c3924fff67ae52e3ef20d3ac106056bf"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/visualize_fertility.py",
+      "bytes": 22631,
+      "sha256": "40d8fc0b519fff728b9408b68a9a843e811096da76a47ad7dcc3fa9551d8fc12"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/runtime/visualize_nominal_collision.py",
+      "bytes": 4724,
+      "sha256": "916e45c7b4a8e71094f7b55f784599b696a529325cd3a60a3267bcbc8f265681"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_collision_coverage.py",
+      "bytes": 8410,
+      "sha256": "0a096ea27d3bcc4333dc24334fa4fa23d5b46d3ed17bf93e540bc5686256f691"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_collision_normalization.py",
+      "bytes": 5337,
+      "sha256": "f63e02141e6cbdfc0761ef1d74253638d3a798b6b17a9e513ab5ad0ce01769cf"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_collision_performance.py",
+      "bytes": 12920,
+      "sha256": "bcda25c07b602414048215d46ce926dc7d532746569968920ad68b37fd53bf94"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_free_base_sampling.py",
+      "bytes": 2566,
+      "sha256": "a4cc5a1d49b564c1c5d0a69c94ce495b9961afc654d094d23280e0f2c36a20ba"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_portable.py",
+      "bytes": 9377,
+      "sha256": "3157bad4d242e9f378725022670d8fa0b1db351c0745c5eed8e298212ddf412d"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_restored_options.py",
+      "bytes": 14828,
+      "sha256": "155299a12326b0520c85f1adfbf6be8136977a011610d89816b3bd6073ecdf9c"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_sdf_reuse_validation.py",
+      "bytes": 5512,
+      "sha256": "5f3866743d9baf0eca98291bde2ada88e73b1aaa3cc48b6535c2d201f4786e3a"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_sdf_sampling.py",
+      "bytes": 4066,
+      "sha256": "d0eb95496aa76ce35d7d28445a389123e04f6c078dc683f4802dd9cc31c28413"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_stress_planar_initializer.py",
+      "bytes": 7640,
+      "sha256": "b7b0503bab3ecd26995f8315778e6882f6c8392ec9e8ed76b19bf166790fde84"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tests/test_stress_top_percent.py",
+      "bytes": 10489,
+      "sha256": "1899fdbd08ff776d8e9e35910f25d8e76c4e08f2b1195c7bb83c0b3db241a826"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tools/abb_nominal.json",
+      "bytes": 760,
+      "sha256": "3d0aa232fcd17bab43700154864f15b0a13a37c22474d081830680abcc87e881"
+    },
+    {
+      "path": "MultiAxisFieldGenerator/tools/abb_training.json",
+      "bytes": 700,
+      "sha256": "1df222b6d8c82090a6d84953cf10587a87135a736631a2888697b926ccca9469"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/.gitignore",
+      "bytes": 32,
+      "sha256": "d61c5ec90fe6721329121a68a41b1f20b78fff10e4cb6949144906c42639f523"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/AUTHORS.md",
+      "bytes": 209,
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/README.md",
+      "bytes": 10659,
+      "sha256": "ed182b8eac35b8119bcd24f9a4f70d16596dfab9d508b02c9dd6d253a42e5c05"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/__init__.py",
+      "bytes": 70,
+      "sha256": "1b36cf157161185a0c0cbfa3657d255a89f999df0b4f025ccc9ef357ea1d6110"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/__main__.py",
+      "bytes": 48,
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/cli.py",
+      "bytes": 9672,
+      "sha256": "f2b7e21975e9e59191964fc4107da446d1df02e3957b120b7622424059c9a573"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/example_combined_job.json",
+      "bytes": 2340,
+      "sha256": "d58a072b8750b59082a8c8fa12339e72a50f5c861d6e533b5bd2b91b251e4a61"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/example_job.json",
+      "bytes": 1971,
+      "sha256": "ad1b5796d6fc4fa6862f1b26a3cff8ca4b05f2b1319c5c4b5aa2655b774385ea"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/example_strength_batch256_job.json",
+      "bytes": 3369,
+      "sha256": "b9c1dede969abfb7d562ec389469a6e38344cf3e6e1a04ca42ebcb3e390cb5c0"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/example_strength_job.json",
+      "bytes": 3360,
+      "sha256": "544f18d7fbb4d9ded2339172ec6a5b375accdeec60587b16271066bfbe72fbb9"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/example_support_free_job.json",
+      "bytes": 2004,
+      "sha256": "ce8e93f2b6ea4e20867931d34bdf0768012d76b7ad92ea2709aabbad9a2e85a1"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/example_tool.json",
+      "bytes": 196,
+      "sha256": "a1b3afffe450e346f8ec76eb5db5caddd7ac0dc01f263e8e5a8c5d7b918cd150"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/import_fea.py",
+      "bytes": 8797,
+      "sha256": "668635ba83ca16ed92d12a58a486db4ba8d84d9dd23360d64c82431c5a2d8a6f"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/job_options.py",
+      "bytes": 1112,
+      "sha256": "aeb954aa403cb43ebfea17ccd4acdc4a63eb53534fe60b615de8e5b6e05cb7d9"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/requirements.txt",
+      "bytes": 55,
+      "sha256": "7811c2fa4281e2670d51618faf512f95fa78ef556f29d85ea62f677747e6f139"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/3axisStressSlicer.py",
+      "bytes": 47461,
+      "sha256": "a7e37805490177154efd9e188a535c07617668dc23de8f33c9ad96c5f3bfbdf4"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/axialOrientation.py",
+      "bytes": 8642,
+      "sha256": "6f9acddafb1240fd944d1aeb0bbd7dc973943b402a615fdfaa1b3b9c73f67373"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/axisymmetricTool.py",
+      "bytes": 4432,
+      "sha256": "eb387d48e268ba3bdac158595fee41f10c3e43854f579a3f6a5ef9e5befe7f15"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/boxToolSampling.py",
+      "bytes": 2291,
+      "sha256": "29b4e452452edef61cfe366d0cade843944054795d517cf250771708b686c757"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/cacheLayerComparison.py",
+      "bytes": 2546,
+      "sha256": "8f5188079ae0f644f807d64f25c950e6ab6a55d60cfb2f0b5f4ea492bae8ef1f"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/experiments/__init__.py",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/__init__.py",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/convex_surface_quality.py",
+      "bytes": 150161,
+      "sha256": "e31298ba96debdcebfbe1df5d6825a373a68500969ff0f76730cbb4f17fb27d7"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/hard_collision_sampling.py",
+      "bytes": 61961,
+      "sha256": "cc19a3e72e2e9448721abddf81a277cf54b3448178e59d1f61ff5596050e4f2a"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/exportIsoSurfaces.py",
+      "bytes": 29340,
+      "sha256": "8d253cfbcfdd794d6393c6fa83d2886d349b1911c611fe2e2de795de22cbbb8b"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/fourierFeatureNet.py",
+      "bytes": 2391,
+      "sha256": "09b524c37a877c1f855ee586c1ea140d8aa665460159f85eb57e7ade46bbd244"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/generateScalarInitializer.py",
+      "bytes": 13458,
+      "sha256": "6c5eeeb0ce4bfad6a8bcf01711afc31796269dbc1d20372afb395b03cb2eb142"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/globalOrientation.py",
+      "bytes": 8355,
+      "sha256": "735706650872f89fa284e914689a0403dfc1276579c3df0d34b7ff7dbc88bf4c"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/integratedLosses.py",
+      "bytes": 835,
+      "sha256": "0a36fc8e15f2d9c10c81f66a9e4070deba5fa99e0e8fe4001c80b26eb6c5d78f"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/layerCurvature.py",
+      "bytes": 828,
+      "sha256": "c0352f728882f5430c61b09b5d11ef1ebd4219d7d0de411fba5ef7aec88be1e5"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/layerThicknessControl.py",
+      "bytes": 7657,
+      "sha256": "425073566f79d125ef5a344adc85025b0a1ae1050f8d4463e729509616c5a00f"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/runBandedSurfaceQualityPipeline.py",
+      "bytes": 136748,
+      "sha256": "bba37b6a3756ab5e1b87e95e8a5ea9d8bea2cca12ad917719307788973a46e35"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/runBandedSurfaceQualityPipelineLocalEdge.py",
+      "bytes": 686,
+      "sha256": "cc9889946b076c3cbe8fd8b402859f6fc4eeb437d6b549e737b5911bd5139be7"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/runModelCollisionCheck.py",
+      "bytes": 11991,
+      "sha256": "e38ea11aa23344de0665ac3d26514dbdf543608612f4d3d94a34930cdb35c5ad"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/runtimeEnv.py",
+      "bytes": 563,
+      "sha256": "b069823de1b844be6e1a04053abd4809aec95302c5d40bac06ccf277c01c6a6b"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/scalarFieldCollisionCheck.py",
+      "bytes": 40688,
+      "sha256": "cdd32c90b15000ad9e986471a65cc14dad3392bcbe0a3f279c9cf64ba95098f5"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/scalarNetUtils.py",
+      "bytes": 11792,
+      "sha256": "484ae1dd8f6564e87b76ab5052edabfb14dc719e0ecabab90da8ede6f03746b2"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/sdfField.py",
+      "bytes": 20340,
+      "sha256": "e2a06aea1ab72bfff948d260d06a10abec09ae35b07053a24958cedf5cd2696f"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/LICENSE",
+      "bytes": 1066,
+      "sha256": "02cf6ed7df17f94fafa61e67a089ee51faac006db35ffa173c70e6763c253cf6"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/__init__.py",
+      "bytes": 77,
+      "sha256": "e4faf2787f1ae2fd54455a6630301f89725d5f982a81df6a62a5c76f2a07ed5b"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/siren_pytorch.py",
+      "bytes": 6651,
+      "sha256": "90d10eb865dabb0f1f0aef171206034a7b442d728967313442f0117512a3f487"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/strengthConstraints.py",
+      "bytes": 11610,
+      "sha256": "8fa25298e349aeea12c84e40ff919a1962226d45b379d5ea7393464a97e81cc6"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/stressSampling.py",
+      "bytes": 5581,
+      "sha256": "ebb90dd605dd4af0a794d572d7f5df0d66f2a49e69f9c13283c04419dc01fc0a"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/toolFieldOffsets.py",
+      "bytes": 14682,
+      "sha256": "74b3986b82a219d03e84429add597b51fd7f77457d91da527f9339c86afccfa2"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/toolSampling.py",
+      "bytes": 5638,
+      "sha256": "acdbe3c429a23f7639c378c7c4e323934fadad1569ac716410a67d16dda3e12b"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/trainingMetrics.py",
+      "bytes": 3470,
+      "sha256": "c2d68bb89cbf69616937a8162a95d767ce4ef44980f951c7a9ef93b50c21ff8c"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/viewCachedLayers.py",
+      "bytes": 1965,
+      "sha256": "dfe7ed2eefce7fce542ddf51667f249e2adf025c9c0dddd8e987bd78fc66cbaa"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/viewFieldComparison.py",
+      "bytes": 3230,
+      "sha256": "2fe266baac8d21e7054ffc2eda7f6e19767b68735e9487c6543485eb3feb161c"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/viewOrientation.py",
+      "bytes": 5249,
+      "sha256": "0b02e918d0786a8ae8038718a6d15a3e9e0a220a776d0f2a325317d0e0eb0981"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/viewStressOrientation.py",
+      "bytes": 4244,
+      "sha256": "cba7d52bd086d7dbd0d8cd9c5a2afecde5e0b254965ffc750e4702988aad7e1b"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/visualizeBoundaryVertexNormalSampling.py",
+      "bytes": 13716,
+      "sha256": "41b1d0996cf81c3085c02c7f25d9aa4290231c2096da321e54ea0b3535d303a7"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/visualizeGradientHeightLayers.py",
+      "bytes": 16661,
+      "sha256": "f566ea2b1b2976bb4ad861377f382ad3c57f4a72b4dc9b8e0c71b38179cb5791"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/visualizeHeightClippedSurfaceSampling.py",
+      "bytes": 10181,
+      "sha256": "f3cc2159a4c9061b8fa69ae967ee0259a9e0333ea955ae935a41c149351770fa"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/runtime/visualizeHybridSurfaceSampling.py",
+      "bytes": 25712,
+      "sha256": "66b8cd0514c95978e5cda68b88d42493fa8fc93427b645b52eac53672138d201"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tests/test_collision_normalization.py",
+      "bytes": 3962,
+      "sha256": "855d39dda9a184dc666d830e40e642b7bbce833f1bbdac8985f2814d9a251150"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tests/test_learning_rate_schedule.py",
+      "bytes": 3804,
+      "sha256": "85748c5574de7a5db88625e181f9fd707b8fb9d9410b009c12405f6bb2fe7788"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tests/test_portable_update.py",
+      "bytes": 8869,
+      "sha256": "38f9ea58ed84a969e01a813836be23da801c8ec627c5291e1aef3bea88bc7a99"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tests/test_pyvista_compatibility.py",
+      "bytes": 2261,
+      "sha256": "40dcbdbfd00340d38d4fa7279ee9134910ec0ecb43da85787f95a3481c789e07"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tests/test_stress_sampling_acceleration.py",
+      "bytes": 3227,
+      "sha256": "a5583b56c1d7b6007c5f345ed0ec6229fe73ba5b7d14d6ce67c94c1e46cf2554"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tests/test_workflows.py",
+      "bytes": 6261,
+      "sha256": "75bcb31f4d35c70eebd105d609571a46a57bd5e942650842d5e9eabb3dc98e20"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tool_y8_xz25.json",
+      "bytes": 143,
+      "sha256": "cbee1d3b9cc3df3aefbc067bb9668962180c6c72d9432cab4e6ce62c9bf6e90f"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_check.json",
+      "bytes": 303,
+      "sha256": "7c3e281da4b48ef34196b133c30c37c41d678f1443f099dba471bd545e09ce09"
+    },
+    {
+      "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_training_margin04.json",
+      "bytes": 143,
+      "sha256": "df94e51d66da3050369e6a0db3677e1d22a62c9e26f7529b70be40fd7fa8f76d"
+    },
+    {
+      "path": "external_projected_pipeline/.gitignore",
+      "bytes": 8,
+      "sha256": "70a213afeabe5ac38ae4c88b2c7002ce5068b91a3e57a032245ab809dc6fa460"
+    },
+    {
+      "path": "external_projected_pipeline/AUTHORS.md",
+      "bytes": 209,
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+    },
+    {
+      "path": "external_projected_pipeline/MODEL_OPTIONS.md",
+      "bytes": 7242,
+      "sha256": "bc1349eacea1c809516480a1d475cf998afa74ff123e381767913e98f1f2a348"
+    },
+    {
+      "path": "external_projected_pipeline/README.md",
+      "bytes": 8591,
+      "sha256": "d00e91f805aa10502df9895b4e1afea27b1ce656675b5ec51135e807337c0b0d"
+    },
+    {
+      "path": "external_projected_pipeline/__init__.py",
+      "bytes": 269,
+      "sha256": "9a7cd319ac216def7d77d4f211aa36a1c643f1f1ced5ce83967a65d7ac2ee78f"
+    },
+    {
+      "path": "external_projected_pipeline/__main__.py",
+      "bytes": 70,
+      "sha256": "c97770108436e1dd8aac5fc79741d2dd7487a4f61d12ba4c081a957c2a3e6995"
+    },
+    {
+      "path": "external_projected_pipeline/api.py",
+      "bytes": 14872,
+      "sha256": "fe37bd7af0edc200f40d3c46cc76b5995e12c1244dbe8a685c164f62dbb31eb3"
+    },
+    {
+      "path": "external_projected_pipeline/bundle_manifest.json",
+      "bytes": 12000,
+      "sha256": "ca09fd0192f6ad6ee4fb80393b7657df2fc6399c8c69e6b1406e04bbf8d3a2cc"
+    },
+    {
+      "path": "external_projected_pipeline/calibration.py",
+      "bytes": 12844,
+      "sha256": "0480763ef4723759621dcff9084f227cc251597d131ec7608a9f838d012bfeff"
+    },
+    {
+      "path": "external_projected_pipeline/configs/projected.example.json",
+      "bytes": 6876,
+      "sha256": "2627c74f3b6480cc29a58011a1f7947e443adebfcb35cee87062b0b3c67422d7"
+    },
+    {
+      "path": "external_projected_pipeline/configs/support-model.example.json",
+      "bytes": 6501,
+      "sha256": "a2c04bbfbdef8928574810762bf4852166d06b7f6c008044e9808747c9f62a53"
+    },
+    {
+      "path": "external_projected_pipeline/execution_settings.py",
+      "bytes": 2640,
+      "sha256": "2dc1b5e9e60b10f0b0ed00f9fd7d5ada9eced21374b1ce442c0ffc08cd096f14"
+    },
+    {
+      "path": "external_projected_pipeline/machines/FLSUNQ5 - Copy.json",
+      "bytes": 473,
+      "sha256": "3c27313bf7c9d79ba232ed026d817661bfb07926e6cdac122f7f3004cd49619f"
+    },
+    {
+      "path": "external_projected_pipeline/machines/FLSUNQ5.json",
+      "bytes": 661,
+      "sha256": "f07cda53dfd65812d5d7a7fd6c981c316d30bd35c220a1f2a989fedcf60aa275"
+    },
+    {
+      "path": "external_projected_pipeline/machines/FLSUNQ5_post.gcode",
+      "bytes": 349,
+      "sha256": "0358fcc1160f59337dcbea63ec51df4745f85decf7647c161364d588720374a5"
+    },
+    {
+      "path": "external_projected_pipeline/machines/FLSUNQ5_pre.gcode",
+      "bytes": 802,
+      "sha256": "6e3755827ff1a80c48a9a64f594c2882e241d0300fe44670bc38de2dde3456d3"
+    },
+    {
+      "path": "external_projected_pipeline/machines/bambuA1.json",
+      "bytes": 650,
+      "sha256": "b697342cc48dd1fe6c1250df17455310c97e4108cde2b871adba255c79acb5b0"
+    },
+    {
+      "path": "external_projected_pipeline/machines/bambuH2D.json",
+      "bytes": 660,
+      "sha256": "77c6ee2752c011426d791649f01d506b49ff1a7698d8afff0d9af7484081eb61"
+    },
+    {
+      "path": "external_projected_pipeline/machines/bambuH2D_post.gcode",
+      "bytes": 2127,
+      "sha256": "14fdb2692554a98bdddec6115570d565019472aaaebfe820fba5fa76b58c6018"
+    },
+    {
+      "path": "external_projected_pipeline/machines/bambuH2D_pre.gcode",
+      "bytes": 9940,
+      "sha256": "8f8cd42174e3efb4599b6045410eef6bfc012a4b2be398e1e907064de96983ff"
+    },
+    {
+      "path": "external_projected_pipeline/machines/example_machine.json",
+      "bytes": 489,
+      "sha256": "8efe8133b6546ba6813d8ad4587aa974e140114360ab770bc5a1b8682846d7c7"
+    },
+    {
+      "path": "external_projected_pipeline/machines/example_machine_post.gcode",
+      "bytes": 81,
+      "sha256": "45b2eb61d42dd9a2ef23135e0f5582a4a02ad972dd7a8488e617e2aa00057137"
+    },
+    {
+      "path": "external_projected_pipeline/machines/example_machine_pre.gcode",
+      "bytes": 96,
+      "sha256": "c174ed787f6a1b3029aca475566c36d2e39a1ff1e3819c39164e1bd01503cf44"
+    },
+    {
+      "path": "external_projected_pipeline/output_lock.py",
+      "bytes": 2295,
+      "sha256": "6ee357fd3d834bf6b4a9541bc453bbf1c828e5fef7cb0373f6ddfd1bb1dcfe8a"
+    },
+    {
+      "path": "external_projected_pipeline/pipeline_cli.py",
+      "bytes": 7111,
+      "sha256": "a92ce2f5cca5091609f221a2e81c47255477f234a825d0fd73466ef6057fed27"
+    },
+    {
+      "path": "external_projected_pipeline/process_tree.py",
+      "bytes": 4443,
+      "sha256": "f5ccc0d9cd548ff8ef61f8c463f34808b765bae9b4a51c40a8031621cb161cff"
+    },
+    {
+      "path": "external_projected_pipeline/pyproject.toml",
+      "bytes": 820,
+      "sha256": "0425304de2555b355a693ab1f0392923b738542254df28b40cd28c418708d9da"
+    },
+    {
+      "path": "external_projected_pipeline/requirements-optional.txt",
+      "bytes": 86,
+      "sha256": "407109f8ff2163b31f2668cfa73a094649cbd6a7a1c9d018350a49b6588da348"
+    },
+    {
+      "path": "external_projected_pipeline/requirements.txt",
+      "bytes": 279,
+      "sha256": "3159eee14a1598a36770eaaf2a4dddacbf1fbab102e03a2310eb0a2f7977fa10"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/adaptive_path_decimation.py",
+      "bytes": 17291,
+      "sha256": "97405c3838f6b4dcb5d1ff5aa4f150f4b3591ec8ea094986bb310f0630f4776a"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/anchored_hole_heights.py",
+      "bytes": 6356,
+      "sha256": "a916c5389ba64919c0025e2727302aaa60274907d44011ce9766459e2c67c2d9"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_compute_heights.py",
+      "bytes": 27201,
+      "sha256": "18ecc882b7362cce4eceb74a613948ff55a5b291e25d2c23236b4a205a3f1875"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_compute_heights_5axis.py",
+      "bytes": 13681,
+      "sha256": "6f9b6bff5db3ddf5f4ae27c2e9a598835f7a2b584e0c15bacf8c96f9a307f815"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_compute_manifest_support_heights.py",
+      "bytes": 17882,
+      "sha256": "2e40882d33a4d87e28c700efd0bf4df4899bea989de0990b55ba34f057359d4f"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_compute_projected_nearest_heights.py",
+      "bytes": 20972,
+      "sha256": "ccba640fb30cd6bbac1a1e78b88d2eced771ddc6db3f035b926a9198116fe427"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_expand_boundary_support_meshes.py",
+      "bytes": 11102,
+      "sha256": "120c50a7d0d6f932c9c2defc6c5e090310f338d5cda7ce5ab894fc8280099b40"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_generate_hybrid_paths.py",
+      "bytes": 24515,
+      "sha256": "a06a3f87953021b05940c10621ecd172adca206a1385bcfda82e1b81055e8774"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_generate_paths.py",
+      "bytes": 20748,
+      "sha256": "f4bd08feee117d2265cfb0345b7a70949aca8230b675be23ac5aefe920dcf459"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_generate_projected_hybrid_paths.py",
+      "bytes": 60525,
+      "sha256": "6c58ee45f74a8268468ad97ba879b89ca0f476c7fa0f3946ebe6188911785ac7"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_generate_projected_manifest_support_paths.py",
+      "bytes": 14422,
+      "sha256": "8713e1b22da3771265a3d4700b462bb48ebd79f994dad7e8120664b51f7ad8fd"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_generate_projected_support_model_paths.py",
+      "bytes": 4630,
+      "sha256": "33d949cee733f01879a1170541c83db9945c32b69855610945f9adcc1663e9df"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/batch_meshlab_isotropic_remesh.py",
+      "bytes": 14513,
+      "sha256": "ca98f56e0faec9bc3e33875eceb154edc8ea31ac25fe2790722120f18d562a24"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/calibration_workload.py",
+      "bytes": 10318,
+      "sha256": "4c022e565161abd715b406103b891b31ce8d59700453fbaf702e30fc18e05cf4"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/compatible_support_schedule.py",
+      "bytes": 11007,
+      "sha256": "6e033841bc1e218aabef737a27be477a929909c3372096427434599a879d1191"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/connected_patch_planner.py",
+      "bytes": 13252,
+      "sha256": "24c63782f24b5770a3eae44ecf5ec1545b2036cd56e2af31918a3164a755aaf3"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/contact_support_height.py",
+      "bytes": 10966,
+      "sha256": "d219b76c238f84a4f8f9b15223c3e5f944a1c2ef0d5a1a1896e9e4ed1b1360e7"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/contour_extraction.py",
+      "bytes": 56117,
+      "sha256": "e02803db8386fa80dcaf59590095ca9adcb97c73dea6378bedc07e383dfc9f32"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/deposition_bvh.cpp",
+      "bytes": 6241,
+      "sha256": "d21efbfc13d345b98b5f5450c181fb33c2c37e6f7a575b1ba4e34ab271bf6452"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/deposition_bvh.py",
+      "bytes": 7164,
+      "sha256": "3ae82cec6a87fb48bf440a286f15141076328cdec92e53748dc0d011d9069a03"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/detect_top_layers_by_coverage.py",
+      "bytes": 40256,
+      "sha256": "b1af0c882793f76d3cabc6430f4388c86658afd2d67ec25d5e58ba5cf9c90e36"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/draft_toolpaths.py",
+      "bytes": 2090,
+      "sha256": "6282bf29c92e75c5a4cc393bf637eacc644ac1a306f27eb458d6aef7f8cd0b52"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/early_path_reduction.py",
+      "bytes": 10180,
+      "sha256": "dab3ae8412e219e0d398d82b76f72ec9c379edc6454454da519dad43be06532f"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/export_input_guard.py",
+      "bytes": 17078,
+      "sha256": "acfa5c35b44c55676ced01121f183b8065b7058fde012714bcfadf39734e2e4c"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/export_projected_manifest_support.py",
+      "bytes": 4244,
+      "sha256": "e50483d48393113ab9788a0e66fb3bff1a92e9b56ed29bc90f2224e23f79bc53"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/extrusion_height.py",
+      "bytes": 27942,
+      "sha256": "9d530d7e916b2b8961eac2cfe66abec94c6faafbf574f214fccbedb3173b7205"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/field_orientation.py",
+      "bytes": 3264,
+      "sha256": "c58ed609a454c3d6055203f09147d3c5e12e0f950568abda73a6e5dd5131e727"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/fixed_axis_collision.py",
+      "bytes": 5125,
+      "sha256": "9da04e430231d87ab6cf587b15e845f0799f17049935bc03d501254402411224"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/heat_method_core.py",
+      "bytes": 17429,
+      "sha256": "84d0ee676a7e181de0af3814bfbf34480f15afe0db65a1cda468ca9445fa3e1c"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/height_cache_budget.py",
+      "bytes": 4011,
+      "sha256": "a9df74d8ec380d8673473082016e36252dccb4def5528a3d3b708f9de295d45a"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/height_output_sidecars.py",
+      "bytes": 3809,
+      "sha256": "1d13dff3577622cba1b5dffd4634ffa90e700300286d1ad1c6f7d6aad351e6d1"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/height_warning_policy.py",
+      "bytes": 4938,
+      "sha256": "ecccf3d0bae38c1e4988281594ab77a587fa25eadcc67a8496dcba00e573d7d4"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/machine_gcode_export.py",
+      "bytes": 70234,
+      "sha256": "0518a5dd8982841ca6f4bda524b25745120eb941cfc66f32ea6291e535f95402"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/manifold_surface_patches.py",
+      "bytes": 5585,
+      "sha256": "75b779f065a2582199c5eb2ae068e9b3e6226ee23d86e291e9b5e561adbffe4c"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/mesh_distance_workflow.py",
+      "bytes": 14986,
+      "sha256": "346ee0d3d2e1528c4612cbc6be1ef7666e084378d7e5a454bb1236f31388afc0"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/mesh_hole_repair.py",
+      "bytes": 6371,
+      "sha256": "0e85afdc1f43911e7eb80e81eff36e1e7742320fc93a77f5aa173c42fa883be5"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/path_backing_audit.py",
+      "bytes": 12335,
+      "sha256": "f9b45ab630f3bdeb70e64ebb11f4e082cffca24e29a8ad0602f4898b9691ac4e"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/path_fragment_filter.py",
+      "bytes": 8382,
+      "sha256": "ac9f10501b24980b83ae0d97b1704ed60398e6546beb4487d13f33c671b70813"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/projected_entry.py",
+      "bytes": 8997,
+      "sha256": "96da1209c4d56678665628301dbbc30807d73b97f00bc295d4209a6f2b34c3a2"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/projection_mesh_repair.py",
+      "bytes": 5530,
+      "sha256": "857d02c96c4e6ea83f6f3754d25a59bc6a6f14cf260ee78a0a5c763fc07482f2"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/reference_geometry_cache.py",
+      "bytes": 2093,
+      "sha256": "972719b81fb36ee1608b4fa09242b2b31991da6f8c94fd6f010295d787595367"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/run_causal_path_lift.py",
+      "bytes": 31858,
+      "sha256": "06f65162d6b6ab43338eadf49c31026b447b1a2de65fb278f1fc20db1892c68c"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/run_surface_pipeline.py",
+      "bytes": 99782,
+      "sha256": "90f23ea889d7ad790877c1eccf011289a8679380684f4d44ac4cc6b198a54c3d"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/run_surface_pipeline_projected_hybrid.py",
+      "bytes": 3530,
+      "sha256": "4483f6fe3382bde944e7a378dd09eb1bd5a8c990b251c6cb2b4b9a0284f01df0"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/run_surface_pipeline_projected_manifest_support.py",
+      "bytes": 17470,
+      "sha256": "fcb0c2b8665503195b2682def4a3bbf91769e7e11c3d3de2d20b4a5adfee665f"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/support_height_validation.py",
+      "bytes": 34697,
+      "sha256": "655d43071e7b5e4b49c6bf7e9bb9b450287c8fd117586cc23132871304780496"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/support_hole_repair.py",
+      "bytes": 26105,
+      "sha256": "b8fb74b8e5c6c96fe6fc6bb8286b31087db6b3813e62a1f32b696cbc0c655ae0"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/support_preflight_cache.py",
+      "bytes": 5808,
+      "sha256": "0d90275cb9fa2d5b6ca8f7d409aa6809a8db4a4ab3aa3789176218be35a22ef7"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/surface_field_pipeline.py",
+      "bytes": 38755,
+      "sha256": "686e48ead38b5201738fa4a1465f379dcc320648bb54c5f0f905d9cb161a298b"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/surface_field_support.py",
+      "bytes": 9923,
+      "sha256": "944256cba6b35a4c3f85f9fe4d60cef283aab1586047866c42627744d841635e"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/surface_hatch_metric.py",
+      "bytes": 9739,
+      "sha256": "a51330202656cd5a268ad78abad219cbecaceb98e58917577b5894347269e80d"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/surface_metric_source.py",
+      "bytes": 3361,
+      "sha256": "096c019bd62442607f788c8af4e7742be3e7661a463b1d5978111f5940e3c5d3"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/surface_remesh.py",
+      "bytes": 9430,
+      "sha256": "e60db6826e80788cafccad15b84e48073a681d0b599c92f022609758573940ce"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/surface_waypoint_sampling.py",
+      "bytes": 2509,
+      "sha256": "27b8dd5e05f003e8df276985d596f22f11f7a9498016627a93f81e3152a03cfc"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/test_hybrid_contours.py",
+      "bytes": 87514,
+      "sha256": "10dbcce02b1b0e2db4be31dee8e82fee0f459bc496b6ea5b475b1084cd88c21d"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/test_hybrid_contours_vectorized.py",
+      "bytes": 11513,
+      "sha256": "0d7114253df59c9982d369bff946cb93cc249da8219e6d8a2d0387be87e21224"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/test_potpourri3d_signed_heat_plane.py",
+      "bytes": 21469,
+      "sha256": "438a17b0e47c70cccc9172ef06c0b90de70522c0542b31d0b5a0a01894dea22d"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/test_vector_heat_stripe_field.py",
+      "bytes": 38124,
+      "sha256": "3bf5a3dde58ca3523ee44ba040a481e3d63c2035cc87787a78475ee91716b1f5"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/toolpath_export.py",
+      "bytes": 12362,
+      "sha256": "6557178b98a2409519d5689e8c0a3428905b764ce3edd98388ef366cca78a9b3"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/toolpath_order.py",
+      "bytes": 11286,
+      "sha256": "6c161ba4b31ddc6518a6e0388968aa1d14d673602ca8e2b1078153f9c9253232"
+    },
+    {
+      "path": "external_projected_pipeline/runtime/visualize_layers_and_paths.py",
+      "bytes": 29230,
+      "sha256": "e4a442f3582c4491e08691efeba2daff6cb2c6e2e2b95e214f169b5aa764f770"
+    },
+    {
+      "path": "external_projected_pipeline/tested_dependencies.json",
+      "bytes": 357,
+      "sha256": "90f5210488732974a66d65d8cc55e001fb2976bf5e348ffc078d071bf362a121"
+    },
+    {
+      "path": "external_projected_pipeline/tests/test_calibration.py",
+      "bytes": 4375,
+      "sha256": "6b79ca4bd532b0b6f71387063d08310ce3ae09ba3355707cbfb29c04124225db"
+    },
+    {
+      "path": "external_projected_pipeline/tests/test_support_sheet_spacing.py",
+      "bytes": 14329,
+      "sha256": "05e23a874777aaddf35853c22e7f28b197e33653dfdd4fff08c85faaf0e53038"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/.gitignore",
+      "bytes": 572,
+      "sha256": "24945a44fb2794b18ba452baafdc9d5b4ba72dbede1e67168b844e9e19d4c7c8"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/AUTHORS.md",
+      "bytes": 209,
+      "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/README.md",
+      "bytes": 3425,
+      "sha256": "68ea79d70157bb4aad4befc35d60c906f3794320c335f00eadbf1f1c16005ae5"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/assemble_a1_layer_paths.py",
+      "bytes": 5400,
+      "sha256": "7a4ba2fac71443a3eff084914d5763999388f16f1dce7d3930a1259bf0ea8ef3"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/make_a1_3mf_folder.py",
+      "bytes": 17177,
+      "sha256": "ba9ee10ccb4550110dce70b51e9046f1ea11ef1c5b7d354e1bf357369466e6d4"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/pipeline_config.json",
+      "bytes": 6012,
+      "sha256": "8da70d310fa6f8ee4569b04016c28fe63804fdb9e3024fd835d0c5509e5c6b7d"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/prepare_a1_reference.py",
+      "bytes": 4284,
+      "sha256": "f28390bf00a411673f698d9f5c7d17be6081a6c0e75a9fd63787d5a43454245a"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/profiles/A1mini.json",
+      "bytes": 976,
+      "sha256": "962148566dff9cf6d18b964583fe8f1568de148514b4dc57b8de8fb80ae192e1"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/reference/A1_sample.gcode.3mf",
+      "bytes": 921692,
+      "sha256": "cd796723e5d8a888e5eacdc6163f182c9a7c6621b637859883cdcb9e0cc90c5d"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/reference/A1mini_sample.gcode.3mf",
+      "bytes": 37752,
+      "sha256": "b1d8b709e2dd1318cfe1a864d7f9d0acd53f02f61b5233a9b7e669630482085a"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/run_pipeline.py",
+      "bytes": 6037,
+      "sha256": "b51d3afb53414df9f04659864106ea9d9de11bf4e4ffe5e7d6077d8c69d0715d"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/a1_single_nozzle/run_pipeline_motion_test.py",
+      "bytes": 3266,
+      "sha256": "9d8e3612ad18be0b0661941c33da4f75ebfbf1a2703f9b10af16579aceb4447b"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/assemble_layer_paths.py",
+      "bytes": 182016,
+      "sha256": "e84b48e1a5609305efb4044a90fb9e51f97bc80b55fc97a1de4fac1331369f6c"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/make_h2d_3mf_folder.py",
+      "bytes": 84803,
+      "sha256": "6e533b9813f3d99622a183a21adf69d9b16d2ec973bab72b5f339c9e3d5037ae"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/motion_cleanup.py",
+      "bytes": 13672,
+      "sha256": "4d3dd02aed20182ea2f5a76db11c100cf78f565291dcc3b2616233c460e48626"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/pack_3mf_folder.py",
+      "bytes": 2184,
+      "sha256": "63a74044808504b4fe1cce2af39ff91c85bb643e66d41a08c864ea3f1c2bf912"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/run_pipeline.py",
+      "bytes": 6377,
+      "sha256": "76be15372ad7bab4a059a1c0d18d288aec35216513644f7c727d40d34170ba52"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/run_pipeline_motion_test.py",
+      "bytes": 8858,
+      "sha256": "e0b9bfb72e1fddbc55fbb754a92bf4695970a19f5762520d56751534aea2c3c8"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/run_pipeline_pressure_wipe.py",
+      "bytes": 4044,
+      "sha256": "9e6078728d7bb1eac887b56ae6d13c050f3de4253b8199bb099f159a11dace80"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/travel_feed.py",
+      "bytes": 3172,
+      "sha256": "e303aa33c9fea4b81ea721c06eeab90e080fa0e0ad8f2b1cf482940ef5264835"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/common/verify_a1_motion.py",
+      "bytes": 7815,
+      "sha256": "579f53ba914012ebd464c840aa5af824c657f4547903f8b33d955e7699f35efd"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/machineSetup/bambuH2D_post.gcode",
+      "bytes": 2127,
+      "sha256": "14fdb2692554a98bdddec6115570d565019472aaaebfe820fba5fa76b58c6018"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/machineSetup/bambuH2D_pre.gcode",
+      "bytes": 9755,
+      "sha256": "0699f77e1c40e5ea9ad4e0a45cadcbe6f9d44fa2afb978ee6933adb5af5c4858"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/pipeline_config.json",
+      "bytes": 10264,
+      "sha256": "5fb055d4f74cec341c5cea16e8fcaf03747b837baec65a217599f1d111009bdf"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/run_pipeline.py",
+      "bytes": 503,
+      "sha256": "47ea00b1250ebfec54004fa5201319297598f247797784bfec00f8a12e9c44ba"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/run_pipeline_motion_test.py",
+      "bytes": 514,
+      "sha256": "f2660d89666381e1beb12b0cadb29a4b7e0ac9c12f467a1fb1687940688a401c"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/3D/3dmodel.model",
+      "bytes": 1037,
+      "sha256": "9b5350a85286be2f3e02e435450a508bc00d3912cfeb4b8a75a6d017b925a459"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/_rels/model_settings.config.rels",
+      "bytes": 255,
+      "sha256": "5ea2c0f459aec4d25341abd431edee7890c8d2fd02efbaed4b073d04cfa11440"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/cut_information.xml",
+      "bytes": 139,
+      "sha256": "f3d74f9df0e65dcb21f3392b309896fac8d83fd6abccf270b134ee25bb98287e"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/filament_sequence.json",
+      "bytes": 36,
+      "sha256": "871fa38c5823373f7e7ba741873836fd02163b6cc14784fd3c6e2c7ff6a133d8"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/model_settings.config",
+      "bytes": 771,
+      "sha256": "85a1d33e9278a748eb77dd9fb2c04db7674d27f8634b244e3dce87de3df0d891"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/pick_1.png",
+      "bytes": 1299,
+      "sha256": "030660b2b2505da187828e7248e603068495a56a45c0696e0f3a04f4399cb5b0"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/plate_1.gcode",
+      "bytes": 4076269,
+      "sha256": "771973360d2b97c24e5818c10caccf10f35391c68a59e7ac9f711120ececfc20"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/plate_1.gcode.md5",
+      "bytes": 32,
+      "sha256": "d133c4b849964b65b0624d2545f5a5cf34ec562bbe93c9eb8c814a37d445b3fe"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/plate_1.json",
+      "bytes": 613,
+      "sha256": "fcd0d46f9d6feaf10e33f91c7611405b82015522c6aa836539d491c892912052"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/plate_1.png",
+      "bytes": 13705,
+      "sha256": "f2d02227e4461e9d48afb6613e7abde5d925b323ca6913d377e27f79e996b9a5"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/plate_1_small.png",
+      "bytes": 2596,
+      "sha256": "699bb7a060730f3909d15287cc168dd13d01247f0014685254199c757b425895"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/plate_no_light_1.png",
+      "bytes": 2752,
+      "sha256": "d97876798c3711b4abab2fad80ecd3d2fd680f243c34b37c4bb4e3a956add25f"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/project_settings.config",
+      "bytes": 68386,
+      "sha256": "c36786c53a404cbc1173b05df147880711ad68dab0376fca91176976cb436527"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/slice_info.config",
+      "bytes": 1774,
+      "sha256": "70daa0258d0bc760f7c9f1186207dce58cd51373335eb3ee8969c739d41149a2"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/top_1.png",
+      "bytes": 3838,
+      "sha256": "cfa014dcca6e3ceafd22673d0d72ed0c83e89eb6b625db0543fb0001c51346fe"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/[Content_Types].xml",
+      "bytes": 432,
+      "sha256": "4acce1f577c7f0af6d9d5923faac96a76aeb1c06f0eef1762b2c8905cc0c846b"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/_rels/.rels",
+      "bytes": 674,
+      "sha256": "abba8905ba7d74bf494412a808888e96f3e9f8dc43eccef22f4d4eff4dd8f77c"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/machineSetup/bambuH2D_post.gcode",
+      "bytes": 2127,
+      "sha256": "14fdb2692554a98bdddec6115570d565019472aaaebfe820fba5fa76b58c6018"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/machineSetup/bambuH2D_pre.gcode",
+      "bytes": 9755,
+      "sha256": "0699f77e1c40e5ea9ad4e0a45cadcbe6f9d44fa2afb978ee6933adb5af5c4858"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/pipeline_config.json",
+      "bytes": 6000,
+      "sha256": "2112ca0dec383c78f24c4d01c33a49ac755bae195764f29ed6ba11fa15031b2d"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/run_pipeline.py",
+      "bytes": 503,
+      "sha256": "47ea00b1250ebfec54004fa5201319297598f247797784bfec00f8a12e9c44ba"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/run_pipeline_motion_test.py",
+      "bytes": 514,
+      "sha256": "f2660d89666381e1beb12b0cadb29a4b7e0ac9c12f467a1fb1687940688a401c"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/3D/3dmodel.model",
+      "bytes": 1037,
+      "sha256": "607c33cb5eace89b147de6457d3a4b3ad2569887fabb7bc01bdd0517bb48d4d6"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/_rels/model_settings.config.rels",
+      "bytes": 255,
+      "sha256": "5ea2c0f459aec4d25341abd431edee7890c8d2fd02efbaed4b073d04cfa11440"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/cut_information.xml",
+      "bytes": 139,
+      "sha256": "f3d74f9df0e65dcb21f3392b309896fac8d83fd6abccf270b134ee25bb98287e"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/filament_sequence.json",
+      "bytes": 28,
+      "sha256": "fbee280bfae078aff1276cb9094a99079914ef66ecca185b3365a31e84eff979"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/model_settings.config",
+      "bytes": 775,
+      "sha256": "142c2455a39ce143e16a7f34e6bc81f68840927d549047bd4c757f603a2daaa7"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/pick_1.png",
+      "bytes": 1172,
+      "sha256": "2fd24eb26df73700e334c2ce33b52dee2b5f39c73e10c058969c817ff91ac29b"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/plate_1.gcode",
+      "bytes": 204185,
+      "sha256": "dad5d234041c43fc2f7e919edb84fad7a3836cb0f8d68dd5859936f3dea098ec"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/plate_1.gcode.md5",
+      "bytes": 32,
+      "sha256": "4505e95d51085624625ad7574ba401773b61f6a5cd052b89d86014c18453ca28"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/plate_1.json",
+      "bytes": 450,
+      "sha256": "858582a6cb62e1f1954b47f5694031569e88fea566e0796cd8809e6b9bf8ee33"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/plate_1.png",
+      "bytes": 3886,
+      "sha256": "90557869a6ac9be7dc95124d61b2299feef33ff7812104137128998b04d1bf8a"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/plate_1_small.png",
+      "bytes": 2066,
+      "sha256": "282e04987287459d2d106fad2bc632246481a481d81d442231651191108bc278"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/plate_no_light_1.png",
+      "bytes": 3048,
+      "sha256": "8c484c0bfe4e6746ac21de4389a3a520834853380b433ffb80dd2813eb614b52"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/project_settings.config",
+      "bytes": 65219,
+      "sha256": "1bd467ad18606f4cc61deeb98eb181ae58f766403aa1ce8f09399fb93911bbfc"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/slice_info.config",
+      "bytes": 1411,
+      "sha256": "9519d1345c64ef9718327ef82d48346b9ca3ea70b0c1ab3d941b6bfcee5fb704"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/top_1.png",
+      "bytes": 1287,
+      "sha256": "0a720899a21497ab6ee9645b526b1d089c5cb72ccfc492f4b959b987f3ac3824"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/[Content_Types].xml",
+      "bytes": 432,
+      "sha256": "4acce1f577c7f0af6d9d5923faac96a76aeb1c06f0eef1762b2c8905cc0c846b"
+    },
+    {
+      "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/_rels/.rels",
+      "bytes": 674,
+      "sha256": "abba8905ba7d74bf494412a808888e96f3e9f8dc43eccef22f4d4eff4dd8f77c"
+    }
+  ]
+}

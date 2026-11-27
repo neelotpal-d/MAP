@@ -117,14 +117,11 @@ def layer_surface_spacings(rows,widths,tags,breaks,layer,metadata,*,maximum_spac
     from batch_generate_projected_hybrid_paths import ProjectedSurfaceLifter,_planar_region_from_projected_triangles
     from mesh_distance_workflow import load_obj_mesh
     from extrusion_height import apply_axis_lift
-    source=layer.get('surface_metric_mesh')
+    from surface_metric_source import retained_metric_source
+    source,recovery=retained_metric_source(layer,metadata)
     if not source:return np.zeros(max(0,len(rows)-1)),dict(qualified_segments=0,reason='No saved source mesh; regenerate paths to enable surface correction.')
-    path=Path(source)
-    if not path.is_file():raise FileNotFoundError('Saved surface for hatch-volume correction: '+str(path))
-    vertices,faces=load_obj_mesh(path)
+    vertices,faces=load_obj_mesh(source)
     vertices=apply_axis_lift(vertices,axis=str(metadata.get('model_lift_axis','y')),amount=float(metadata.get('model_lift',0.)))
-    lifter=ProjectedSurfaceLifter.build(vertices,faces)
-    region=_planar_region_from_projected_triangles(lifter)
     directions=dict(layer.get('surface_hatch_directions',{}))
     if not directions and layer.get('parallel_axis'):
         value=layer['parallel_axis']
@@ -132,4 +129,26 @@ def layer_surface_spacings(rows,widths,tags,breaks,layer,metadata,*,maximum_spac
         elif str(value).startswith('angle:'):
             theta=np.deg2rad(float(value.split(':')[1]));directions['inner_raster']=[float(np.cos(theta)),float(np.sin(theta))]
     nominal=.5*(widths[:-1]+widths[1:])
-    return finite_strip_spacings(lifter,region,rows[:,:3],nominal,tags,breaks,directions,maximum_spacing=maximum_spacing)
+    if layer.get('surface_metric_components')=='connected_regions':
+        from connected_patch_planner import surface_components
+        charts=surface_components(vertices,faces)
+    else:charts=((vertices,faces),)
+    result=np.zeros(max(0,len(rows)-1));maximum_error=0.;count=0
+    for chart_index,(points,triangles) in enumerate(charts):
+        selected=layer.get('surface_metric_chart_indices')
+        if selected is not None and chart_index not in selected:continue
+        lifter=ProjectedSurfaceLifter.build(points,triangles)
+        region=_planar_region_from_projected_triangles(lifter)
+        chart_directions=layer.get('surface_metric_chart_directions',{}).get(str(chart_index),directions)
+        values,report=finite_strip_spacings(lifter,region,rows[:,:3],nominal,tags,breaks,chart_directions,maximum_spacing=maximum_spacing)
+        overlap=(result>0)&(values>0)
+        if np.any(overlap&~np.isclose(result,values,rtol=1e-6,atol=1e-8)):
+            raise ValueError('Hatch strip matches disconnected source charts with inconsistent physical spacing.')
+        result=np.maximum(result,values);count+=1
+        maximum_error=max(maximum_error,report.get('maximum_qualified_planarity_error_mm',0.))
+    qualified=int(np.count_nonzero(result))
+    return result,dict(qualified_segments=qualified,excluded_segments=len(result)-qualified,
+        maximum_physical_spacing_mm=float(result.max(initial=0.)),
+        maximum_qualified_planarity_error_mm=maximum_error,source_chart_count=count,
+        recovered_patch_reference=recovery is not None,
+        scope='Source-matched finite hatch strips; disconnected source charts evaluated separately')

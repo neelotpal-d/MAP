@@ -203,6 +203,11 @@ def run_config(config_path, *, log_dir=None, on_output: Callable[[str], None] | 
     """Run in a separate interpreter to isolate sibling imports and worker globals."""
     path = Path(config_path).resolve()
     config = _read(path)
+    if __package__:
+        from .runtime.draft_toolpaths import validate_outputs
+    else:
+        from runtime.draft_toolpaths import validate_outputs
+    draft = validate_outputs(config, path.parent)
     variant = config.get('pipeline_variant', 'support-model' if 'compatible_inputs' in config else 'projected')
     if variant not in {'projected', 'support-model'}:
         raise ValueError(f'Unknown pipeline_variant: {variant}')
@@ -227,6 +232,9 @@ def run_config(config_path, *, log_dir=None, on_output: Callable[[str], None] | 
             raise ValueError(f'Generated folder cannot be a filesystem root: {output}')
     logs = log_dir or path.parent / config.get('logs_dir', 'logs')
     execution=resolve_execution(config)
+    if draft:
+        outputs = dict(outputs, draft_paths=outputs['toolpaths'])
+        outputs.pop('heights', None)
     with lock_outputs(generated):
         return _execute([sys.executable, '-u', str(RUNTIME / 'projected_entry.py'), str(path)], cwd=path.parent,
                         logs_dir=logs, outputs=outputs, label='pipeline', on_output=on_output, check=check, config=config,
@@ -236,6 +244,11 @@ def run_config(config_path, *, log_dir=None, on_output: Callable[[str], None] | 
 def export_bare(toolpath_dir, output_dir, *, machine_name='bambuH2D', machine_dir=None,
                 start_main=None, end_main=None, options=(), log_dir=None, on_output=None, check=True) -> RunResult:
     source, target = Path(toolpath_dir).resolve(), Path(output_dir).resolve()
+    if __package__:
+        from .runtime.height_warning_policy import check_draft_paths
+    else:
+        from runtime.height_warning_policy import check_draft_paths
+    check_draft_paths(source)
     if (source / 'batch_5axis.meta.json').exists():
         raise ValueError('Experimental layer-normal paths cannot be exported by this fixed-axis machine exporter.')
     metadata = _read(source / 'batch_3axis.meta.json')
@@ -246,10 +259,11 @@ def export_bare(toolpath_dir, output_dir, *, machine_name='bambuH2D', machine_di
     else:
         from runtime.height_warning_policy import check_height_outliers
     check_height_outliers(metadata, start_main=start_main, end_main=end_main)
-    issues = metadata.get('support_validation', {}).get('unresolved_points', 0)
-    if issues:
-        raise ValueError(f'{issues} unresolved supporting-height points remain. Inspect the per-layer '
-            '*.height_validation.npz diagnostics before machine export; no bridge thickness is assumed.')
+    if __package__:
+        from .runtime.height_warning_policy import check_height_issues
+    else:
+        from runtime.height_warning_policy import check_height_issues
+    check_height_issues(metadata,start_main=start_main,end_main=end_main)
     mains = [int(layer['layer_main']) for layer in metadata['layers']]
     if not mains:
         raise ValueError('Processed batch is empty.')

@@ -1,4 +1,4 @@
-"""Directed born-small support-hole masks with saved-field lifting.
+"""Directed small support-hole masks with mesh or advanced saved-field lifting.
 
 Source layer meshes remain unchanged. Cached projected regions avoid repeating
 their polygon unions in path workers. Model-near/protected lifetimes are kept.
@@ -15,6 +15,9 @@ import shapely
 from shapely.geometry import Polygon,MultiPolygon
 from shapely.ops import unary_union
 from scipy.spatial import cKDTree
+
+# Match the numerical-hole cleanup used by the cached planning regions.
+NUMERICAL_HOLE_AREA_MM2=1e-10
 
 
 def _sha(path):
@@ -51,27 +54,35 @@ def _geometry_context(field_source,model_source,domain_sha,field_sha,model_sha):
     runtime=Path(__file__).resolve().parents[2]/'CurvedSupportGenerator/runtime'
     if str(runtime) not in sys.path:sys.path.insert(0,str(runtime))
     from SupportGenerationCurved.field_grid import GridField
+    return GridField.load(field_source),_model_context(model_source,model_sha)
+
+
+@lru_cache(maxsize=1)
+def _model_context(model_source,model_sha):
+    if _sha(Path(model_source))!=model_sha:raise ValueError('Support repair model changed: '+str(model_source))
     import pyvista as pv
     import igl,vtk
     mesh=pv.read(model_source)
     if not isinstance(mesh,pv.PolyData):mesh=mesh.extract_surface(algorithm='dataset_surface')
     mesh=mesh.triangulate().clean()
     if mesh.n_open_edges:raise ValueError('Support-hole repair requires a closed original model solid.')
-    vertices=np.asarray(mesh.points,dtype=np.float64).copy()
-    faces=np.asarray(mesh.regular_faces,dtype=np.int64).copy()
+    vertices=np.ascontiguousarray(mesh.points,dtype=np.float64)
+    faces=np.ascontiguousarray(mesh.regular_faces,dtype=np.int64)
     tree=igl.AABB();tree.init(vertices,faces)
     inside=vtk.vtkSelectEnclosedPoints();inside.Initialize(mesh)
-    return GridField.load(field_source),(vertices,faces,tree,inside,mesh)
+    return vertices,faces,tree,inside,mesh
 
 
 def _context(settings):
+    if settings.get('method','field')=='mesh':
+        return None,_model_context(settings['model_source'],settings['model_sha256'])
     return _geometry_context(settings['field_source'],settings['model_source'],
         settings['domain_sha256'],settings['field_sha256'],settings['model_sha256'])
 
 
 def _distances(model,points):
     vertices,faces,tree=model[:3]
-    squared,_,_=tree.squared_distance(vertices,faces,np.asarray(points))
+    squared,_,_=tree.squared_distance(vertices,faces,np.ascontiguousarray(points,dtype=np.float64))
     return np.sqrt(np.maximum(squared,0)).reshape(-1)
 
 
@@ -105,6 +116,7 @@ def track_lifetimes(catalogs,settings):
                 if abs(h['center_y']-p['center_y'])<=settings['maximum_sheet_shift_mm']+.5*(h['height_span']+p['height_span']):parents.append(j)
             may_start=all(status[j] for j in parents) if parents else h['small_birth_candidate']
             status[i]=may_start and not h['protected']
+            if settings.get('method','field')=='mesh':status[i]&=h['small_birth_candidate']
             h['parents']=parents
         previous=ids;previous_polys=[Polygon(holes[i]['xy']) for i in ids]
     return holes,status
@@ -121,7 +133,7 @@ def _catalog(job):
     from connected_patch_planner import surface_components
     from batch_generate_projected_hybrid_paths import ProjectedSurfaceLifter,_planar_region_from_projected_triangles,_iter_polygons,_subdivide_3d
     field,model=_context(settings)
-    vertices,faces=load_obj_mesh(path);holes=[];regions={}
+    vertices,faces=load_obj_mesh(path);holes=[];regions={};numerical_holes=0
     patches=list(surface_components(vertices,faces))
     # The planner keeps original vertex/cell ordering for a single body.
     if len(patches)==1:patches=[(vertices,faces)]
@@ -131,26 +143,40 @@ def _catalog(job):
     for points,triangles in patches:
         lifter=ProjectedSurfaceLifter.build(points,triangles)
         identity=patch_identity(lifter)
-        chart=validate_field_chart(lifter,field,entry['scalar'],field_tolerance=settings['surface_repair_budget_mm'],
+        mesh_method=settings.get('method','field')=='mesh'
+        chart=None if mesh_method else validate_field_chart(lifter,field,entry['scalar'],field_tolerance=settings['surface_repair_budget_mm'],
             maximum_facet_difference=settings['chart_maximum_y_shift_mm'])
         if chart is not None:field_charts[identity]=chart
-        geometry=_planar_region_from_projected_triangles(lifter,validate_projection=False)
+        geometry=_planar_region_from_projected_triangles(lifter,validate_projection=mesh_method)
         source_polygons=_iter_polygons(geometry)
-        polygons=[Polygon(p.exterior.coords,[r.coords for r in p.interiors if Polygon(r).area>1e-10]) for p in source_polygons]
+        polygons=[Polygon(p.exterior.coords,[r.coords for r in p.interiors if Polygon(r).area>NUMERICAL_HOLE_AREA_MM2]) for p in source_polygons]
         geometry=polygons[0] if len(polygons)==1 else MultiPolygon(polygons)
         regions[identity]=geometry.wkb_hex
         for polygon in source_polygons:
             for ring in polygon.interiors:
+                if Polygon(ring).area<=NUMERICAL_HOLE_AREA_MM2:
+                    numerical_holes+=1;continue
                 xy=np.asarray(ring.coords);xyz,_,_=lifter.lift(xy)
                 probes=_subdivide_3d(xyz,settings['boundary_sample_mm'])
                 distance=float(_distances(model,probes).min())
                 bounds=Polygon(xy).bounds
-                holes.append(dict(xy=xy.tolist(),ring=xyz.tolist(),file=entry['combined_mesh'],
+                holes.append(dict(owner_identity=identity,xy=xy.tolist(),ring=xyz.tolist(),file=entry['combined_mesh'],
                     small_birth_candidate=max(bounds[2]-bounds[0],bounds[3]-bounds[1])<settings['birth_width_mm'],
                     protected=distance<=settings['protection_distance_mm'],model_distance_mm=distance,
                     center_y=float(xyz[:,1].mean()),height_span=float(np.ptp(xyz[:,1]))))
+                if settings.get('method','field')=='mesh':
+                    from mesh_hole_repair import boundary_patch
+                    try:
+                        pv,pf=boundary_patch([holes[-1]])
+                        tri=pv[pf][:,:,[0,2]]
+                        a=tri[:,1]-tri[:,0];b=tri[:,2]-tri[:,0]
+                        area=float(np.abs(a[:,0]*b[:,1]-a[:,1]*b[:,0]).sum()/2)
+                        if abs(area-Polygon(xy).area)>max(1e-12,1e-10*Polygon(xy).area):
+                            raise ValueError('Triangulated patch does not cover its approved boundary.')
+                    except ValueError as error:
+                        holes[-1].update(protected=True,repair_unavailable_reason=str(error))
     result=dict(file=entry['combined_mesh'],scalar=entry['scalar'],holes=holes,regions=regions,
-        repaired_mesh=None,surface_repairs=[],field_charts=field_charts)
+        repaired_mesh=None,surface_repairs=[],field_charts=field_charts,numerical_holes_ignored=numerical_holes)
     probe.store(result);result['catalogue_cache']=probe.stats
     return result
 
@@ -158,20 +184,24 @@ def _catalog(job):
 def prepare_repair(entries,mesh_dir,output_dir,support_config,export_metadata,height_config,*,base_dir,workers=1):
     """Return per-layer context paths and an explicit availability report."""
     option=dict(support_config.get('hole_repair',{}));started=time.perf_counter()
+    method=option.get('method','field')  # Legacy configs retain their saved-field contract.
+    if method not in ('mesh','field'):raise ValueError('Support hole repair method must be mesh or field.')
     report=dict(enabled=bool(option.get('enabled',True)),status='disabled',changed_layer_candidates=0)
+    report['method']=method
     if not report['enabled']:return {},report
     root=option.get('field_source') or export_metadata.get('support_field_source')
     model=option.get('model_source') or height_config.get('support_validation',{}).get('model_solid') or export_metadata.get('model_volume_source')
-    if not root or not model:
-        report.update(status='unavailable',reason='Saved support field and original closed model are required; no field is guessed or extrapolated.')
+    if not model or (method=='field' and not root):
+        report.update(status='unavailable',reason=('Original closed model is required for interpolated-hole clearance checks.' if method=='mesh' else
+            'Saved support field and original closed model are required; no field is guessed or extrapolated.'))
         return {},report
     def absolute(value):
         path=Path(value);return str((Path(base_dir)/path).resolve()) if not path.is_absolute() else str(path.resolve())
-    root,model=absolute(root),absolute(model)
+    root,model=(absolute(root) if root and method=='field' else None),absolute(model)
     width=float(support_config.get('width',.5));nominal=float(height_config.get('nominal_layer_height',.2))
     gap=max(float(export_metadata.get('side_clearance',0)),float(export_metadata.get('contact_gap',0)),
             float(height_config.get('contact_support_height',{}).get('gap',0)))
-    settings=dict(field_source=root,model_source=model,birth_width_mm=float(option.get('birth_width_mm',4*width)),
+    settings=dict(method=method,field_source=root,model_source=model,birth_width_mm=float(option.get('birth_width_mm',4*width)),
         protection_distance_mm=gap+1.25*width,minimum_new_path_clearance_mm=gap+width,
         parent_radius_mm=.5*width,maximum_sheet_shift_mm=max(4*nominal,1.6*width),boundary_sample_mm=min(.25,.5*width))
     chart_height=float(export_metadata.get('nominal_layer_height',nominal))
@@ -182,7 +212,8 @@ def prepare_repair(entries,mesh_dir,output_dir,support_config,export_metadata,he
         chart_model_clearance_mm=max(0,gap-min(.01,.05*nominal)))
     if not np.isfinite([width,nominal,gap,*[settings[k] for k in ('birth_width_mm','protection_distance_mm','minimum_new_path_clearance_mm','parent_radius_mm','maximum_sheet_shift_mm','boundary_sample_mm')]]).all() or min(width,nominal,settings['birth_width_mm'])<=0 or gap<0:
         raise ValueError('Invalid support-hole repair dimensions.')
-    settings.update(domain_sha256=_sha(Path(root)/'domain.npz'),field_sha256=_sha(Path(root)/'optimized_field.npz'),model_sha256=_sha(model))
+    settings.update(domain_sha256=_sha(Path(root)/'domain.npz') if root else None,
+        field_sha256=_sha(Path(root)/'optimized_field.npz') if root else None,model_sha256=_sha(model))
     enabled=option.get('cache_enabled',True)
     if not isinstance(enabled,bool):raise ValueError('hole_repair.cache_enabled must be boolean.')
     from support_preflight_cache import revision
@@ -216,7 +247,10 @@ def prepare_repair(entries,mesh_dir,output_dir,support_config,export_metadata,he
         contexts[row['file']]=str(path)
     report.update(status='prepared',settings=settings,catalogued_layers=len(catalogs),hole_occurrences=len(holes),
         approved_hole_occurrences=sum(status.values()),changed_layer_candidates=len(selected),seconds=time.perf_counter()-started,
-        scope='Born-small, model-distant lifetime planning masks; new path points must pass saved-field and model exclusion checks. No source mesh edits.')
+        scope=('Small model-distant hole patches triangulated from their own boundary heights; no field required. New material passes model exclusion checks. Source meshes unchanged.' if method=='mesh' else
+            'Born-small, model-distant lifetime planning masks; new path points must pass saved-field and model exclusion checks. No source mesh edits.'))
+    report['numerical_holes_ignored']=sum(r.get('numerical_holes_ignored',0) for r in catalogs)
+    report['unavailable_hole_repairs']=sum(bool(h.get('repair_unavailable_reason')) for r in catalogs for h in r['holes'])
     report['repaired_meshes']={r['file']:r['repaired_mesh'] for r in catalogs if r['repaired_mesh']}
     report['surface_repairs']={r['file']:r['surface_repairs'] for r in catalogs if r['surface_repairs']}
     report['field_charts']={r['file']:r['field_charts'] for r in catalogs if r['field_charts']}
@@ -232,9 +266,10 @@ def verify_repair_sources(report):
     """Do not accept workers' cached field data after a source mutation."""
     if report.get('status')!='prepared':return
     s=report['settings']
-    for path,key in ((Path(s['field_source'])/'domain.npz','domain_sha256'),
-                     (Path(s['field_source'])/'optimized_field.npz','field_sha256'),
-                     (Path(s['model_source']),'model_sha256')):
+    sources=[(Path(s['model_source']),'model_sha256')]
+    if s.get('method','field')=='field':sources.extend(((Path(s['field_source'])/'domain.npz','domain_sha256'),
+                     (Path(s['field_source'])/'optimized_field.npz','field_sha256')))
+    for path,key in sources:
         if _sha(path)!=s[key]:raise ValueError('Support repair source changed during planning: '+str(path))
 
 
@@ -247,12 +282,10 @@ class FieldRepairLifter:
         self.base,self.mask,self.context=base,mask,context
         self.field_mask=mask;self.full_field_chart=False;self.chart_y_shift=0.
         self.points=0;self.error=0.;self.clearance=float('inf')
-        self.initial_error=0.;self.initial_mesh_samples=0;self.lift_seconds=0.;self.normal_seconds=0.
     def __getattr__(self,name):return getattr(self.base,name)
     def lift(self,points):
         mask=shapely.covers(self.field_mask,shapely.points(points))
         if not mask.any():return self.base.lift(points)
-        started=time.perf_counter()
         result=np.empty((len(points),3));ambiguous=snapped=0
         if (~mask).any():result[~mask],ambiguous,snapped=self.base.lift(points[~mask])
         field,model=_context(self.context['settings'])
@@ -280,12 +313,6 @@ class FieldRepairLifter:
                 if (g[:,1]<=1e-9).any():raise ValueError('Saved field is not monotone in the projected path root bracket.')
         for _ in range(24):
             value,gradient=field.evaluate_scalars_and_gradients(q);error=value-scalar
-            if _==0 and material.any():
-                # A first-order normal-distance estimate, not an exact nearest
-                # surface distance. Reuse this existing query: no extra sampling.
-                initial=abs(error[material])/np.maximum(np.linalg.norm(gradient[material],axis=1),1e-12)
-                self.initial_error=max(self.initial_error,float(initial.max(initial=0)))
-                self.initial_mesh_samples+=int(material.sum())
             if abs(error).max(initial=0)<1e-10:break
             if (gradient[:,1]<=1e-9).any():raise ValueError('Support hole mask is not a positive-Y field graph.')
             q[:,1]-=np.clip(error/gradient[:,1],-.25,.25)
@@ -295,8 +322,7 @@ class FieldRepairLifter:
         if physical.max(initial=0)>1e-5 or (gradient[:,1]<=1e-9).any() or (abs(q[:,1]-seed)>limits).any():
             bad=int(np.argmax(abs(q[:,1]-seed)-limits))
             raise ValueError(f'Support path cannot be lifted onto its saved field sheet: Y shift={abs(q[bad,1]-seed[bad]):.6g} mm, '
-                f'limit={limits[bad]:.6g} mm, point={q[bad].tolist()}, field error={physical.max(initial=0):.6g} mm, '
-                f'initial normal-error estimate={self.initial_error:.6g} mm.')
+                f'limit={limits[bad]:.6g} mm, point={q[bad].tolist()}, field error={physical.max(initial=0):.6g} mm.')
         distance=_distances(model,q)
         clearance=np.where(material,settings.get('chart_model_clearance_mm',settings.get('model_clearance_mm',0)),settings['minimum_new_path_clearance_mm'])
         if (distance<clearance).any() or _confirmed_inside(model,q).any():
@@ -306,23 +332,17 @@ class FieldRepairLifter:
         self.points+=len(q);self.error=max(self.error,float(physical.max(initial=0)))
         if material.any():self.chart_y_shift=max(self.chart_y_shift,float(abs(q[material,1]-seed[material]).max(initial=0)))
         self.clearance=min(self.clearance,float(distance.min()));result[mask]=q
-        self.lift_seconds+=time.perf_counter()-started
         return result,ambiguous,snapped
     def normals(self,points,normals):
         mask=shapely.covers(self.field_mask,shapely.points(points[:,[0,2]]))
         if mask.any():
-            started=time.perf_counter()
             field,_=_context(self.context['settings']);_,g=field.evaluate_scalars_and_gradients(points[mask])
             g/=np.maximum(np.linalg.norm(g,axis=1,keepdims=True),1e-12)
             g*=np.where(np.einsum('ij,ij->i',g,normals[mask])<0,-1.,1.)[:,None];normals[mask]=g
-            self.normal_seconds+=time.perf_counter()-started
         return normals
     def report(self):return dict(mask_count=self.mask_count,field_lift_points=self.points,
         maximum_physical_field_error_mm=self.error,minimum_model_distance_mm=self.clearance if self.points else None,
-        full_field_chart=self.full_field_chart,maximum_chart_y_shift_mm=self.chart_y_shift,
-        initial_mesh_samples=self.initial_mesh_samples,
-        maximum_initial_normalized_field_error_mm=self.initial_error if self.initial_mesh_samples else None,
-        field_lift_seconds=self.lift_seconds,field_normal_seconds=self.normal_seconds)
+        full_field_chart=self.full_field_chart,maximum_chart_y_shift_mm=self.chart_y_shift)
 
 
 def bind_repair(lifter,context_path):
@@ -331,9 +351,20 @@ def bind_repair(lifter,context_path):
     region=shapely.from_wkb(context['regions'][identity]);approved=[]
     tree=cKDTree(lifter.vertices)
     for hole in context['holes']:
-        distance,_=tree.query(np.asarray(hole['ring']))
-        if distance.min()<1e-7:approved.append(Polygon(hole['xy']))
-    mask=unary_union(approved);wrapped=FieldRepairLifter(lifter,mask,context);wrapped.mask_count=len(approved)
+        if Polygon(hole['xy']).area<=NUMERICAL_HOLE_AREA_MM2 or hole.get('repair_unavailable_reason'):continue
+        if hole.get('owner_identity') is not None:
+            owned=hole['owner_identity']==identity
+        else:
+            # Older contexts have no explicit owner. A single touching vertex
+            # does not make an unrelated component own the entire hole.
+            distance,_=tree.query(np.asarray(hole['ring']));owned=distance.max(initial=0)<1e-7
+        if owned:approved.append(Polygon(hole['xy']))
+    mask=unary_union(approved)
+    if context['settings'].get('method','field')=='mesh':
+        from mesh_hole_repair import MeshRepairLifter
+        selected=[h for h in context['holes'] if any(Polygon(h['xy']).equals(p) for p in approved)]
+        return MeshRepairLifter(lifter,mask,context,selected),region.union(mask) if approved else region
+    wrapped=FieldRepairLifter(lifter,mask,context);wrapped.mask_count=len(approved)
     if context.get('field_charts',{}).get(identity):
         wrapped.full_field_chart=True;wrapped.field_mask=region.union(mask)
     return wrapped,region.union(mask) if approved else region
@@ -346,6 +377,9 @@ def save_reference_addition(lifter,output_dir,stem):
     written; height-reference assembly later appends them to the source mesh.
     """
     if lifter.mask.is_empty or lifter.mask.area<=1e-12:return None
+    if lifter.context['settings'].get('method','field')=='mesh':
+        from mesh_hole_repair import save_reference
+        return save_reference(lifter,output_dir,stem)
     triangles=shapely.get_parts(shapely.constrained_delaunay_triangles(lifter.mask))
     triangles=np.asarray([np.asarray(t.exterior.coords)[:3] for t in triangles if t.area>1e-12])
     if not len(triangles):return None

@@ -60,7 +60,9 @@
     "allow_branching_boundary_fallback": true
   },
   "hybrid_contours": {
-    "point_reduction": {"enabled": true},
+    "point_reduction": {
+      "enabled": true
+    },
     "model_half_width_inset": false,
     "reuse_existing_paths": false,
     "planner_backend": "xz_projected_2d",
@@ -200,6 +202,7 @@
     "platform_height_factor": 1.5,
     "nearest_direct_factor": 1.5,
     "support_validation": {
+      "ambiguous_height_policy": "nominal_warn",
       "enabled": true,
       "check_height_factor": 1.75,
       "max_bead_height_factor": 1.5,
@@ -224,5 +227,8 @@
   "execution": {
     "blas_threads_per_process": 1,
     "keep_patch_artifacts": false
+  },
+  "toolpath_ordering": {
+    "enabled": true
   }
 }

@@ -64,6 +64,8 @@ def run(config_path: Path) -> Path:
 
     config = read_json(config_path)
     base = config_path.resolve().parent
+    from draft_toolpaths import validate_outputs, write_draft
+    draft = validate_outputs(config, base)
     if config.get('height_mode', '3axis') != '3axis':
         raise ValueError('This projected support fork requires height_mode=3axis.')
     for stage_name in ('remesh', 'support_mesh_expand'):
@@ -75,7 +77,7 @@ def run(config_path: Path) -> Path:
     entries, export_metadata, protected = load_schedule(base, config['compatible_inputs'])
     height_settings = config.setdefault('heights_3axis', {})
     validation = height_settings.setdefault('support_validation', {})
-    if validation.get('enabled'):
+    if validation.get('enabled') and not draft:
         original = validation.get('model_solid') or export_metadata.get('model_volume_source')
         if original:
             root = resolve(base, config['compatible_inputs']['export_root'])
@@ -121,7 +123,7 @@ def run(config_path: Path) -> Path:
     contours = run_mesh_stage('remesh', pipeline.run_remesh_stage, paths['combined_input_surfaces'],
                               paths['remeshed_surfaces'], config.get('remesh', {'enabled': False}), clean, schedule_keys)
     active_entries = [e for e in entries if (contours / e['combined_mesh']).is_file()]
-    references = run_mesh_stage('support-expansion', pipeline.run_support_expansion_stage, contours,
+    references = contours if draft else run_mesh_stage('support-expansion', pipeline.run_support_expansion_stage, contours,
                                 paths['expanded_support_surfaces'], config.get('support_mesh_expand', {'enabled': False}), clean, schedule_keys)
     output = paths['toolpaths']
     prepare_output(output, clean=clean, protected=[contours, references, *protected])
@@ -212,12 +214,18 @@ def run(config_path: Path) -> Path:
         raise ValueError('No printable toolpaths remain at the selected width/spacing; inspect the layer footprints and contour settings.')
     if empty:print(f'[paths] {len(empty)} scheduled parts have no printable centreline; retained in metadata, excluded as height supports.',flush=True)
     from path_backing_audit import repair_support_seams
-    backing=repair_support_seams(output,layers,width=float(support_cfg.get('width',.5)),
+    backing=(dict(status='not_evaluated', reason='Draft paths only', changes=[]) if draft else
+        repair_support_seams(output,layers,width=float(support_cfg.get('width',.5)),
         nominal=float(height_settings.get('nominal_layer_height',.2)),
         bed=float(height_settings.get('platform_value',0)),threads=min(workers,4),
-        repair=bool(support_cfg.get('backing_repair',{}).get('enabled',True)))
-    print(f'[support backing] {backing["status"]}; {len(backing["changes"])} seam relocations; '
-          f'{len(backing["after"]["findings"])} remaining findings (see support_backing.json)',flush=True)
+        repair=bool(support_cfg.get('backing_repair',{}).get('enabled',True)),
+        check=bool(support_cfg.get('backing_check',{}).get('enabled',False))))
+    if backing['status']=='not_evaluated':
+        print('[support backing] Check disabled; continuing without evaluation.',flush=True)
+    else:
+        prefix='WARNING: ' if backing['after']['findings'] else ''
+        print(f'{prefix}[support backing] {backing["status"]}; {len(backing["changes"])} seam relocations; '
+              f'{len(backing["after"]["findings"])} remaining findings; continuing (see support_backing.json)',flush=True)
     metadata = dict(batch_kind='projected_manifest_support_model_paths', output_format='x y z nx ny nz',
                     input_dir=str(contours), output_dir=str(output), width=float(hybrid['spacing']),
                     model_lift=float(hybrid.get('model_lift', 0.0)), model_lift_axis=hybrid.get('model_lift_axis', 'y'),
@@ -231,6 +239,10 @@ def run(config_path: Path) -> Path:
     metadata['empty_path_layers']=empty
     write_json(output / 'batch_paths.meta.json', metadata)
     write_json(output / 'print_schedule.json', dict(material_count=1, layers=layers))
+    if draft:
+        write_draft(output, metadata)
+        verify_repair_sources(repair_report)
+        return output
     height_config = config.get('heights_3axis', {})
     if height_config.get('backend', 'nearest_triangle') != 'nearest_triangle':
         raise ValueError('Manifest support heights require backend=nearest_triangle.')

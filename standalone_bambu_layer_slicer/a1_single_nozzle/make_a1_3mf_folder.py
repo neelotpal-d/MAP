@@ -46,13 +46,14 @@ def main() -> int:
             target.write_bytes(archive.read(member))
 
     info = {'bbox': parse_bbox(args.bbox) if args.bbox else None,
-            'bed_leveling_margin': args.bed_leveling_margin}
+            'bed_leveling_margin': args.bed_leveling_margin,'build_size':args.build_size}
     checksum = copy_gcode_with_checksum(args.gcode, output / GCODE_ENTRY,
                                         spiral_mode_preview=args.spiral_mode_preview,
                                         job_metadata=info)
     (output / MD5_ENTRY).write_text(checksum, encoding="ascii", newline="\n")
     update_plate_json(output / PLATE_JSON_ENTRY, args)
     update_job_metadata(output, info)
+    make_gcode_only(output)
     if args.spiral_mode_preview:
         update_nonplanar_preview_metadata(output / PROJECT_SETTINGS_ENTRY)
     print(f"Wrote extracted A1 package {output}")
@@ -127,8 +128,7 @@ def corrected_job_header(text: str, info: dict) -> tuple[int, str]:
     layer_count = sum(1 for _ in re.compile(r'(?m)^; CHANGE_LAYER[ \t]*\r?$').finditer(text, start, end))
     if not layer_count:
         raise ValueError('A1 assembled body has no CHANGE_LAYER markers.')
-    e_words = re.compile(r'(?m)^G[01][ \t]+[^;\r\n]*?\bE(' + NUMBER + r')(?=[ \t;\r\n]|$)')
-    length = math.fsum(float(match[1]) for match in e_words.finditer(text, start, end))
+    length, maximum_z = body_motion_totals(text, start, end)
     if not math.isfinite(length) or length < 0:
         raise ValueError('Invalid net relative extrusion in A1 assembled body.')
     header = text[:start]
@@ -153,10 +153,11 @@ def corrected_job_header(text: str, info: dict) -> tuple[int, str]:
         bbox = lower + upper
     bbox = parse_bbox(','.join(map(str, bbox)))
     margin = float(info.get('bed_leveling_margin', 5.))
-    if not math.isfinite(margin) or margin < 0 or any(value < 0 or value > 256 for value in bbox):
-        raise ValueError('A1 probe footprint must fit 0..256 mm; margin must be finite and nonnegative.')
+    build_size=float(info.get('build_size',256.))
+    if not math.isfinite(build_size) or build_size<=0 or not math.isfinite(margin) or margin < 0 or any(value < 0 or value > build_size for value in bbox):
+        raise ValueError(f'Probe footprint must fit 0..{build_size:g} mm; margin must be finite and nonnegative.')
     probe = [max(0., bbox[0]-margin), max(0., bbox[1]-margin),
-             min(256., bbox[2]+margin), min(256., bbox[3]+margin)]
+             min(build_size, bbox[2]+margin), min(build_size, bbox[3]+margin)]
     line = f'G29 A1 X{probe[0]:.5f} Y{probe[1]:.5f} I{probe[2]-probe[0]:.5f} J{probe[3]-probe[1]:.5f}'
     header, count = re.subn(r'(?m)^[ \t]*G29[ \t]+A1(?=[ \t])[^\r\n]*', line, header)
     if count != 1:
@@ -171,12 +172,69 @@ def corrected_job_header(text: str, info: dict) -> tuple[int, str]:
         if count != 1:
             raise ValueError(f'Expected one reference header value for {name}; found {count}.')
     header = re.sub(r'(?m)^M73[ \t]+[^\r\n]*', 'M73 P0 R0', header)
+    height_line=f'; max_z_height: {maximum_z:.5f}'
+    header,height_count=re.subn(r'(?m)^; max_z_height\s*[:=][^\r\n]*',height_line,header)
+    if height_count>1:raise ValueError('Ambiguous max_z_height in reference header.')
+    if not height_count:header=height_line+'\n'+header
     header = '; Custom path execution time unavailable; reference estimates removed.\n' + header
     info.update(bbox=bbox, probe_bbox=probe, layer_count=layer_count,
                 filament_length_mm=length, filament_volume_cm3=volume,
                 filament_weight_g=volume*density, execution_time_estimated=False,
-                support_used=text.find(';part: support', start, end) >= 0)
+                support_used=text.find(';part: support', start, end) >= 0,max_z_height=maximum_z)
     return start, header
+
+
+def body_motion_totals(text: str, start: int, end: int) -> tuple[float,float]:
+    """Count relative E and the highest moving positive-E Z, with modal Z."""
+    moves=re.compile(r'(?m)^G[01][ \t]+([^;\r\n]*)')
+    words=re.compile(r'\b([ZE])('+NUMBER+r')(?=[ \t\r\n]|$)')
+    current_z=None;highest=None
+    def extrusions():
+        nonlocal current_z,highest
+        for move in moves.finditer(text,start,end):
+            code=move[1];values=dict(words.findall(code))
+            if 'Z' in values:current_z=float(values['Z'])
+            if 'E' not in values:continue
+            amount=float(values['E'])
+            if amount>0 and ('X' in code or 'Y' in code) and current_z is not None:
+                highest=current_z if highest is None else max(highest,current_z)
+            yield amount
+    length=math.fsum(extrusions())
+    if highest is None or not math.isfinite(highest):raise ValueError('No finite printing height in assembled body.')
+    return length,highest
+
+
+def make_gcode_only(output: Path) -> None:
+    """Match a sliced-file archive: no reference model to auto-slice on open."""
+    core='http://schemas.microsoft.com/3dmanufacturing/core/2015/02'
+    ET.register_namespace('',core)
+    path=output/'3D/3dmodel.model'
+    if path.is_file():
+        tree=ET.parse(path);root=tree.getroot();root.attrib.pop('requiredextensions',None)
+        for name in ('resources','build'):
+            element=root.find('{'+core+'}'+name)
+            if element is not None:element.clear()
+        tree.write(path,encoding='utf-8',xml_declaration=True)
+    config=output/'Metadata/model_settings.config'
+    if config.is_file():
+        tree=ET.parse(config);root=tree.getroot()
+        for obj in list(root.findall('object')):root.remove(obj)
+        for plate in root.findall('plate'):
+            for instance in list(plate.findall('model_instance')):plate.remove(instance)
+            if not any(row.get('key')=='pattern_bbox_file' for row in plate.findall('metadata')):
+                ET.SubElement(plate,'metadata',key='pattern_bbox_file',value='Metadata/plate_1.json')
+        tree.write(config,encoding='utf-8',xml_declaration=True)
+    # These are newly extracted reference assets, never user model inputs.
+    base=output.resolve();objects=base/'3D/Objects'
+    if objects.is_dir():
+        for path in objects.rglob('*'):
+            if path.is_file():
+                if path.is_symlink() or not path.resolve().is_relative_to(objects.resolve()):raise ValueError('Linked reference model asset.')
+                path.unlink()
+    relations=base/'3D/_rels/3dmodel.model.rels'
+    if relations.is_file():
+        if relations.is_symlink():raise ValueError('Linked reference model relationships.')
+        relations.unlink()
 
 
 def update_job_metadata(output: Path, info: dict) -> None:
@@ -258,6 +316,7 @@ def parse_bbox(value: str) -> list[float]:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference", required=True, type=Path, help="Known-good A1 .gcode.3mf package.")
+    parser.add_argument('--build-size',type=float,default=256.,help='Selected printer build size in mm; A1 mini uses 180.')
     parser.add_argument("--gcode", required=True, type=Path, help="Assembled G-code to embed.")
     parser.add_argument("--output", required=True, type=Path, help="Output extracted 3MF directory.")
     parser.add_argument("--bbox", help="Optional model bounds: min_x,min_y,max_x,max_y.")

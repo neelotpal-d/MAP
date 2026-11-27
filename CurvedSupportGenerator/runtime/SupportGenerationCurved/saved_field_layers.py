@@ -68,6 +68,8 @@ def geometry(pipeline):
         shape=tg.TaperedTree(rows,mesh,(0,1,0),float(s.get('plate',0)),
             float(s.get('side_clearance',.4)),float(s.get('contact_gap',.4)),terminal_normals=normals,
             terminal_cap='rounded',distance_backend='certified',prune_pairs=bool(s.get('trim_pair_pruning',True)))
+    from .trim_tolerance import configured
+    shape.trim_boundary_tolerance_mm=configured(s.get('trim_boundary_tolerance_mm',0.))
     shape.model_contact_roots=roots;shape.platform_roots=[]
     from .grid_distance_certificate import GridDistanceCertificate
     shape.distance_certificate=GridDistanceCertificate(shape.mesh,shape.distance)
@@ -93,25 +95,61 @@ def initialize_worker(pipeline,output):
     output=Path(output);s=pipeline.get('settings',{})
     shape,sizing,rooted,fast,backend=geometry(pipeline)
     field=GridField.load(pipeline['input']['support_field_source'])
+    # Fixed-axis paths require a single height chart; general five-axis layer
+    # normals may legitimately turn through the build-plane projection.
+    folder=Path(pipeline['input']['support_field_source'])
+    protocol=next((p for p in (folder/'support_field.json',folder/'protocol.json',folder/'accepted/protocol.json') if p.is_file()),None)
+    metadata=read(protocol) if protocol is not None else {}
+    mode=metadata.get('collision_mode')
+    preserve_chart=(mode=='fixed_axis') if mode is not None else metadata.get('model_generator_axes')==3
     _STATE=dict(shape=shape,field=field,fast=fast,output=output,settings=s,
+        preserve_projected_chart=preserve_chart,
         active=pv.read(output/'support_field_grid.vtu'),schedule=np.loadtxt(output/'main_scalar_values.txt').reshape(-1),
         regions=read(output/'support_role_regions.json'),roles=read(output/'support_role_indices.json'),bases=settings_for(shape))
     print(json.dumps(dict(stage='layer_worker_ready',backend=backend)),flush=True)
 
 
+def _generated_layer(state,index,value,correct):
+    from .layer_quality import field_normal_consistency,refined_field_grid
+    attempts=[]
+    verify=(not state.get('preserve_projected_chart',False) and isinstance(state['field'],GridField))
+    for factor in (1,2,4):
+        active=state['active']
+        if factor>1:
+            cache=state.setdefault('refined_contour_sources',{})
+            if factor not in cache:cache[factor]=refined_field_grid(state['field'],factor)
+            active=cache[factor]
+        generated=tg.extract_one_layer(state['shape'],active,index,value,state['output']/'tree_layers',1.,.2,'surface_scalar',
+            layer_compression='lz4',planar_base_settings=state['bases'],adaptive_layer_tolerance=float(state['settings'].get('adaptive_layer_tolerance',.05)),
+            role_regions=state['regions'],layer_role_indices=state['roles'],spatial_platform=True,_return_surface=True)
+        if generated['vertex_bad'] or generated['centroid_bad'] or generated.get('geometry_bad_faces',0):raise ValueError(f'Layer {index}: geometry validation failed.')
+        if not verify or correct:return generated,dict(factor=factor,attempts=attempts)
+        surface=generated['surface'];normal=field_normal_consistency(surface.points,surface.regular_faces,state['field'])
+        attempts.append(dict(factor=factor,field_normal_consistency=normal))
+        if normal['valid']:
+            return generated,dict(factor=factor,spacing_mm=state['field'].spacing/factor,attempts=attempts,
+                method='Recontour the same original trilinear field; no field optimization, smoothing or extrapolation.')
+        print(json.dumps(dict(stage='layer_normal_recontour',index=index,factor=factor,
+            warning='Extracted layer conflicts with saved field normals; retrying a finer source contour.',diagnostics=normal)),flush=True)
+    raise ValueError(f'Layer {index}: field-normal consistency failed after bounded contour refinements (1, 2, 4). Inspect the saved field and layer geometry; no normals were forced or check bypassed. Last check: {normal}')
+
+
 def extract(index):
     from .nonplanar import slice_error
     from .layer_projection import project_layer
-    state=_STATE;s=state['settings'];out=state['output'];schedule=state['schedule'];value=float(schedule[index]);t=time.perf_counter()
-    generated=tg.extract_one_layer(state['shape'],state['active'],index,value,out/'tree_layers',1.,.2,'surface_scalar',
-        layer_compression='lz4',planar_base_settings=state['bases'],adaptive_layer_tolerance=float(s.get('adaptive_layer_tolerance',.05)),
-        role_regions=state['regions'],layer_role_indices=state['roles'],spatial_platform=True,_return_surface=True)
-    if generated['vertex_bad'] or generated['centroid_bad']:raise ValueError(f'Layer {index}: geometry validation failed.')
+    state=_STATE;s=state['settings'];out=state['output'];schedule=state['schedule'];value=float(schedule[index]);t=time.perf_counter();cpu_started=time.process_time()
+    correct=s.get('correct_layer_scalar',True)
+    if not isinstance(correct,bool):raise ValueError('correct_layer_scalar must be boolean.')
+    generated,contour_refinement=_generated_layer(state,index,value,correct)
     surface=generated.pop('surface');record=generated['manifest'];record.update(slice_error(surface,state['field'],value))
+    # New interface jobs default to mesh geometry. Absent settings retain the
+    # original exact-field contract for saved CLI jobs/reproducibility.
+    correct=s.get('correct_layer_scalar',True)
+    if not isinstance(correct,bool):raise ValueError('correct_layer_scalar must be boolean.')
     gaps=np.diff(schedule);budget=float(.25*min(gaps[max(0,index-1)],gaps[min(len(gaps)-1,index)]))
     # Geometric source binding and projected root lifting need a physical
     # accuracy bound in addition to a fraction of the scalar layer interval.
-    if surface.n_cells:
+    if correct and surface.n_cells:
         points=np.asarray(surface.points)
         minimum_norm=float('inf');minimum_y=float('inf')
         for start in range(0,len(points),25000):
@@ -122,13 +160,33 @@ def extract(index):
         if not np.isfinite(tolerance) or tolerance<=0:raise ValueError('Layer field tolerance must be positive and finite.')
         if not np.isfinite(minimum_norm) or minimum_norm<=1e-12:raise ValueError('Support layer has a degenerate field gradient.')
         budget=min(budget,tolerance*minimum_norm)
-        if minimum_y>1e-9:
+        # Only fixed-axis paths lift through a vertical height chart.
+        # Five-axis normal paths retain the normal-distance accuracy bound.
+        if state.get('preserve_projected_chart',False) and minimum_y>1e-9:
             budget=min(budget,.02*minimum_y)
-    if surface.n_cells and max(record['vertex_scalar_error_max'],record['interior_scalar_error_max'])>budget:
-        record=project_layer(record,state['shape'],state['field'],out/'tree_layers_refined',state['regions'],surface=surface,schedule=schedule,scalar_error_budget=budget,maximum_refinements=12)
-    if max(record['vertex_scalar_error_max'],record['interior_scalar_error_max'])>budget:
+    projected=False
+    if correct and surface.n_cells and max(record['vertex_scalar_error_max'],record['interior_scalar_error_max'])>budget:
+        projected=True
+        record=project_layer(record,state['shape'],state['field'],out/'tree_layers_refined',state['regions'],surface=surface,schedule=schedule,scalar_error_budget=budget,maximum_refinements=12,
+            preserve_projected_chart=state.get('preserve_projected_chart',False))
+    exceeds=max(record['vertex_scalar_error_max'],record['interior_scalar_error_max'])>budget
+    if correct and exceeds:
         raise ValueError(f'Layer {index}: trilinear isosurface error exceeds {budget:g}.')
-    result=dict(record=record,seconds=time.perf_counter()-t,extraction_timing=generated['timing'])
+    record.update(layer_scalar_correction_enabled=correct,layer_scalar_error_budget=budget,
+        layer_scalar_error_exceeds_budget=bool(exceeds),layer_field_geometry_validated=bool(correct))
+    if not correct and exceeds:
+        print(json.dumps(dict(stage='layer_scalar_approximation',index=index,warning='Using extracted mesh; no exact scalar-level claim.',
+            vertex_error=record['vertex_scalar_error_max'],interior_error=record['interior_scalar_error_max'],scalar_budget=budget)),flush=True)
+    from .layer_quality import mesh_quality,field_normal_consistency
+    final_surface=pv.read(record['file']) if projected else surface
+    record['mesh_quality']=mesh_quality(final_surface.points,final_surface.regular_faces)
+    record['contour_source_refinement']=contour_refinement
+    if not state.get('preserve_projected_chart',False) and isinstance(state['field'],GridField):
+        checked=field_normal_consistency(final_surface.points,final_surface.regular_faces,state['field'])
+        record['field_normal_consistency']=checked
+        if not checked['valid']:raise ValueError(f'Layer {index}: final mesh/field normal consistency failed: {checked}')
+    if record['mesh_quality']['degenerate_faces']:raise ValueError(f'Layer {index}: degenerate final triangle mesh.')
+    result=dict(record=record,seconds=time.perf_counter()-t,cpu_seconds=time.process_time()-cpu_started,extraction_timing=generated['timing'])
     save(out/'layer_metadata'/f'{index}.json',result);return result
 
 
@@ -144,6 +202,9 @@ def run_job(pipeline,output):
     from .compatible_export import export_compatible
     from .layer_viewers import LayerViewerWriter
     started=time.perf_counter();inputs=pipeline['input'];s=pipeline.get('settings',{});output=Path(output).resolve()
+    from .trim_tolerance import configured
+    trim_budget=configured(s.get('trim_boundary_tolerance_mm',0.))
+    if not isinstance(s.get('correct_layer_scalar',True),bool):raise ValueError('correct_layer_scalar must be boolean.')
     for key,default in (('layer_workers',4),('vtk_threads_per_worker',1)):
         value=s.get(key,default)
         if isinstance(value,bool) or not isinstance(value,int) or value<1:raise ValueError(f'{key} must be a positive integer.')
@@ -213,6 +274,8 @@ def run_job(pipeline,output):
     if fast:fast.close()
     if not s.get('all_layers',True):ids=np.unique(np.linspace(0,len(schedule)-1,min(int(s.get('preview_layers',5)),len(schedule)),dtype=int))
     workers=min(int(s.get('layer_workers',4)),len(ids));results=[]
+    setup_seconds=time.perf_counter()-started
+    extraction_started=time.perf_counter()
     if workers<=1:
         initialize_worker(pipeline,output)
         for i in ids:
@@ -220,10 +283,28 @@ def run_job(pipeline,output):
     else:
         with tg.worker_blas_environment(1):
             with ProcessPoolExecutor(max_workers=workers,mp_context=multiprocessing.get_context('spawn'),initializer=initialize_worker,initargs=(pipeline,str(output))) as pool:
-                futures=[pool.submit(extract,int(i)) for i in ids]
+                futures={pool.submit(extract,int(i)):int(i) for i in ids}
                 for future in as_completed(futures):
-                    r=future.result();results.append(r);print(json.dumps(dict(stage='layer_complete',completed=len(results),total=len(ids),index=r['record']['layer'],seconds=r['seconds'])),flush=True)
+                    try:r=future.result()
+                    except Exception as error:
+                        # Do not finish hundreds of queued layers after the
+                        # first failed one. Retain completed diagnostics and
+                        # let only already-running tasks finish their writes.
+                        cancelled=sum(pending.cancel() for pending in futures)
+                        print(json.dumps(dict(stage='layer_failed',index=futures[future],error=str(error),cancelled_pending_layers=cancelled)),flush=True)
+                        raise
+                    results.append(r);print(json.dumps(dict(stage='layer_complete',completed=len(results),total=len(ids),index=r['record']['layer'],seconds=r['seconds'])),flush=True)
+    extraction_seconds=time.perf_counter()-extraction_started
+    export_started=time.perf_counter()
     records=sorted((r['record'] for r in results),key=lambda r:r['layer']);save(output/'tree_layer_manifest_refined.json',records)
+    approximations=[dict(layer=r['layer'],**r['trim_boundary_approximation']) for r in records
+        if r.get('trim_boundary_approximation') and r['trim_boundary_approximation']['accepted_faces']]
+    trim_summary=dict(tolerance_mm=trim_budget,accepted_layers=len(approximations),
+        accepted_faces=sum(r['accepted_faces'] for r in approximations),
+        maximum_deviation_bound_mm=max((r['maximum_deviation_bound_mm'] for r in approximations),default=0.),layers=approximations)
+    save(output/'trim_approximation_report.json',trim_summary)
+    from .layer_quality import summarize as summarize_layer_quality
+    save(output/'support_layer_quality_report.json',summarize_layer_quality(records))
     viewers=LayerViewerWriter(output)
     report=export_compatible(inputs['mesh'],pv.read(inputs['mesh']),schedule,ids,records,output,evaluator=native,
         field_mode='tetrahedral',volume_path=inputs['tetrahedral_volume'],native_model_layers=True,_surface_callback=viewers.add)
@@ -232,7 +313,8 @@ def run_job(pipeline,output):
     report['viewer']=viewers.finish();save(output/'export_report.json',report)
     compatible=read(output/'compatible_export.json');compatible.update(contact_gap=float(s.get('contact_gap',.4)),side_clearance=float(s.get('side_clearance',.4)),
         plate=float(s.get('plate',0)),nominal_layer_height=float(s.get('layer_spacing',.2)),complete_layers=bool(s.get('all_layers',True)),
-        support_field_source=str(inputs['support_field_source']),rebuild_pipeline=str(output/'rebuild_pipeline.json'))
+        support_field_source=str(inputs['support_field_source']),rebuild_pipeline=str(output/'rebuild_pipeline.json'),
+        layer_scalar_correction_enabled=s.get('correct_layer_scalar',True),trim_boundary_approximation=trim_summary)
     if separated:
         compatible['experimental_overhang_only']=True
         compatible['complete_layers']=False
@@ -240,6 +322,12 @@ def run_job(pipeline,output):
     summary=dict(status='complete',pipeline=pipeline,shared_levels=len(schedule),exported_indices=ids.tolist(),
         workers=workers,native_threads=int(s.get('vtk_threads_per_worker',1)),backend=backend,
         vtk_threads_effective=tg.effective_geometry_threads(int(s.get('vtk_threads_per_worker',1))),
+        layer_scalar_correction_enabled=s.get('correct_layer_scalar',True),trim_boundary_approximation=trim_summary,
         field_representation='Original trilinear voxels; no transfer or tetrahedralization',seconds=time.perf_counter()-started,
+        timings=dict(setup_seconds=setup_seconds,extraction_wall_seconds=extraction_seconds,
+            export_and_reports_seconds=time.perf_counter()-export_started,
+            sum_worker_layer_seconds=sum(r['seconds'] for r in results),
+            sum_worker_cpu_seconds=sum(r.get('cpu_seconds',0.) for r in results),
+            scope='Backend setup, extraction pool including startup/shutdown, then component export/viewer/reports. Excludes GUI loading.'),
         support_field_sha256=sha(Path(inputs['support_field_source'])/'optimized_field.npz'),excluded_contact_ids=rooted.get('excluded_contact_ids',[]))
     save(output/'summary.json',summary);return summary
