@@ -5,13 +5,13 @@
 ### Recommended: use the interface installation packages
 
 For the complete GUI, FEA and end-to-end workflows, download the current
-[MultiAxisPrinting installer release](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-preview-2026-11-27-map):
+[MultiAxisPrinting installer release](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-preview-2026-11-27-r2):
 
 | Platform | Package | Start |
 |---|---|---|
-| Windows x86-64 | [MultiAxisPrinting-Setup-Windows.exe](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-map/MultiAxisPrinting-Setup-Windows.exe) | Open the EXE, choose **Install / Check**, then **Launch interface**. |
-| macOS 14+, Apple Silicon or Intel | [MultiAxisPrinting-Setup-macOS.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-map/MultiAxisPrinting-Setup-macOS.zip) | Extract the whole ZIP, open **Install MultiAxisPrinting.app**, then launch **MultiAxisPrinting.app** from your user Applications folder. |
-| Linux x86-64 | [application.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-map/application.zip) | Extract into a fresh folder and follow **INSTALL.md** inside it. This is a Linux/source package. |
+| Windows x86-64 | [MultiAxisPrinting-Setup-Windows.exe](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/MultiAxisPrinting-Setup-Windows.exe) | Open the EXE, choose **Install / Check**, then **Launch interface**. |
+| macOS 14+, Apple Silicon or Intel | [MultiAxisPrinting-Setup-macOS.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/MultiAxisPrinting-Setup-macOS.zip) | Extract the whole ZIP, open **Install MultiAxisPrinting.app**, then launch **MultiAxisPrinting.app** from your user Applications folder. |
+| Linux x86-64 | [application.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/application.zip) | Extract into a fresh folder and follow **INSTALL.md** inside it. This is a Linux/source package. |
 
 Windows/macOS setup creates its own dedicated Miniforge/Python environment and
 installs pinned dependencies; no separate Conda/Python installation or manual
@@ -20,7 +20,7 @@ Windows/Linux support NVIDIA CUDA with CPU fallback; Mac profiles use CPU.
 
 ### How the installers obtain MAP
 
-First-time setup downloads the exact [tested MAP backend release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27)
+First-time setup downloads the exact [tested MAP backend release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27-r2)
 from **this repository**, rather than fetching changing code from `main` or
 `latest`. `MAP_BACKEND_LOCK.json` in the interface package pins the 3.3 MB ZIP's
 SHA256, size and complete 382-member inventory. Setup verifies every file before
@@ -32,10 +32,10 @@ check-only do not download code. Modified existing backend source is preserved
 and blocks replacement. 
 
 For an offline backend, download the exact ZIP named by the interface's lock from
-the [MAP release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27). From the extracted **interface** folder, run:
+the [MAP release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27-r2). From the extracted **interface** folder, run:
 
 ```text
-python map_backend.py --archive /path/to/MAP-backends-2026-11-27.zip
+python map_backend.py --archive /path/to/MAP-backends-2026-11-27-r2.zip
 ```
 
 Then run the normal interface setup. `map_backend.py`, `setup.py`, GUI code and
@@ -45,7 +45,7 @@ See the [interface installation notes](https://github.com/RyanTaoLiu/MultiAxisPr
 These are development prereleases. Actual backend download/offline reuse was
 verified on Windows and Linux. Complete fresh-environment installation, native
 Mac setup and physical printing are not claimed verified; read the matching
-[release verification notes](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-map/VERIFICATION.json).
+[release verification notes](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/VERIFICATION.json).
 
 ### Manual/source installation (fallback)
 
@@ -71,7 +71,7 @@ the installer backend. The repository's `MAP_BUNDLE.json` retains the original
 
 MAP provides backend algorithms for neural-field slicing, support generation,
 toolpaths, supporting heights and printer-program export. Current interface
-installers obtain their exact tested backend from [MAP Releases](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27).
+installers obtain their exact tested backend from [MAP Releases](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27-r2).
 GUI and existing FEA functionality are provided by
 [MultiAxisPrinting/dev2](https://github.com/RyanTaoLiu/MultiAxisPrinting/tree/dev2).
 
