@@ -4,8 +4,8 @@
 
 ### Recommended: use the interface installation packages
 
-For the complete GUI, FEA and end-to-end workflows, download the Windows/macOS
-[MultiAxisPrinting installer release](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-preview-2026-11-27-r2):
+For the complete GUI, FEA and end-to-end workflows, choose the installer for
+your operating system from the table below.
 
 | Platform | Package | Start |
 |---|---|---|

@@ -1,7 +1,13 @@
 # Install, launch and locate MultiAxisPrinting
 
-Download the [Windows/macOS package](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-preview-2026-11-27-r2).
-For Linux, download the [automatic installer](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-linux-preview-2026-11-27).
+Choose the installer for your operating system:
+
+| Platform | Download |
+|---|---|
+| Windows x86-64 | [MultiAxisPrinting-Setup-Windows.exe](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/MultiAxisPrinting-Setup-Windows.exe) |
+| macOS 14+, Apple Silicon or Intel | [MultiAxisPrinting-Setup-macOS.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/MultiAxisPrinting-Setup-macOS.zip) |
+| Linux x86-64 | [MultiAxisPrinting-Setup-Linux.sh](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-linux-preview-2026-11-27/MultiAxisPrinting-Setup-Linux.sh) |
+
 The packages install one interface with five backend component folders. The
 backends are modules used by the interface, not five separate desktop applications.
 
