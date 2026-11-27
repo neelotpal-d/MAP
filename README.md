@@ -24,8 +24,8 @@ First-time setup downloads the exact [tested MAP backend release](https://github
 from **this repository**, rather than fetching changing code from `main` or
 `latest`. `MAP_BACKEND_LOCK.json` in the interface package pins the 3.3 MB ZIP's
 SHA256, size and complete 382-member inventory. Setup verifies every file before
-installing the five component folders; the 380 component code/reference files
-match the preceding tested interface snapshot, with two release/notices files added.
+installing the five component folders. The archive also includes its release
+inventory and source notices.
 
 Valid installed source and cached archives are reused. Normal launches and
 check-only do not download code. Modified existing backend source is preserved
@@ -46,6 +46,28 @@ These are development prereleases. Actual backend download/offline reuse was
 verified on Windows and Linux. Complete fresh-environment installation, native
 Mac setup and physical printing are not claimed verified; read the matching
 [release verification notes](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/VERIFICATION.json).
+
+### Downloads, installed files and later launches
+
+Setup includes the interface, starter models and local documentation, then obtains
+the locked MAP backends from MAP Releases, Miniforge from conda-forge, and pinned
+dependencies from conda-forge/PyPI and the official PyTorch wheel indexes.
+
+| Platform | Default installed application root | Launch again |
+|---|---|---|
+| Windows bootstrap | `%LOCALAPPDATA%\MultiAxisPrinting\versions\<release-id>\` | **MultiAxisPrinting** Desktop/Start-menu shortcut; its Properties show the exact source root. |
+| macOS bootstrap | `~/.local/share/multiaxisprinting/versions/<release-id>/` | `~/Applications/MultiAxisPrinting.app`; `current-app.txt` in the installation base identifies the active source root. |
+| Linux/source ZIP | The folder where you extracted `application.zip` | From that folder, `python launch.py --installed-runtime`. |
+
+Windows can use the destination selected in setup. Mac setup can use a custom
+`MULTIAXIS_INSTALL_DIR`. Python lives in the application root's `.runtime/`;
+`.runtime/selection.json` records the active interpreter. Starter models are in
+`MultiAxisPrinting-dev/data/mesh/`. Use **File → Run reports…** for generated
+results/logs; project saves and final exports use the destination you choose.
+
+See [download sources, folder locations and launch instructions](INSTALLERS.md)
+for each component, Finder/File Explorer navigation, caches, setup/launch logs
+and manual/offline installation.
 
 ### Manual/source installation (fallback)
 
