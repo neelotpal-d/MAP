@@ -4,23 +4,24 @@
 
 ### Recommended: use the interface installation packages
 
-For the complete GUI, FEA and end-to-end workflows, download the current
+For the complete GUI, FEA and end-to-end workflows, download the Windows/macOS
 [MultiAxisPrinting installer release](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-preview-2026-11-27-r2):
 
 | Platform | Package | Start |
 |---|---|---|
 | Windows x86-64 | [MultiAxisPrinting-Setup-Windows.exe](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/MultiAxisPrinting-Setup-Windows.exe) | Open the EXE, choose **Install / Check**, then **Launch interface**. |
 | macOS 14+, Apple Silicon or Intel | [MultiAxisPrinting-Setup-macOS.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/MultiAxisPrinting-Setup-macOS.zip) | Extract the whole ZIP, open **Install MultiAxisPrinting.app**, then launch **MultiAxisPrinting.app** from your user Applications folder. |
-| Linux x86-64 | [application.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/application.zip) | Extract into a fresh folder and follow **INSTALL.md** inside it. This is a Linux/source package. |
+| Linux x86-64 | [MultiAxisPrinting-Setup-Linux.sh](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-linux-preview-2026-11-27/MultiAxisPrinting-Setup-Linux.sh) | Run `bash MultiAxisPrinting-Setup-Linux.sh` in Terminal, then open **MultiAxisPrinting** from the application menu. |
 
-Windows/macOS setup creates its own dedicated Miniforge/Python environment and
-installs pinned dependencies; no separate Conda/Python installation or manual
-environment activation is needed. Mac setup may request Apple Command Line Tools.
-Windows/Linux support NVIDIA CUDA with CPU fallback; Mac profiles use CPU.
+**Windows, macOS and Linux installers:** setup creates a dedicated Miniforge/Python
+environment and installs the pinned dependencies. You do not need to install
+Conda/Python separately or activate an environment manually. Mac setup may request
+Apple Command Line Tools. Windows/Linux use verified prebuilt native accelerators
+and select usable NVIDIA CUDA with CPU fallback; Mac profiles use CPU.
 
-**Linux:** follow the [numbered manual setup below](#manualsource-installation-fallback).
-Install Miniforge once, then let `setup.py` create the application environment.
-Use the documented launch command on later visits.
+Linux download: [installer and installation notes](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-linux-preview-2026-11-27).
+Run `bash "$HOME/Downloads/MultiAxisPrinting-Setup-Linux.sh"` using the path to
+your downloaded file. See [Linux setup details](INSTALLERS.md#linux-installer).
 
 ### How the installers obtain MAP
 
@@ -55,17 +56,18 @@ Mac setup and physical printing are not claimed verified; read the matching
 
 The setup packages include the interface, starter models and local documentation.
 Setup obtains the locked MAP backends from MAP Releases and pinned dependencies
-from conda-forge/PyPI and the official PyTorch wheel indexes. The Windows/Mac
-bootstrap also installs Miniforge; Linux/source setup uses an existing manager.
+from conda-forge/PyPI and the official PyTorch wheel indexes. All three platform installers
+also install Miniforge; the manual/source fallback uses an existing manager.
 
 | Platform | Default installed application root | Launch again |
 |---|---|---|
 | Windows bootstrap | `%LOCALAPPDATA%\MultiAxisPrinting\versions\<release-id>\` | **MultiAxisPrinting** Desktop/Start-menu shortcut; its Properties show the exact source root. |
 | macOS bootstrap | `~/.local/share/multiaxisprinting/versions/<release-id>/` | `~/Applications/MultiAxisPrinting.app`; `current-app.txt` in the installation base identifies the active source root. |
-| Linux/source ZIP | The folder where you extracted `application.zip` | From that folder, `python launch.py --installed-runtime`. |
+| Linux bootstrap | `~/.local/share/multiaxisprinting/versions/<release-id>/` (or the selected/XDG base) | **MultiAxisPrinting** application-menu entry; `current-app.txt` identifies the active root. |
+| Manual/source ZIP | The folder where you extracted `application.zip` | From that folder, `python launch.py --installed-runtime`. |
 
-Windows can use the destination selected in setup. Mac setup can use a custom
-`MULTIAXIS_INSTALL_DIR`. Python lives in the application root's `.runtime/`;
+Windows can use the destination selected in setup; Linux accepts `--destination`.
+Mac/Linux setup can use a custom `MULTIAXIS_INSTALL_DIR`. Python lives in the application root's `.runtime/`;
 `.runtime/selection.json` records the active interpreter. Starter models are in
 `MultiAxisPrinting-dev/data/mesh/`. Use **File → Run reports…** for generated
 results/logs; project saves and final exports use the destination you choose.
@@ -76,7 +78,7 @@ and manual/offline installation.
 
 ### Manual/source installation (fallback)
 
-Use these steps for Linux, or for manual setup on Windows/macOS.
+Use these steps if you choose manual setup instead of the Windows, Mac or Linux installer.
 
 **1. Install Miniforge once.** Download the installer for your OS/CPU from the
 [official Miniforge page](https://github.com/conda-forge/miniforge#install).
