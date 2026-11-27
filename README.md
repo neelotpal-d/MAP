@@ -18,24 +18,9 @@ installs pinned dependencies; no separate Conda/Python installation or manual
 environment activation is needed. Mac setup may request Apple Command Line Tools.
 Windows/Linux support NVIDIA CUDA with CPU fallback; Mac profiles use CPU.
 
-**Linux:** use `application.zip` with an existing native Linux Miniforge,
-Conda or Mamba installation; this source package does not install Miniforge for
-you. [Miniforge](https://github.com/conda-forge/miniforge) supplies Python and
-Conda if neither is installed. Extract the ZIP into a writable folder and, in a
-terminal with Python and the environment manager available, run from that folder:
-
-```bash
-python setup.py --device auto
-python launch.py --installed-runtime
-```
-
-Setup creates the application environment in `.runtime/linux-64/`, downloads
-the locked backends/dependencies and selects usable NVIDIA CUDA or CPU fallback.
-Use the second command for later launches. The Linux profile requires x86-64,
-glibc 2.35+ (for example Ubuntu 22.04+) and a working desktop/OpenGL driver.
-Matching prebuilt C++ accelerators are included; no compiler is needed for the
-default Linux route. There is no graphical Linux bootstrap installer or automatic
-desktop shortcut.
+**Linux:** follow the [numbered manual setup below](#manualsource-installation-fallback).
+Install Miniforge once, then let `setup.py` create the application environment.
+Use the documented launch command on later visits.
 
 ### How the installers obtain MAP
 
@@ -91,14 +76,59 @@ and manual/offline installation.
 
 ### Manual/source installation (fallback)
 
-For manual GUI setup, extract **application.zip from the same interface release**,
-use a native-architecture Miniforge/Conda terminal, and follow its **INSTALL.md**
-and pinned dependency profiles. From the folder containing `setup.py`:
+Use these steps for Linux, or for manual setup on Windows/macOS.
 
-```text
+**1. Install Miniforge once.** Download the installer for your OS/CPU from the
+[official Miniforge page](https://github.com/conda-forge/miniforge#install).
+On Windows, open **Miniforge Prompt** after installation. On Mac/Linux, complete
+the shell-initialization prompt, then open a new Terminal. If Conda already works,
+use that installation. [Miniforge installation steps for each OS](INSTALLERS.md#step-1-install-miniforge-once).
+
+**2. Download and extract the application.** From the
+[interface release](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-preview-2026-11-27-r2),
+download the file named **application.zip**. Extract it to `C:\MultiAxisPrinting`
+on Windows, or `~/MultiAxisPrinting` on Mac/Linux. The extracted folder must
+contain `setup.py` and `launch.py`. If you choose another folder, use its path
+in the commands below.
+
+**3. Create the application environment and launch.** Run the block for your OS:
+
+Windows — in **Miniforge Prompt**:
+
+```cmd
+conda activate base
+cd /d "C:\MultiAxisPrinting"
 python setup.py --device auto
 python launch.py --installed-runtime
 ```
+
+Linux or macOS — in **Terminal**:
+
+```bash
+conda activate base
+cd "$HOME/MultiAxisPrinting"
+python setup.py --device auto
+python launch.py --installed-runtime
+```
+
+**`setup.py` creates the application environment for you.** It installs the
+profile's Python 3.10, pinned dependencies and matching MAP backends, then checks
+the installation. Application dependencies go into this folder's `.runtime/`,
+separately from Conda's `base` environment. Windows/Linux select usable CUDA
+or CPU fallback; Mac profiles use CPU. Continue to launch after setup reports
+**Setup passed**. Platform prerequisites are listed in the package's `INSTALL.md`.
+
+**4. Launch on later visits.** Open the same terminal, activate `base`, change
+to the same application folder, and run only:
+
+```text
+python launch.py --installed-runtime
+```
+
+You do not need to repeat setup. The launcher uses the recorded application
+environment. See the [manual setup guide](INSTALLERS.md#linux-and-manualsource-installation)
+for explicit Conda activation, installation checks and common setup messages.
+
 
 For backend-only development or component CLIs, keep the component folders as
 siblings and use a compatible numerical environment. Read each component README

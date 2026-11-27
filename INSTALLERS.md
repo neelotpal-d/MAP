@@ -115,32 +115,161 @@ For a custom base, use its `current-app.txt`. The launcher `.app` in
 
 ### Linux and manual/source installation
 
-On Linux this is a source installation: Python and a working Conda/Mamba
-manager must already be available. Install native Linux Miniforge first if
-needed; `setup.py` creates the application environment, but does not install
-Miniforge itself. The Linux profile requires x86-64 and glibc 2.35+ (for example
-Ubuntu 22.04+), plus a working desktop/OpenGL driver. Its default verified
-prebuilt accelerators do not require a local C++ compiler.
+Follow this procedure for Linux, or when choosing manual setup on Windows/macOS.
+It creates the application's Python environment and installs its dependencies.
 
-Use a native-architecture Miniforge/Conda terminal in the extracted folder and
-follow `INSTALL.md` from `application.zip`. With a working Conda/Mamba manager
-and Python available, run:
+#### Step 1: install Miniforge once
+
+If `conda --version` already works in your terminal, continue to Step 2.
+Otherwise download the matching installer from the
+[official Miniforge release](https://github.com/conda-forge/miniforge/releases/latest).
+
+| Your computer | Miniforge file | What to do |
+|---|---|---|
+| Windows x86-64 | `Miniforge3-Windows-x86_64.exe` | Open the EXE, follow the prompts and keep Start-menu shortcuts enabled. After installation, open **Miniforge Prompt** from Start. |
+| Linux x86-64 | `Miniforge3-Linux-x86_64.sh` | Run the Linux command below in Terminal, follow the prompts and accept Conda initialization. Close and reopen Terminal. |
+| Mac with Apple Silicon | `Miniforge3-MacOSX-arm64.sh` | Run the Apple Silicon command below in Terminal, follow the prompts and accept Conda initialization. Close and reopen Terminal. |
+| Mac with Intel CPU | `Miniforge3-MacOSX-x86_64.sh` | Run the Intel command below in Terminal, follow the prompts and accept Conda initialization. Close and reopen Terminal. |
+
+For a file saved in your Downloads folder, run the one matching command:
+
+Linux x86-64:
+
+```bash
+bash "$HOME/Downloads/Miniforge3-Linux-x86_64.sh"
+```
+
+Apple Silicon Mac:
+
+```bash
+bash "$HOME/Downloads/Miniforge3-MacOSX-arm64.sh"
+```
+
+Intel Mac:
+
+```bash
+bash "$HOME/Downloads/Miniforge3-MacOSX-x86_64.sh"
+```
+
+In the new terminal, run `conda --version`. A version number confirms that Conda
+is available. These steps follow the
+[official Miniforge instructions](https://github.com/conda-forge/miniforge#install).
+
+#### Step 2: extract the application
+
+Download **application.zip** from the
+[MultiAxisPrinting release](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-preview-2026-11-27-r2)
+and extract it into a new folder you will keep at the same location.
+These examples use `C:\MultiAxisPrinting` on Windows and `~/MultiAxisPrinting`
+on Mac/Linux. Open that folder and check that `setup.py`, `launch.py` and
+`MultiAxisPrinting-dev/` are directly inside it. If extraction adds another
+folder level, use that inner folder in the following commands.
+
+For Linux, the supported profile is x86-64 with glibc 2.35+ (for example
+Ubuntu 22.04+), plus a working desktop/OpenGL driver. The default prebuilt
+accelerators need no C++ compiler. On Mac, use macOS 14+ and install Apple Command
+Line Tools if requested for native builds. See `INSTALL.md` in the extracted
+package for system-library requirements.
+
+#### Step 3: create the environment and install dependencies
+
+Windows — open **Miniforge Prompt**:
+
+```cmd
+conda activate base
+cd /d "C:\MultiAxisPrinting"
+python setup.py --device auto
+```
+
+Linux/macOS — open **Terminal**:
+
+```bash
+conda activate base
+cd "$HOME/MultiAxisPrinting"
+python setup.py --device auto
+```
+
+Replace the example application path if you extracted elsewhere. Leave the
+terminal open until it reports **Setup passed**. Setup performs all of these:
+
+1. Downloads and verifies the matching MAP backend source when needed.
+2. Creates a separate application environment with the profile's Python 3.10.
+3. Installs the pinned Conda/pip dependencies into that environment.
+4. Installs or builds the matching native accelerators, checks dependencies,
+   Qt and native operations, and probes CUDA/CPU as applicable.
+5. Records the application interpreter in `.runtime/selection.json`.
+
+`base` provides the Python/Conda used to run setup. The application's dependencies
+are installed separately under the extracted application's `.runtime/` folder.
+You do not need a separate `conda create` command or a manual `pip install` list.
+
+| Platform | Default environment created by this procedure |
+|---|---|
+| Windows | `<application-folder>\.runtime\win-64\` |
+| Linux | `<application-folder>/.runtime/linux-64/` |
+| Apple Silicon Mac | `<application-folder>/.runtime/osx-arm64/` |
+| Intel Mac | `<application-folder>/.runtime/osx-64/` |
+
+Windows/Linux use usable NVIDIA CUDA with CPU fallback; Mac uses CPU. For a
+deliberate CPU-only setup, use `python setup.py --device cpu` for the first setup.
+This setup script uses the Miniforge/Conda installed in Step 1; it does not install
+the environment manager itself.
+
+#### Step 4: launch now and on later visits
+
+After setup passes, run from the same application folder:
 
 ```text
-python setup.py --device auto
 python launch.py --installed-runtime
 ```
 
-For subsequent launches, return to the application root and run the second
-command. `--installed-runtime` uses the recorded application interpreter. If
-you deliberately use your own complete compatible environment instead, activate
-it and run `python launch.py`. Linux/source setup does not create a desktop
-shortcut automatically. A graphical Linux bootstrap installer is not supplied.
+For later launches, open Miniforge Prompt/Terminal, activate `base`, change to the
+application folder and run that launch command. Skip the setup command.
+The launcher selects the recorded application environment automatically.
+Linux/source setup does not create a desktop shortcut automatically.
 
-Keep an installed Conda runtime at its original path; do not move it between
-application folders, computers or operating systems. For download/security
-prompts and supported desktop requirements, see the package's
-`DOWNLOAD_SECURITY.md` and `INSTALL.md`.
+<details>
+<summary>Optional: activate the application environment explicitly</summary>
+
+From the extracted application folder, use the command for your OS:
+
+| Platform | Conda activation command |
+|---|---|
+| Windows, in Miniforge Prompt | `conda activate ".\.runtime\win-64"` |
+| Linux | `conda activate "./.runtime/linux-64"` |
+| Apple Silicon Mac | `conda activate "./.runtime/osx-arm64"` |
+| Intel Mac | `conda activate "./.runtime/osx-64"` |
+
+Then launch using `python launch.py`. This is an alternative to the automatic
+`--installed-runtime` launch above, after the same setup has completed.
+For a custom `--prefix`, use the environment path recorded in
+`.runtime/selection.json` instead of the default table.
+
+</details>
+
+<details>
+<summary>Common setup messages and installation checks</summary>
+
+- **`conda: command not found`:** reopen the terminal after Miniforge installation.
+  With the default Mac/Linux Miniforge location, running
+  `source "$HOME/miniforge3/etc/profile.d/conda.sh"` enables Conda for that terminal.
+  Use your chosen Miniforge path if different.
+- **`setup.py` or `launch.py` not found:** change to the extracted folder containing
+  those files, rather than the parent folder or the ZIP itself.
+- **`Runtime destination exists`:** setup has already created that environment.
+  To verify it, run `python setup.py --check-only`; to launch, use Step 4.
+  If setup was interrupted and checking fails, retain its log and use a fresh
+  application folder for another installation.
+- **Missing Linux display/system libraries:** follow the Linux system-library
+  section in the package's `INSTALL.md`; numerical CPU fallback still needs a
+  working desktop for the GUI.
+
+Run `python launch.py --installed-runtime --check` from the application folder
+for an installed-runtime environment check. Keep the runtime at its original
+path; choose a new setup folder rather than moving an existing Conda environment.
+
+</details>
+
 
 ## Find models, generated results, saved projects and logs
 
