@@ -13,14 +13,10 @@ For the complete GUI, FEA and end-to-end workflows, download the current
 | macOS 14+, Apple Silicon or Intel | [MultiAxisPrinting-Setup-macOS.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-map/MultiAxisPrinting-Setup-macOS.zip) | Extract the whole ZIP, open **Install MultiAxisPrinting.app**, then launch **MultiAxisPrinting.app** from your user Applications folder. |
 | Linux x86-64 | [application.zip](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-map/application.zip) | Extract into a fresh folder and follow **INSTALL.md** inside it. This is a Linux/source package. |
 
-Windows/macOS setup creates its own private Miniforge/Python environment and
+Windows/macOS setup creates its own dedicated Miniforge/Python environment and
 installs pinned dependencies; no separate Conda/Python installation or manual
 environment activation is needed. Mac setup may request Apple Command Line Tools.
 Windows/Linux support NVIDIA CUDA with CPU fallback; Mac profiles use CPU.
-
-The interface repository is currently **private**: GitHub installer downloads
-require repository access. Installers received directly work without a GitHub
-login. The MAP backend release below is public and needs no account.
 
 ### How the installers obtain MAP
 
@@ -33,8 +29,7 @@ match the preceding tested interface snapshot, with two release/notices files ad
 
 Valid installed source and cached archives are reused. Normal launches and
 check-only do not download code. Modified existing backend source is preserved
-and blocks replacement. This makes backend installation a genuine MAP release
-download; release-download statistics are separate from page views and clones.
+and blocks replacement. 
 
 For an offline backend, download the exact ZIP named by the interface's lock from
 the [MAP release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27). From the extracted **interface** folder, run:
@@ -102,5 +97,4 @@ python -m external_projected_pipeline doctor
 
 See AUTHORS.md for author details/placeholders. Original SIREN, Bambu-derived
 and other third-party authorship/licences remain applicable; see
-THIRD_PARTY_NOTICES.md and LICENSE_STATUS.md. Discussion/agent handovers,
-generated experiments, checkpoints and environments are not included.
+THIRD_PARTY_NOTICES.md and LICENSE_STATUS.md. Generated results, checkpoints and runtime environments are stored separately from source.

@@ -43,8 +43,7 @@ VISUALIZATION_MODE = 1
 VISUALIZATION_SAMPLES_PER_AXIS = 40
 VISUALIZATION_NOISE_SCALE = 0.3
 
-# Visualization is intentionally a placeholder for now so you can fill it in
-# manually later without reworking the training flow again.
+# Visualization configuration is independent of the training settings.
 RUN_TRAINING = True
 RUN_VISUALIZATION = True
 

@@ -15,6 +15,21 @@
     "sha256": "4525cbe4602a54d2314b36d84d648c050feec9a8ae3e57b267b1cface1467e09"
   },
   {
+    "path": "CurvedSupportGenerator/AUTHORS.md",
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+  },
+  {
+    "path": "CurvedSupportGenerator/COLLISION_MODES.md",
+    "bytes": 4210,
+    "sha256": "e3fb5d7baafd008e12cc8227c6e0f81e6ae7a7d5043dd06f9abb7a94a1f1d427"
+  },
+  {
+    "path": "CurvedSupportGenerator/README.md",
+    "bytes": 8404,
+    "sha256": "a82a3e3ad93c5df5e8c8be8ca0023f1abc962c5a964a35df02d24d502d77dd44"
+  },
+  {
     "path": "CurvedSupportGenerator/__init__.py",
     "bytes": 97,
     "sha256": "e51420553def9637ce8dfa8e8439a1767bd7e0b7d5fbdd0cbce9f088cb6a8c0b"
@@ -23,11 +38,6 @@
     "path": "CurvedSupportGenerator/__main__.py",
     "bytes": 80,
     "sha256": "3d2438ae92f4746e9ffaa1f837b1fe803f6281091d1f31f8c95643716f257d9a"
-  },
-  {
-    "path": "CurvedSupportGenerator/AUTHORS.md",
-    "bytes": 209,
-    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
   },
   {
     "path": "CurvedSupportGenerator/build_native.py",
@@ -40,11 +50,6 @@
     "sha256": "4ecbf4ffcd6bd66a5581c01059f5c6011fe64951041f2c3ad0ea959172b9d57d"
   },
   {
-    "path": "CurvedSupportGenerator/COLLISION_MODES.md",
-    "bytes": 4210,
-    "sha256": "e3fb5d7baafd008e12cc8227c6e0f81e6ae7a7d5043dd06f9abb7a94a1f1d427"
-  },
-  {
     "path": "CurvedSupportGenerator/example_job.json",
     "bytes": 1608,
     "sha256": "304be6f2d9e97a2e1d97ec201de4074e696539186440ae5ace2f4fceb30eac65"
@@ -55,39 +60,9 @@
     "sha256": "78cedb92ac17005a249c2f666b16388038d9b0e7bd6e9db7eefc026b43bd0d2f"
   },
   {
-    "path": "CurvedSupportGenerator/README.md",
-    "bytes": 8404,
-    "sha256": "a82a3e3ad93c5df5e8c8be8ca0023f1abc962c5a964a35df02d24d502d77dd44"
-  },
-  {
     "path": "CurvedSupportGenerator/requirements.txt",
     "bytes": 112,
     "sha256": "b6fdbb16957b6a6a8c4fde49db4d8ec1ed19f225146e30d3f243fe0899b26855"
-  },
-  {
-    "path": "CurvedSupportGenerator/runtime/runtimeEnv.py",
-    "bytes": 563,
-    "sha256": "b069823de1b844be6e1a04053abd4809aec95302c5d40bac06ccf277c01c6a6b"
-  },
-  {
-    "path": "CurvedSupportGenerator/runtime/scalarNetUtils.py",
-    "bytes": 11341,
-    "sha256": "a3ad3399b09ef848d43552c3c7d8c719a3ab6c9b7d5b9b5d97d2e13b31d7a7a5"
-  },
-  {
-    "path": "CurvedSupportGenerator/runtime/siren_pytorch/__init__.py",
-    "bytes": 77,
-    "sha256": "e4faf2787f1ae2fd54455a6630301f89725d5f982a81df6a62a5c76f2a07ed5b"
-  },
-  {
-    "path": "CurvedSupportGenerator/runtime/siren_pytorch/LICENSE",
-    "bytes": 1066,
-    "sha256": "02cf6ed7df17f94fafa61e67a089ee51faac006db35ffa173c70e6763c253cf6"
-  },
-  {
-    "path": "CurvedSupportGenerator/runtime/siren_pytorch/siren_pytorch.py",
-    "bytes": 6651,
-    "sha256": "90d10eb865dabb0f1f0aef171206034a7b442d728967313442f0117512a3f487"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/__init__.py",
@@ -356,8 +331,8 @@
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/promotion_sources.json",
-    "bytes": 4286,
-    "sha256": "2b7484572a1ad3ff712791da7f8cd3b4cebdeba65e67374a674907cfd73dfd52"
+    "bytes": 3433,
+    "sha256": "bc0720d2da77e52a1a71037735bd49ccebdf1917cc64c88f86471595a3bb1fe0"
   },
   {
     "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/routing_field.py",
@@ -540,6 +515,31 @@
     "sha256": "f39f80689fbb1e5c8a22d3ebe1a47edcee3bd454433c7698f7845376abe85db5"
   },
   {
+    "path": "CurvedSupportGenerator/runtime/runtimeEnv.py",
+    "bytes": 563,
+    "sha256": "b069823de1b844be6e1a04053abd4809aec95302c5d40bac06ccf277c01c6a6b"
+  },
+  {
+    "path": "CurvedSupportGenerator/runtime/scalarNetUtils.py",
+    "bytes": 11341,
+    "sha256": "a3ad3399b09ef848d43552c3c7d8c719a3ab6c9b7d5b9b5d97d2e13b31d7a7a5"
+  },
+  {
+    "path": "CurvedSupportGenerator/runtime/siren_pytorch/LICENSE",
+    "bytes": 1066,
+    "sha256": "02cf6ed7df17f94fafa61e67a089ee51faac006db35ffa173c70e6763c253cf6"
+  },
+  {
+    "path": "CurvedSupportGenerator/runtime/siren_pytorch/__init__.py",
+    "bytes": 77,
+    "sha256": "e4faf2787f1ae2fd54455a6630301f89725d5f982a81df6a62a5c76f2a07ed5b"
+  },
+  {
+    "path": "CurvedSupportGenerator/runtime/siren_pytorch/siren_pytorch.py",
+    "bytes": 6651,
+    "sha256": "90d10eb865dabb0f1f0aef171206034a7b442d728967313442f0117512a3f487"
+  },
+  {
     "path": "CurvedSupportGenerator/skeleton.py",
     "bytes": 2325,
     "sha256": "5e389e8638a8e44b871596d7a748c1bb9f4a72da04988cf889be12a8e1aa6e47"
@@ -565,9 +565,559 @@
     "sha256": "93c568dd90e89f3a13befbb87fd3c912bf6e5f07cf408f93fe1ebf67745cf81d"
   },
   {
+    "path": "LICENSE_STATUS.md",
+    "bytes": 909,
+    "sha256": "d526084f309032a7613dab330876b3592390deaa7053b2425bd7e3e9148162c0"
+  },
+  {
+    "path": "MAP_BUNDLE.json",
+    "bytes": 65953,
+    "sha256": "ff25acafd037de00b64cf73c60afc5ab82d1bc35603a5b377408fd1a09ce3ce7"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/.gitignore",
+    "bytes": 38,
+    "sha256": "c3d282d32e0459e2f8fc51942eb3009656c22a75ec8a7272575bab000e3ad9bb"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/AUTHORS.md",
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/README.md",
+    "bytes": 19560,
+    "sha256": "0495bc28a77e0b0b98a90a750b995c6bb474be44764f2343372613b7efce62ae"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/__init__.py",
+    "bytes": 79,
+    "sha256": "1edc4adc8038f94a679f02320bffc2d9d4ec7450684aa34ddeadfae7bfe289af"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/__main__.py",
+    "bytes": 47,
+    "sha256": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/build_initializer.py",
+    "bytes": 323,
+    "sha256": "970759eb2a027844f79eb50dbb312754b2874d42dfc06cc12ad13d9207218322"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/build_sdf.py",
+    "bytes": 399,
+    "sha256": "4cf03f56e68e7e45dc74a7d860d019b8f7836bdc90a89a4e2eb92318ba84b795"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/cli.py",
+    "bytes": 9479,
+    "sha256": "5b21603592944f255c976b226ed79e26d67bfbe345fd850c22aa6a44b05ae2d9"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/example_job.json",
+    "bytes": 892,
+    "sha256": "703e602eaab7eb69a9cf6c745eecf5e6ec7051d491dc761f59889f611ae67a73"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/example_no_collision_job.json",
+    "bytes": 527,
+    "sha256": "af0c3a53afe8cdaefb7ee2afc2c6e2ba3f4111f5f8117b6688b7092d7416a6b5"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/example_stress_job.json",
+    "bytes": 1022,
+    "sha256": "1344b78ff1da6a036f8a44ef36850a1a9856ff5f72364208a121d47a6edfc8cf"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/examples/fertility_job.json",
+    "bytes": 704,
+    "sha256": "ab2d77eea7c691f807cb057b6fdae95a60f4917b5a9a72624f82262cfaa65aa9"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/pack.py",
+    "bytes": 1149,
+    "sha256": "5834359d9f9422740ab7bf1e47cda89c3d1e39124fe59dfd8aa51dea1deb0383"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/requirements.txt",
+    "bytes": 48,
+    "sha256": "ac7eeec9f0e18d64db4b4273ead32527fc0dc19b59fb05994619af2e334edb41"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/build_checkpoint.py",
+    "bytes": 20452,
+    "sha256": "05fd9473daa478ca3d7dec46c5bdc9785e5c3d4c150e241ba5dd753997a3bf43"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/collision.py",
+    "bytes": 20411,
+    "sha256": "a477a7c5bb152dcdb261a8ee38d062f08f500981a9a762bc1e82c4467b151949"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/collision_settings.py",
+    "bytes": 524,
+    "sha256": "6144dd1babd8cc5df24842be2133100de2a4a7e69eda65287f3d838e13ff19fc"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/fields.py",
+    "bytes": 3395,
+    "sha256": "493fcd63545f436fdde1e808ec98b00b8b2603fdf0b7dccf370acf60ff419a9f"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/plotting.py",
+    "bytes": 940,
+    "sha256": "47b2adfcab1c1a116281ce84061a8e3975eab699fd84f482c277f8f040b817d5"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/root_sampling.py",
+    "bytes": 11987,
+    "sha256": "ec0d8af401636486b0b5ae5dc782524ac938aa2ac2ac993c815bd04916f145aa"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/run_model.py",
+    "bytes": 73386,
+    "sha256": "04e17f9e786cace9357ebd896f81e8e06f76caa248311f7cb56d1cc9eb3b575b"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/sdf_sampling.py",
+    "bytes": 1378,
+    "sha256": "768fe3cc854521a7d2ebda538c307545c32112276b582ec96d2280668c44f397"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/slicing.py",
+    "bytes": 3593,
+    "sha256": "8d4ff806fc0657e00914bb0df0effa44cf3e8f465ee19dba305321407ecbb2ff"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/stress.py",
+    "bytes": 11329,
+    "sha256": "5ae4699afdf713594514c488e57a2aa4e080a55519d61d3e5efc5884a7722387"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/surface_regions.py",
+    "bytes": 721,
+    "sha256": "77f14b1a9c9cd2169c0ea003e5649fbf539183b7665efb9fa9e7f93ba283308e"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/validate_nominal_collision.py",
+    "bytes": 21342,
+    "sha256": "41b53b6a5fc7589fc2ea8d473ca1b70f6dc38d0822ee56cc636c67e87d57efca"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/validate_sdf.py",
+    "bytes": 10883,
+    "sha256": "80ff0cb827d4e80a5c6e3b479acc76e1c3924fff67ae52e3ef20d3ac106056bf"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/visualize_fertility.py",
+    "bytes": 22631,
+    "sha256": "40d8fc0b519fff728b9408b68a9a843e811096da76a47ad7dcc3fa9551d8fc12"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/runtime/visualize_nominal_collision.py",
+    "bytes": 4724,
+    "sha256": "916e45c7b4a8e71094f7b55f784599b696a529325cd3a60a3267bcbc8f265681"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_collision_coverage.py",
+    "bytes": 8410,
+    "sha256": "0a096ea27d3bcc4333dc24334fa4fa23d5b46d3ed17bf93e540bc5686256f691"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_collision_normalization.py",
+    "bytes": 5337,
+    "sha256": "f63e02141e6cbdfc0761ef1d74253638d3a798b6b17a9e513ab5ad0ce01769cf"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_collision_performance.py",
+    "bytes": 12920,
+    "sha256": "bcda25c07b602414048215d46ce926dc7d532746569968920ad68b37fd53bf94"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_free_base_sampling.py",
+    "bytes": 2566,
+    "sha256": "a4cc5a1d49b564c1c5d0a69c94ce495b9961afc654d094d23280e0f2c36a20ba"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_portable.py",
+    "bytes": 9377,
+    "sha256": "3157bad4d242e9f378725022670d8fa0b1db351c0745c5eed8e298212ddf412d"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_restored_options.py",
+    "bytes": 14828,
+    "sha256": "155299a12326b0520c85f1adfbf6be8136977a011610d89816b3bd6073ecdf9c"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_sdf_reuse_validation.py",
+    "bytes": 5512,
+    "sha256": "5f3866743d9baf0eca98291bde2ada88e73b1aaa3cc48b6535c2d201f4786e3a"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_sdf_sampling.py",
+    "bytes": 4066,
+    "sha256": "d0eb95496aa76ce35d7d28445a389123e04f6c078dc683f4802dd9cc31c28413"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_stress_planar_initializer.py",
+    "bytes": 7640,
+    "sha256": "b7b0503bab3ecd26995f8315778e6882f6c8392ec9e8ed76b19bf166790fde84"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tests/test_stress_top_percent.py",
+    "bytes": 10489,
+    "sha256": "1899fdbd08ff776d8e9e35910f25d8e76c4e08f2b1195c7bb83c0b3db241a826"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tools/abb_nominal.json",
+    "bytes": 760,
+    "sha256": "3d0aa232fcd17bab43700154864f15b0a13a37c22474d081830680abcc87e881"
+  },
+  {
+    "path": "MultiAxisFieldGenerator/tools/abb_training.json",
+    "bytes": 700,
+    "sha256": "1df222b6d8c82090a6d84953cf10587a87135a736631a2888697b926ccca9469"
+  },
+  {
+    "path": "README.md",
+    "bytes": 5843,
+    "sha256": "c596057f36f75cf968638a7c8a0587a4619564b81c4a325f88e70241e0a44b46"
+  },
+  {
+    "path": "THIRD_PARTY_NOTICES.md",
+    "bytes": 1525,
+    "sha256": "a5b7c6e388d168c79274e047728f8bb3fd27ebf7164ad115c10adf951d70a9e6"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/.gitignore",
+    "bytes": 32,
+    "sha256": "d61c5ec90fe6721329121a68a41b1f20b78fff10e4cb6949144906c42639f523"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/AUTHORS.md",
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/README.md",
+    "bytes": 10659,
+    "sha256": "ed182b8eac35b8119bcd24f9a4f70d16596dfab9d508b02c9dd6d253a42e5c05"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/__init__.py",
+    "bytes": 70,
+    "sha256": "1b36cf157161185a0c0cbfa3657d255a89f999df0b4f025ccc9ef357ea1d6110"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/__main__.py",
+    "bytes": 48,
+    "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/cli.py",
+    "bytes": 9672,
+    "sha256": "f2b7e21975e9e59191964fc4107da446d1df02e3957b120b7622424059c9a573"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/example_combined_job.json",
+    "bytes": 2340,
+    "sha256": "d58a072b8750b59082a8c8fa12339e72a50f5c861d6e533b5bd2b91b251e4a61"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/example_job.json",
+    "bytes": 1971,
+    "sha256": "ad1b5796d6fc4fa6862f1b26a3cff8ca4b05f2b1319c5c4b5aa2655b774385ea"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/example_strength_batch256_job.json",
+    "bytes": 3369,
+    "sha256": "b9c1dede969abfb7d562ec389469a6e38344cf3e6e1a04ca42ebcb3e390cb5c0"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/example_strength_job.json",
+    "bytes": 3360,
+    "sha256": "544f18d7fbb4d9ded2339172ec6a5b375accdeec60587b16271066bfbe72fbb9"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/example_support_free_job.json",
+    "bytes": 2004,
+    "sha256": "ce8e93f2b6ea4e20867931d34bdf0768012d76b7ad92ea2709aabbad9a2e85a1"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/example_tool.json",
+    "bytes": 196,
+    "sha256": "a1b3afffe450e346f8ec76eb5db5caddd7ac0dc01f263e8e5a8c5d7b918cd150"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/import_fea.py",
+    "bytes": 8797,
+    "sha256": "668635ba83ca16ed92d12a58a486db4ba8d84d9dd23360d64c82431c5a2d8a6f"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/job_options.py",
+    "bytes": 1112,
+    "sha256": "aeb954aa403cb43ebfea17ccd4acdc4a63eb53534fe60b615de8e5b6e05cb7d9"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/requirements.txt",
+    "bytes": 55,
+    "sha256": "7811c2fa4281e2670d51618faf512f95fa78ef556f29d85ea62f677747e6f139"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/3axisStressSlicer.py",
+    "bytes": 47461,
+    "sha256": "a7e37805490177154efd9e188a535c07617668dc23de8f33c9ad96c5f3bfbdf4"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/axialOrientation.py",
+    "bytes": 8642,
+    "sha256": "6f9acddafb1240fd944d1aeb0bbd7dc973943b402a615fdfaa1b3b9c73f67373"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/axisymmetricTool.py",
+    "bytes": 4432,
+    "sha256": "eb387d48e268ba3bdac158595fee41f10c3e43854f579a3f6a5ef9e5befe7f15"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/boxToolSampling.py",
+    "bytes": 2291,
+    "sha256": "29b4e452452edef61cfe366d0cade843944054795d517cf250771708b686c757"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/cacheLayerComparison.py",
+    "bytes": 2546,
+    "sha256": "8f5188079ae0f644f807d64f25c950e6ab6a55d60cfb2f0b5f4ea492bae8ef1f"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/experiments/__init__.py",
+    "bytes": 2,
+    "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/__init__.py",
+    "bytes": 2,
+    "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/convex_surface_quality.py",
+    "bytes": 150161,
+    "sha256": "e31298ba96debdcebfbe1df5d6825a373a68500969ff0f76730cbb4f17fb27d7"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/hard_collision_sampling.py",
+    "bytes": 62507,
+    "sha256": "e2786adb666d427672938ef90ed2c5c2992447c978144eb38634b1aee93d8a70"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/exportIsoSurfaces.py",
+    "bytes": 29340,
+    "sha256": "8d253cfbcfdd794d6393c6fa83d2886d349b1911c611fe2e2de795de22cbbb8b"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/fourierFeatureNet.py",
+    "bytes": 2391,
+    "sha256": "09b524c37a877c1f855ee586c1ea140d8aa665460159f85eb57e7ade46bbd244"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/generateScalarInitializer.py",
+    "bytes": 13458,
+    "sha256": "6c5eeeb0ce4bfad6a8bcf01711afc31796269dbc1d20372afb395b03cb2eb142"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/globalOrientation.py",
+    "bytes": 8355,
+    "sha256": "735706650872f89fa284e914689a0403dfc1276579c3df0d34b7ff7dbc88bf4c"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/integratedLosses.py",
+    "bytes": 835,
+    "sha256": "0a36fc8e15f2d9c10c81f66a9e4070deba5fa99e0e8fe4001c80b26eb6c5d78f"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/layerCurvature.py",
+    "bytes": 828,
+    "sha256": "c0352f728882f5430c61b09b5d11ef1ebd4219d7d0de411fba5ef7aec88be1e5"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/layerThicknessControl.py",
+    "bytes": 7657,
+    "sha256": "425073566f79d125ef5a344adc85025b0a1ae1050f8d4463e729509616c5a00f"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/runBandedSurfaceQualityPipeline.py",
+    "bytes": 136748,
+    "sha256": "bba37b6a3756ab5e1b87e95e8a5ea9d8bea2cca12ad917719307788973a46e35"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/runBandedSurfaceQualityPipelineLocalEdge.py",
+    "bytes": 686,
+    "sha256": "cc9889946b076c3cbe8fd8b402859f6fc4eeb437d6b549e737b5911bd5139be7"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/runModelCollisionCheck.py",
+    "bytes": 11991,
+    "sha256": "e38ea11aa23344de0665ac3d26514dbdf543608612f4d3d94a34930cdb35c5ad"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/runtimeEnv.py",
+    "bytes": 563,
+    "sha256": "b069823de1b844be6e1a04053abd4809aec95302c5d40bac06ccf277c01c6a6b"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/scalarFieldCollisionCheck.py",
+    "bytes": 40053,
+    "sha256": "8f19b809cdb4891adc69ab213f7cd9a5d3745328173bce5b5169d22cb6fa7862"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/scalarNetUtils.py",
+    "bytes": 11792,
+    "sha256": "484ae1dd8f6564e87b76ab5052edabfb14dc719e0ecabab90da8ede6f03746b2"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/sdfField.py",
+    "bytes": 20340,
+    "sha256": "e2a06aea1ab72bfff948d260d06a10abec09ae35b07053a24958cedf5cd2696f"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/LICENSE",
+    "bytes": 1066,
+    "sha256": "02cf6ed7df17f94fafa61e67a089ee51faac006db35ffa173c70e6763c253cf6"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/__init__.py",
+    "bytes": 77,
+    "sha256": "e4faf2787f1ae2fd54455a6630301f89725d5f982a81df6a62a5c76f2a07ed5b"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/siren_pytorch.py",
+    "bytes": 6651,
+    "sha256": "90d10eb865dabb0f1f0aef171206034a7b442d728967313442f0117512a3f487"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/strengthConstraints.py",
+    "bytes": 11610,
+    "sha256": "8fa25298e349aeea12c84e40ff919a1962226d45b379d5ea7393464a97e81cc6"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/stressSampling.py",
+    "bytes": 5581,
+    "sha256": "ebb90dd605dd4af0a794d572d7f5df0d66f2a49e69f9c13283c04419dc01fc0a"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/toolFieldOffsets.py",
+    "bytes": 14682,
+    "sha256": "74b3986b82a219d03e84429add597b51fd7f77457d91da527f9339c86afccfa2"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/toolSampling.py",
+    "bytes": 5638,
+    "sha256": "acdbe3c429a23f7639c378c7c4e323934fadad1569ac716410a67d16dda3e12b"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/viewCachedLayers.py",
+    "bytes": 1965,
+    "sha256": "dfe7ed2eefce7fce542ddf51667f249e2adf025c9c0dddd8e987bd78fc66cbaa"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/viewFieldComparison.py",
+    "bytes": 3230,
+    "sha256": "2fe266baac8d21e7054ffc2eda7f6e19767b68735e9487c6543485eb3feb161c"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/viewOrientation.py",
+    "bytes": 5249,
+    "sha256": "0b02e918d0786a8ae8038718a6d15a3e9e0a220a776d0f2a325317d0e0eb0981"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/viewStressOrientation.py",
+    "bytes": 4244,
+    "sha256": "cba7d52bd086d7dbd0d8cd9c5a2afecde5e0b254965ffc750e4702988aad7e1b"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/visualizeBoundaryVertexNormalSampling.py",
+    "bytes": 13716,
+    "sha256": "41b1d0996cf81c3085c02c7f25d9aa4290231c2096da321e54ea0b3535d303a7"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/visualizeGradientHeightLayers.py",
+    "bytes": 16661,
+    "sha256": "f566ea2b1b2976bb4ad861377f382ad3c57f4a72b4dc9b8e0c71b38179cb5791"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/visualizeHeightClippedSurfaceSampling.py",
+    "bytes": 10181,
+    "sha256": "f3cc2159a4c9061b8fa69ae967ee0259a9e0333ea955ae935a41c149351770fa"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/runtime/visualizeHybridSurfaceSampling.py",
+    "bytes": 25712,
+    "sha256": "66b8cd0514c95978e5cda68b88d42493fa8fc93427b645b52eac53672138d201"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tests/test_collision_normalization.py",
+    "bytes": 3962,
+    "sha256": "855d39dda9a184dc666d830e40e642b7bbce833f1bbdac8985f2814d9a251150"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tests/test_learning_rate_schedule.py",
+    "bytes": 3804,
+    "sha256": "85748c5574de7a5db88625e181f9fd707b8fb9d9410b009c12405f6bb2fe7788"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tests/test_portable_update.py",
+    "bytes": 8869,
+    "sha256": "38f9ea58ed84a969e01a813836be23da801c8ec627c5291e1aef3bea88bc7a99"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tests/test_pyvista_compatibility.py",
+    "bytes": 2261,
+    "sha256": "40dcbdbfd00340d38d4fa7279ee9134910ec0ecb43da85787f95a3481c789e07"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tests/test_stress_sampling_acceleration.py",
+    "bytes": 3227,
+    "sha256": "a5583b56c1d7b6007c5f345ed0ec6229fe73ba5b7d14d6ce67c94c1e46cf2554"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tests/test_workflows.py",
+    "bytes": 6261,
+    "sha256": "75bcb31f4d35c70eebd105d609571a46a57bd5e942650842d5e9eabb3dc98e20"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tool_y8_xz25.json",
+    "bytes": 143,
+    "sha256": "cbee1d3b9cc3df3aefbc067bb9668962180c6c72d9432cab4e6ce62c9bf6e90f"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_check.json",
+    "bytes": 303,
+    "sha256": "7c3e281da4b48ef34196b133c30c37c41d678f1443f099dba471bd545e09ce09"
+  },
+  {
+    "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_training_margin04.json",
+    "bytes": 143,
+    "sha256": "df94e51d66da3050369e6a0db3677e1d22a62c9e26f7529b70be40fd7fa8f76d"
+  },
+  {
     "path": "external_projected_pipeline/.gitignore",
     "bytes": 8,
     "sha256": "70a213afeabe5ac38ae4c88b2c7002ce5068b91a3e57a032245ab809dc6fa460"
+  },
+  {
+    "path": "external_projected_pipeline/AUTHORS.md",
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+  },
+  {
+    "path": "external_projected_pipeline/MODEL_OPTIONS.md",
+    "bytes": 7242,
+    "sha256": "bc1349eacea1c809516480a1d475cf998afa74ff123e381767913e98f1f2a348"
+  },
+  {
+    "path": "external_projected_pipeline/README.md",
+    "bytes": 8591,
+    "sha256": "d00e91f805aa10502df9895b4e1afea27b1ce656675b5ec51135e807337c0b0d"
   },
   {
     "path": "external_projected_pipeline/__init__.py",
@@ -583,11 +1133,6 @@
     "path": "external_projected_pipeline/api.py",
     "bytes": 14401,
     "sha256": "9b3f4a2706c1fcdf10fe52a2adc1e66e28b18ed67876fec922970a88df54b778"
-  },
-  {
-    "path": "external_projected_pipeline/AUTHORS.md",
-    "bytes": 209,
-    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
   },
   {
     "path": "external_projected_pipeline/bundle_manifest.json",
@@ -608,6 +1153,26 @@
     "path": "external_projected_pipeline/execution_settings.py",
     "bytes": 2640,
     "sha256": "2dc1b5e9e60b10f0b0ed00f9fd7d5ada9eced21374b1ce442c0ffc08cd096f14"
+  },
+  {
+    "path": "external_projected_pipeline/machines/FLSUNQ5 - Copy.json",
+    "bytes": 473,
+    "sha256": "3c27313bf7c9d79ba232ed026d817661bfb07926e6cdac122f7f3004cd49619f"
+  },
+  {
+    "path": "external_projected_pipeline/machines/FLSUNQ5.json",
+    "bytes": 661,
+    "sha256": "f07cda53dfd65812d5d7a7fd6c981c316d30bd35c220a1f2a989fedcf60aa275"
+  },
+  {
+    "path": "external_projected_pipeline/machines/FLSUNQ5_post.gcode",
+    "bytes": 349,
+    "sha256": "0358fcc1160f59337dcbea63ec51df4745f85decf7647c161364d588720374a5"
+  },
+  {
+    "path": "external_projected_pipeline/machines/FLSUNQ5_pre.gcode",
+    "bytes": 802,
+    "sha256": "6e3755827ff1a80c48a9a64f594c2882e241d0300fe44670bc38de2dde3456d3"
   },
   {
     "path": "external_projected_pipeline/machines/bambuA1.json",
@@ -645,31 +1210,6 @@
     "sha256": "c174ed787f6a1b3029aca475566c36d2e39a1ff1e3819c39164e1bd01503cf44"
   },
   {
-    "path": "external_projected_pipeline/machines/FLSUNQ5 - Copy.json",
-    "bytes": 473,
-    "sha256": "3c27313bf7c9d79ba232ed026d817661bfb07926e6cdac122f7f3004cd49619f"
-  },
-  {
-    "path": "external_projected_pipeline/machines/FLSUNQ5.json",
-    "bytes": 661,
-    "sha256": "f07cda53dfd65812d5d7a7fd6c981c316d30bd35c220a1f2a989fedcf60aa275"
-  },
-  {
-    "path": "external_projected_pipeline/machines/FLSUNQ5_post.gcode",
-    "bytes": 349,
-    "sha256": "0358fcc1160f59337dcbea63ec51df4745f85decf7647c161364d588720374a5"
-  },
-  {
-    "path": "external_projected_pipeline/machines/FLSUNQ5_pre.gcode",
-    "bytes": 802,
-    "sha256": "6e3755827ff1a80c48a9a64f594c2882e241d0300fe44670bc38de2dde3456d3"
-  },
-  {
-    "path": "external_projected_pipeline/MODEL_OPTIONS.md",
-    "bytes": 7242,
-    "sha256": "bc1349eacea1c809516480a1d475cf998afa74ff123e381767913e98f1f2a348"
-  },
-  {
     "path": "external_projected_pipeline/output_lock.py",
     "bytes": 2295,
     "sha256": "6ee357fd3d834bf6b4a9541bc453bbf1c828e5fef7cb0373f6ddfd1bb1dcfe8a"
@@ -688,11 +1228,6 @@
     "path": "external_projected_pipeline/pyproject.toml",
     "bytes": 820,
     "sha256": "0425304de2555b355a693ab1f0392923b738542254df28b40cd28c418708d9da"
-  },
-  {
-    "path": "external_projected_pipeline/README.md",
-    "bytes": 8591,
-    "sha256": "d00e91f805aa10502df9895b4e1afea27b1ce656675b5ec51135e807337c0b0d"
   },
   {
     "path": "external_projected_pipeline/requirements-optional.txt",
@@ -845,6 +1380,11 @@
     "sha256": "1d13dff3577622cba1b5dffd4634ffa90e700300286d1ad1c6f7d6aad351e6d1"
   },
   {
+    "path": "external_projected_pipeline/runtime/height_warning_policy.py",
+    "bytes": 1969,
+    "sha256": "bbe79c7299e16f3241916e0d834dddbbb0e888db3dc8073895a06201f64acf9a"
+  },
+  {
     "path": "external_projected_pipeline/runtime/machine_gcode_export.py",
     "bytes": 70307,
     "sha256": "812089d05ef63900037f32b2d15b86f5035a38b17376ff47bc04f62e8c5bef14"
@@ -975,229 +1515,34 @@
     "sha256": "90f5210488732974a66d65d8cc55e001fb2976bf5e348ffc078d071bf362a121"
   },
   {
-    "path": "LICENSE_STATUS.md",
-    "bytes": 909,
-    "sha256": "d526084f309032a7613dab330876b3592390deaa7053b2425bd7e3e9148162c0"
+    "path": "external_projected_pipeline/tests/test_course_height_policy.py",
+    "bytes": 2439,
+    "sha256": "c064601ed8ddd49b519cd4e6456128d17152af4d06147a6b4f90f816f4fd003b"
   },
   {
-    "path": "MAP_BUNDLE.json",
-    "bytes": 67428,
-    "sha256": "6c2fa75e3a1692f1eb213d90a452f0c50f8c19de5551f6602fe15a32767611ce"
+    "path": "external_projected_pipeline/tests/test_support_repair_choice.py",
+    "bytes": 5334,
+    "sha256": "0a440a7cf97c0fdf6d3a40d2e17a9fe8b71a557cb4eff9da9d7133576e74c7b9"
   },
   {
-    "path": "MultiAxisFieldGenerator/.gitignore",
-    "bytes": 38,
-    "sha256": "c3d282d32e0459e2f8fc51942eb3009656c22a75ec8a7272575bab000e3ad9bb"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/__init__.py",
-    "bytes": 79,
-    "sha256": "1edc4adc8038f94a679f02320bffc2d9d4ec7450684aa34ddeadfae7bfe289af"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/__main__.py",
-    "bytes": 47,
-    "sha256": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/AUTHORS.md",
-    "bytes": 209,
-    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/build_initializer.py",
-    "bytes": 323,
-    "sha256": "970759eb2a027844f79eb50dbb312754b2874d42dfc06cc12ad13d9207218322"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/build_sdf.py",
-    "bytes": 399,
-    "sha256": "4cf03f56e68e7e45dc74a7d860d019b8f7836bdc90a89a4e2eb92318ba84b795"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/cli.py",
-    "bytes": 9479,
-    "sha256": "5b21603592944f255c976b226ed79e26d67bfbe345fd850c22aa6a44b05ae2d9"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/example_job.json",
-    "bytes": 892,
-    "sha256": "703e602eaab7eb69a9cf6c745eecf5e6ec7051d491dc761f59889f611ae67a73"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/example_no_collision_job.json",
-    "bytes": 527,
-    "sha256": "af0c3a53afe8cdaefb7ee2afc2c6e2ba3f4111f5f8117b6688b7092d7416a6b5"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/example_stress_job.json",
-    "bytes": 1022,
-    "sha256": "1344b78ff1da6a036f8a44ef36850a1a9856ff5f72364208a121d47a6edfc8cf"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/examples/fertility_job.json",
-    "bytes": 704,
-    "sha256": "ab2d77eea7c691f807cb057b6fdae95a60f4917b5a9a72624f82262cfaa65aa9"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/pack.py",
-    "bytes": 1149,
-    "sha256": "5834359d9f9422740ab7bf1e47cda89c3d1e39124fe59dfd8aa51dea1deb0383"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/README.md",
-    "bytes": 19560,
-    "sha256": "0495bc28a77e0b0b98a90a750b995c6bb474be44764f2343372613b7efce62ae"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/requirements.txt",
-    "bytes": 48,
-    "sha256": "ac7eeec9f0e18d64db4b4273ead32527fc0dc19b59fb05994619af2e334edb41"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/build_checkpoint.py",
-    "bytes": 20452,
-    "sha256": "05fd9473daa478ca3d7dec46c5bdc9785e5c3d4c150e241ba5dd753997a3bf43"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/collision.py",
-    "bytes": 20411,
-    "sha256": "a477a7c5bb152dcdb261a8ee38d062f08f500981a9a762bc1e82c4467b151949"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/collision_settings.py",
-    "bytes": 524,
-    "sha256": "6144dd1babd8cc5df24842be2133100de2a4a7e69eda65287f3d838e13ff19fc"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/fields.py",
-    "bytes": 3395,
-    "sha256": "493fcd63545f436fdde1e808ec98b00b8b2603fdf0b7dccf370acf60ff419a9f"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/plotting.py",
-    "bytes": 940,
-    "sha256": "47b2adfcab1c1a116281ce84061a8e3975eab699fd84f482c277f8f040b817d5"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/root_sampling.py",
-    "bytes": 11987,
-    "sha256": "ec0d8af401636486b0b5ae5dc782524ac938aa2ac2ac993c815bd04916f145aa"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/run_model.py",
-    "bytes": 73386,
-    "sha256": "04e17f9e786cace9357ebd896f81e8e06f76caa248311f7cb56d1cc9eb3b575b"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/sdf_sampling.py",
-    "bytes": 1378,
-    "sha256": "768fe3cc854521a7d2ebda538c307545c32112276b582ec96d2280668c44f397"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/slicing.py",
-    "bytes": 3593,
-    "sha256": "8d4ff806fc0657e00914bb0df0effa44cf3e8f465ee19dba305321407ecbb2ff"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/stress.py",
-    "bytes": 11329,
-    "sha256": "5ae4699afdf713594514c488e57a2aa4e080a55519d61d3e5efc5884a7722387"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/surface_regions.py",
-    "bytes": 721,
-    "sha256": "77f14b1a9c9cd2169c0ea003e5649fbf539183b7665efb9fa9e7f93ba283308e"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/validate_nominal_collision.py",
-    "bytes": 21342,
-    "sha256": "41b53b6a5fc7589fc2ea8d473ca1b70f6dc38d0822ee56cc636c67e87d57efca"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/validate_sdf.py",
-    "bytes": 10883,
-    "sha256": "80ff0cb827d4e80a5c6e3b479acc76e1c3924fff67ae52e3ef20d3ac106056bf"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/visualize_fertility.py",
-    "bytes": 22631,
-    "sha256": "40d8fc0b519fff728b9408b68a9a843e811096da76a47ad7dcc3fa9551d8fc12"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/runtime/visualize_nominal_collision.py",
-    "bytes": 4724,
-    "sha256": "916e45c7b4a8e71094f7b55f784599b696a529325cd3a60a3267bcbc8f265681"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_collision_coverage.py",
-    "bytes": 8410,
-    "sha256": "0a096ea27d3bcc4333dc24334fa4fa23d5b46d3ed17bf93e540bc5686256f691"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_collision_normalization.py",
-    "bytes": 5337,
-    "sha256": "f63e02141e6cbdfc0761ef1d74253638d3a798b6b17a9e513ab5ad0ce01769cf"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_collision_performance.py",
-    "bytes": 12920,
-    "sha256": "bcda25c07b602414048215d46ce926dc7d532746569968920ad68b37fd53bf94"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_free_base_sampling.py",
-    "bytes": 2566,
-    "sha256": "a4cc5a1d49b564c1c5d0a69c94ce495b9961afc654d094d23280e0f2c36a20ba"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_portable.py",
-    "bytes": 9377,
-    "sha256": "3157bad4d242e9f378725022670d8fa0b1db351c0745c5eed8e298212ddf412d"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_restored_options.py",
-    "bytes": 14828,
-    "sha256": "155299a12326b0520c85f1adfbf6be8136977a011610d89816b3bd6073ecdf9c"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_sdf_reuse_validation.py",
-    "bytes": 5512,
-    "sha256": "5f3866743d9baf0eca98291bde2ada88e73b1aaa3cc48b6535c2d201f4786e3a"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_sdf_sampling.py",
-    "bytes": 4066,
-    "sha256": "d0eb95496aa76ce35d7d28445a389123e04f6c078dc683f4802dd9cc31c28413"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_stress_planar_initializer.py",
-    "bytes": 7640,
-    "sha256": "b7b0503bab3ecd26995f8315778e6882f6c8392ec9e8ed76b19bf166790fde84"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tests/test_stress_top_percent.py",
-    "bytes": 10489,
-    "sha256": "1899fdbd08ff776d8e9e35910f25d8e76c4e08f2b1195c7bb83c0b3db241a826"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tools/abb_nominal.json",
-    "bytes": 760,
-    "sha256": "3d0aa232fcd17bab43700154864f15b0a13a37c22474d081830680abcc87e881"
-  },
-  {
-    "path": "MultiAxisFieldGenerator/tools/abb_training.json",
-    "bytes": 700,
-    "sha256": "1df222b6d8c82090a6d84953cf10587a87135a736631a2888697b926ccca9469"
-  },
-  {
-    "path": "README.md",
-    "bytes": 1924,
-    "sha256": "37767059f67f75c1169af888527b9cc8de560e6e0e24f9451ddb46901d71d0fa"
+    "path": "external_projected_pipeline/tests/test_support_sheet_spacing.py",
+    "bytes": 14329,
+    "sha256": "05e23a874777aaddf35853c22e7f28b197e33653dfdd4fff08c85faaf0e53038"
   },
   {
     "path": "standalone_bambu_layer_slicer/.gitignore",
     "bytes": 572,
     "sha256": "24945a44fb2794b18ba452baafdc9d5b4ba72dbede1e67168b844e9e19d4c7c8"
+  },
+  {
+    "path": "standalone_bambu_layer_slicer/AUTHORS.md",
+    "bytes": 209,
+    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
+  },
+  {
+    "path": "standalone_bambu_layer_slicer/README.md",
+    "bytes": 3425,
+    "sha256": "68ea79d70157bb4aad4befc35d60c906f3794320c335f00eadbf1f1c16005ae5"
   },
   {
     "path": "standalone_bambu_layer_slicer/a1_single_nozzle/assemble_a1_layer_paths.py",
@@ -1233,11 +1578,6 @@
     "path": "standalone_bambu_layer_slicer/a1_single_nozzle/run_pipeline_motion_test.py",
     "bytes": 3266,
     "sha256": "9d8e3612ad18be0b0661941c33da4f75ebfbf1a2703f9b10af16579aceb4447b"
-  },
-  {
-    "path": "standalone_bambu_layer_slicer/AUTHORS.md",
-    "bytes": 209,
-    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
   },
   {
     "path": "standalone_bambu_layer_slicer/common/assemble_layer_paths.py",
@@ -1315,16 +1655,6 @@
     "sha256": "9b5350a85286be2f3e02e435450a508bc00d3912cfeb4b8a75a6d017b925a459"
   },
   {
-    "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/[Content_Types].xml",
-    "bytes": 432,
-    "sha256": "4acce1f577c7f0af6d9d5923faac96a76aeb1c06f0eef1762b2c8905cc0c846b"
-  },
-  {
-    "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/_rels/.rels",
-    "bytes": 674,
-    "sha256": "abba8905ba7d74bf494412a808888e96f3e9f8dc43eccef22f4d4eff4dd8f77c"
-  },
-  {
     "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/Metadata/_rels/model_settings.config.rels",
     "bytes": 255,
     "sha256": "5ea2c0f459aec4d25341abd431edee7890c8d2fd02efbaed4b073d04cfa11440"
@@ -1395,6 +1725,16 @@
     "sha256": "cfa014dcca6e3ceafd22673d0d72ed0c83e89eb6b625db0543fb0001c51346fe"
   },
   {
+    "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/[Content_Types].xml",
+    "bytes": 432,
+    "sha256": "4acce1f577c7f0af6d9d5923faac96a76aeb1c06f0eef1762b2c8905cc0c846b"
+  },
+  {
+    "path": "standalone_bambu_layer_slicer/h2d_dual_nozzle/templates/blackLeft_whiteRight_template/_rels/.rels",
+    "bytes": 674,
+    "sha256": "abba8905ba7d74bf494412a808888e96f3e9f8dc43eccef22f4d4eff4dd8f77c"
+  },
+  {
     "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/machineSetup/bambuH2D_post.gcode",
     "bytes": 2127,
     "sha256": "14fdb2692554a98bdddec6115570d565019472aaaebfe820fba5fa76b58c6018"
@@ -1423,16 +1763,6 @@
     "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/3D/3dmodel.model",
     "bytes": 1037,
     "sha256": "607c33cb5eace89b147de6457d3a4b3ad2569887fabb7bc01bdd0517bb48d4d6"
-  },
-  {
-    "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/[Content_Types].xml",
-    "bytes": 432,
-    "sha256": "4acce1f577c7f0af6d9d5923faac96a76aeb1c06f0eef1762b2c8905cc0c846b"
-  },
-  {
-    "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/_rels/.rels",
-    "bytes": 674,
-    "sha256": "abba8905ba7d74bf494412a808888e96f3e9f8dc43eccef22f4d4eff4dd8f77c"
   },
   {
     "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/Metadata/_rels/model_settings.config.rels",
@@ -1505,9 +1835,14 @@
     "sha256": "0a720899a21497ab6ee9645b526b1d089c5cb72ccfc492f4b959b987f3ac3824"
   },
   {
-    "path": "standalone_bambu_layer_slicer/README.md",
-    "bytes": 3425,
-    "sha256": "68ea79d70157bb4aad4befc35d60c906f3794320c335f00eadbf1f1c16005ae5"
+    "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/[Content_Types].xml",
+    "bytes": 432,
+    "sha256": "4acce1f577c7f0af6d9d5923faac96a76aeb1c06f0eef1762b2c8905cc0c846b"
+  },
+  {
+    "path": "standalone_bambu_layer_slicer/h2d_right_nozzle/templates/right_white/_rels/.rels",
+    "bytes": 674,
+    "sha256": "abba8905ba7d74bf494412a808888e96f3e9f8dc43eccef22f4d4eff4dd8f77c"
   },
   {
     "path": "third_party/BambuStudio/LICENSE",
@@ -1518,340 +1853,5 @@
     "path": "third_party/siren-pytorch/LICENSE",
     "bytes": 1066,
     "sha256": "02cf6ed7df17f94fafa61e67a089ee51faac006db35ffa173c70e6763c253cf6"
-  },
-  {
-    "path": "THIRD_PARTY_NOTICES.md",
-    "bytes": 1525,
-    "sha256": "a5b7c6e388d168c79274e047728f8bb3fd27ebf7164ad115c10adf951d70a9e6"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/.gitignore",
-    "bytes": 32,
-    "sha256": "d61c5ec90fe6721329121a68a41b1f20b78fff10e4cb6949144906c42639f523"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/__init__.py",
-    "bytes": 70,
-    "sha256": "1b36cf157161185a0c0cbfa3657d255a89f999df0b4f025ccc9ef357ea1d6110"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/__main__.py",
-    "bytes": 48,
-    "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/AUTHORS.md",
-    "bytes": 209,
-    "sha256": "a0fa3f4770e00e26c9e56075d60f439e81d578c16a1d6b147782faada106d704"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/cli.py",
-    "bytes": 9672,
-    "sha256": "f2b7e21975e9e59191964fc4107da446d1df02e3957b120b7622424059c9a573"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/example_combined_job.json",
-    "bytes": 2340,
-    "sha256": "d58a072b8750b59082a8c8fa12339e72a50f5c861d6e533b5bd2b91b251e4a61"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/example_job.json",
-    "bytes": 1971,
-    "sha256": "ad1b5796d6fc4fa6862f1b26a3cff8ca4b05f2b1319c5c4b5aa2655b774385ea"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/example_strength_batch256_job.json",
-    "bytes": 3369,
-    "sha256": "b9c1dede969abfb7d562ec389469a6e38344cf3e6e1a04ca42ebcb3e390cb5c0"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/example_strength_job.json",
-    "bytes": 3360,
-    "sha256": "544f18d7fbb4d9ded2339172ec6a5b375accdeec60587b16271066bfbe72fbb9"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/example_support_free_job.json",
-    "bytes": 2004,
-    "sha256": "ce8e93f2b6ea4e20867931d34bdf0768012d76b7ad92ea2709aabbad9a2e85a1"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/example_tool.json",
-    "bytes": 196,
-    "sha256": "a1b3afffe450e346f8ec76eb5db5caddd7ac0dc01f263e8e5a8c5d7b918cd150"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/import_fea.py",
-    "bytes": 8797,
-    "sha256": "668635ba83ca16ed92d12a58a486db4ba8d84d9dd23360d64c82431c5a2d8a6f"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/job_options.py",
-    "bytes": 1112,
-    "sha256": "aeb954aa403cb43ebfea17ccd4acdc4a63eb53534fe60b615de8e5b6e05cb7d9"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/README.md",
-    "bytes": 10659,
-    "sha256": "ed182b8eac35b8119bcd24f9a4f70d16596dfab9d508b02c9dd6d253a42e5c05"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/requirements.txt",
-    "bytes": 55,
-    "sha256": "7811c2fa4281e2670d51618faf512f95fa78ef556f29d85ea62f677747e6f139"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/3axisStressSlicer.py",
-    "bytes": 47461,
-    "sha256": "a7e37805490177154efd9e188a535c07617668dc23de8f33c9ad96c5f3bfbdf4"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/axialOrientation.py",
-    "bytes": 8642,
-    "sha256": "6f9acddafb1240fd944d1aeb0bbd7dc973943b402a615fdfaa1b3b9c73f67373"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/axisymmetricTool.py",
-    "bytes": 4432,
-    "sha256": "eb387d48e268ba3bdac158595fee41f10c3e43854f579a3f6a5ef9e5befe7f15"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/boxToolSampling.py",
-    "bytes": 2291,
-    "sha256": "29b4e452452edef61cfe366d0cade843944054795d517cf250771708b686c757"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/cacheLayerComparison.py",
-    "bytes": 2546,
-    "sha256": "8f5188079ae0f644f807d64f25c950e6ab6a55d60cfb2f0b5f4ea492bae8ef1f"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/experiments/__init__.py",
-    "bytes": 2,
-    "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/__init__.py",
-    "bytes": 2,
-    "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/convex_surface_quality.py",
-    "bytes": 150161,
-    "sha256": "e31298ba96debdcebfbe1df5d6825a373a68500969ff0f76730cbb4f17fb27d7"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/experiments/convex_hard_collision/hard_collision_sampling.py",
-    "bytes": 62507,
-    "sha256": "e2786adb666d427672938ef90ed2c5c2992447c978144eb38634b1aee93d8a70"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/exportIsoSurfaces.py",
-    "bytes": 29340,
-    "sha256": "8d253cfbcfdd794d6393c6fa83d2886d349b1911c611fe2e2de795de22cbbb8b"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/fourierFeatureNet.py",
-    "bytes": 2391,
-    "sha256": "09b524c37a877c1f855ee586c1ea140d8aa665460159f85eb57e7ade46bbd244"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/generateScalarInitializer.py",
-    "bytes": 13458,
-    "sha256": "6c5eeeb0ce4bfad6a8bcf01711afc31796269dbc1d20372afb395b03cb2eb142"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/globalOrientation.py",
-    "bytes": 8355,
-    "sha256": "735706650872f89fa284e914689a0403dfc1276579c3df0d34b7ff7dbc88bf4c"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/integratedLosses.py",
-    "bytes": 835,
-    "sha256": "0a36fc8e15f2d9c10c81f66a9e4070deba5fa99e0e8fe4001c80b26eb6c5d78f"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/layerCurvature.py",
-    "bytes": 828,
-    "sha256": "c0352f728882f5430c61b09b5d11ef1ebd4219d7d0de411fba5ef7aec88be1e5"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/layerThicknessControl.py",
-    "bytes": 7657,
-    "sha256": "425073566f79d125ef5a344adc85025b0a1ae1050f8d4463e729509616c5a00f"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/runBandedSurfaceQualityPipeline.py",
-    "bytes": 136748,
-    "sha256": "bba37b6a3756ab5e1b87e95e8a5ea9d8bea2cca12ad917719307788973a46e35"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/runBandedSurfaceQualityPipelineLocalEdge.py",
-    "bytes": 686,
-    "sha256": "cc9889946b076c3cbe8fd8b402859f6fc4eeb437d6b549e737b5911bd5139be7"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/runModelCollisionCheck.py",
-    "bytes": 11991,
-    "sha256": "e38ea11aa23344de0665ac3d26514dbdf543608612f4d3d94a34930cdb35c5ad"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/runtimeEnv.py",
-    "bytes": 563,
-    "sha256": "b069823de1b844be6e1a04053abd4809aec95302c5d40bac06ccf277c01c6a6b"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/scalarFieldCollisionCheck.py",
-    "bytes": 40053,
-    "sha256": "8f19b809cdb4891adc69ab213f7cd9a5d3745328173bce5b5169d22cb6fa7862"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/scalarNetUtils.py",
-    "bytes": 11792,
-    "sha256": "484ae1dd8f6564e87b76ab5052edabfb14dc719e0ecabab90da8ede6f03746b2"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/sdfField.py",
-    "bytes": 20257,
-    "sha256": "656a34c1411023b82bbfaa10ca4e8e24b4567aa9a06bdd96311b2add533e8b0b"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/__init__.py",
-    "bytes": 77,
-    "sha256": "e4faf2787f1ae2fd54455a6630301f89725d5f982a81df6a62a5c76f2a07ed5b"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/LICENSE",
-    "bytes": 1066,
-    "sha256": "02cf6ed7df17f94fafa61e67a089ee51faac006db35ffa173c70e6763c253cf6"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/siren_pytorch.py",
-    "bytes": 6651,
-    "sha256": "90d10eb865dabb0f1f0aef171206034a7b442d728967313442f0117512a3f487"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/strengthConstraints.py",
-    "bytes": 11610,
-    "sha256": "8fa25298e349aeea12c84e40ff919a1962226d45b379d5ea7393464a97e81cc6"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/stressSampling.py",
-    "bytes": 5581,
-    "sha256": "ebb90dd605dd4af0a794d572d7f5df0d66f2a49e69f9c13283c04419dc01fc0a"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/toolFieldOffsets.py",
-    "bytes": 14682,
-    "sha256": "74b3986b82a219d03e84429add597b51fd7f77457d91da527f9339c86afccfa2"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/toolSampling.py",
-    "bytes": 5638,
-    "sha256": "acdbe3c429a23f7639c378c7c4e323934fadad1569ac716410a67d16dda3e12b"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/viewCachedLayers.py",
-    "bytes": 1965,
-    "sha256": "dfe7ed2eefce7fce542ddf51667f249e2adf025c9c0dddd8e987bd78fc66cbaa"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/viewFieldComparison.py",
-    "bytes": 3230,
-    "sha256": "2fe266baac8d21e7054ffc2eda7f6e19767b68735e9487c6543485eb3feb161c"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/viewOrientation.py",
-    "bytes": 5249,
-    "sha256": "0b02e918d0786a8ae8038718a6d15a3e9e0a220a776d0f2a325317d0e0eb0981"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/viewStressOrientation.py",
-    "bytes": 4244,
-    "sha256": "cba7d52bd086d7dbd0d8cd9c5a2afecde5e0b254965ffc750e4702988aad7e1b"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/visualizeBoundaryVertexNormalSampling.py",
-    "bytes": 13716,
-    "sha256": "41b1d0996cf81c3085c02c7f25d9aa4290231c2096da321e54ea0b3535d303a7"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/visualizeGradientHeightLayers.py",
-    "bytes": 16661,
-    "sha256": "f566ea2b1b2976bb4ad861377f382ad3c57f4a72b4dc9b8e0c71b38179cb5791"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/visualizeHeightClippedSurfaceSampling.py",
-    "bytes": 10181,
-    "sha256": "f3cc2159a4c9061b8fa69ae967ee0259a9e0333ea955ae935a41c149351770fa"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/runtime/visualizeHybridSurfaceSampling.py",
-    "bytes": 25712,
-    "sha256": "66b8cd0514c95978e5cda68b88d42493fa8fc93427b645b52eac53672138d201"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tests/test_collision_normalization.py",
-    "bytes": 3962,
-    "sha256": "855d39dda9a184dc666d830e40e642b7bbce833f1bbdac8985f2814d9a251150"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tests/test_portable_update.py",
-    "bytes": 8869,
-    "sha256": "38f9ea58ed84a969e01a813836be23da801c8ec627c5291e1aef3bea88bc7a99"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tests/test_pyvista_compatibility.py",
-    "bytes": 2261,
-    "sha256": "40dcbdbfd00340d38d4fa7279ee9134910ec0ecb43da85787f95a3481c789e07"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tests/test_stress_sampling_acceleration.py",
-    "bytes": 3227,
-    "sha256": "a5583b56c1d7b6007c5f345ed0ec6229fe73ba5b7d14d6ce67c94c1e46cf2554"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tests/test_workflows.py",
-    "bytes": 6261,
-    "sha256": "75bcb31f4d35c70eebd105d609571a46a57bd5e942650842d5e9eabb3dc98e20"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tool_y8_xz25.json",
-    "bytes": 143,
-    "sha256": "cbee1d3b9cc3df3aefbc067bb9668962180c6c72d9432cab4e6ce62c9bf6e90f"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_check.json",
-    "bytes": 303,
-    "sha256": "7c3e281da4b48ef34196b133c30c37c41d678f1443f099dba471bd545e09ce09"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tool_y8_xz25_training_margin04.json",
-    "bytes": 143,
-    "sha256": "df94e51d66da3050369e6a0db3677e1d22a62c9e26f7529b70be40fd7fa8f76d"
-  },
-  {
-    "path": "external_projected_pipeline/tests/test_support_sheet_spacing.py",
-    "bytes": 14329,
-    "sha256": "05e23a874777aaddf35853c22e7f28b197e33653dfdd4fff08c85faaf0e53038"
-  },
-  {
-    "path": "external_projected_pipeline/tests/test_support_repair_choice.py",
-    "bytes": 5334,
-    "sha256": "0a440a7cf97c0fdf6d3a40d2e17a9fe8b71a557cb4eff9da9d7133576e74c7b9"
-  },
-  {
-    "path": "external_projected_pipeline/runtime/height_warning_policy.py",
-    "bytes": 1969,
-    "sha256": "bbe79c7299e16f3241916e0d834dddbbb0e888db3dc8073895a06201f64acf9a"
-  },
-  {
-    "path": "external_projected_pipeline/tests/test_course_height_policy.py",
-    "bytes": 2439,
-    "sha256": "c064601ed8ddd49b519cd4e6456128d17152af4d06147a6b4f90f816f4fd003b"
-  },
-  {
-    "path": "ThreeAxisCollisionGenerator/tests/test_learning_rate_schedule.py",
-    "bytes": 3804,
-    "sha256": "85748c5574de7a5db88625e181f9fd707b8fb9d9410b009c12405f6bb2fe7788"
   }
 ]

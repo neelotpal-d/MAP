@@ -2,7 +2,7 @@
   "format": "map.bundled-source.v1",
   "date": "2026-11-17",
   "source_repository": "https://github.com/neelotpal-d/MAP",
-  "snapshot_id": "4950558de51c7bb72e9b1af8fe3380c3be10a4b000aa333c928875f7210d6c4d",
+  "snapshot_id": "373dce096e3ee1b3cd615bb808f5a5cb567db85cac2e213b520a08fdf9c7001b",
   "origin_archive": "MultiAxisInterface-combined-20261117.zip",
   "origin_archive_sha256": "1eca8322521671e2becf533f0d10b07f0dd895c4db0573c852020843da3c40af",
   "distribution": "Bundled MAP source with recorded maintenance patches",
@@ -288,7 +288,7 @@
     },
     {
       "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/promotion_sources.json",
-      "sha256": "2b7484572a1ad3ff712791da7f8cd3b4cebdeba65e67374a674907cfd73dfd52"
+      "sha256": "bc0720d2da77e52a1a71037735bd49ccebdf1917cc64c88f86471595a3bb1fe0"
     },
     {
       "path": "CurvedSupportGenerator/runtime/SupportGenerationCurved/platform_router/routing_field.py",
@@ -1348,7 +1348,7 @@
     },
     {
       "path": "ThreeAxisCollisionGenerator/runtime/sdfField.py",
-      "sha256": "656a34c1411023b82bbfaa10ca4e8e24b4567aa9a06bdd96311b2add533e8b0b"
+      "sha256": "e2a06aea1ab72bfff948d260d06a10abec09ae35b07053a24958cedf5cd2696f"
     },
     {
       "path": "ThreeAxisCollisionGenerator/runtime/siren_pytorch/__init__.py",
