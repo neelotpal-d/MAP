@@ -18,6 +18,25 @@ installs pinned dependencies; no separate Conda/Python installation or manual
 environment activation is needed. Mac setup may request Apple Command Line Tools.
 Windows/Linux support NVIDIA CUDA with CPU fallback; Mac profiles use CPU.
 
+**Linux:** use `application.zip` with an existing native Linux Miniforge,
+Conda or Mamba installation; this source package does not install Miniforge for
+you. [Miniforge](https://github.com/conda-forge/miniforge) supplies Python and
+Conda if neither is installed. Extract the ZIP into a writable folder and, in a
+terminal with Python and the environment manager available, run from that folder:
+
+```bash
+python setup.py --device auto
+python launch.py --installed-runtime
+```
+
+Setup creates the application environment in `.runtime/linux-64/`, downloads
+the locked backends/dependencies and selects usable NVIDIA CUDA or CPU fallback.
+Use the second command for later launches. The Linux profile requires x86-64,
+glibc 2.35+ (for example Ubuntu 22.04+) and a working desktop/OpenGL driver.
+Matching prebuilt C++ accelerators are included; no compiler is needed for the
+default Linux route. There is no graphical Linux bootstrap installer or automatic
+desktop shortcut.
+
 ### How the installers obtain MAP
 
 First-time setup downloads the exact [tested MAP backend release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27-r2)
@@ -49,9 +68,10 @@ Mac setup and physical printing are not claimed verified; read the matching
 
 ### Downloads, installed files and later launches
 
-Setup includes the interface, starter models and local documentation, then obtains
-the locked MAP backends from MAP Releases, Miniforge from conda-forge, and pinned
-dependencies from conda-forge/PyPI and the official PyTorch wheel indexes.
+The setup packages include the interface, starter models and local documentation.
+Setup obtains the locked MAP backends from MAP Releases and pinned dependencies
+from conda-forge/PyPI and the official PyTorch wheel indexes. The Windows/Mac
+bootstrap also installs Miniforge; Linux/source setup uses an existing manager.
 
 | Platform | Default installed application root | Launch again |
 |---|---|---|

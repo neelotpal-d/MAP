@@ -566,8 +566,8 @@
   },
   {
     "path": "INSTALLERS.md",
-    "bytes": 11909,
-    "sha256": "7a06b285d4f179d07bc6d7d8acd967b18728cda2958ea85e2eedc593c44bd125"
+    "bytes": 12357,
+    "sha256": "3a8d006ed69741b537ecfb5b5132c422bbe56e1303a7a0c4716ee5ba5c4dc169"
   },
   {
     "path": "LICENSE_STATUS.md",
@@ -786,8 +786,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 7265,
-    "sha256": "2e807ffd942c91a3fb4cc3f34a1e3e2692dde3035893a685b856e8cad59ec99f"
+    "bytes": 8314,
+    "sha256": "8540c8422f617e3b1f9001d6e27e6d74c6732e97ee07a179eb1badcf491703bc"
   },
   {
     "path": "THIRD_PARTY_NOTICES.md",

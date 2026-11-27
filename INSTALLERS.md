@@ -115,6 +115,13 @@ For a custom base, use its `current-app.txt`. The launcher `.app` in
 
 ### Linux and manual/source installation
 
+On Linux this is a source installation: Python and a working Conda/Mamba
+manager must already be available. Install native Linux Miniforge first if
+needed; `setup.py` creates the application environment, but does not install
+Miniforge itself. The Linux profile requires x86-64 and glibc 2.35+ (for example
+Ubuntu 22.04+), plus a working desktop/OpenGL driver. Its default verified
+prebuilt accelerators do not require a local C++ compiler.
+
 Use a native-architecture Miniforge/Conda terminal in the extracted folder and
 follow `INSTALL.md` from `application.zip`. With a working Conda/Mamba manager
 and Python available, run:
