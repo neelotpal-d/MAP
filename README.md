@@ -23,34 +23,14 @@ Linux download: [installer and installation notes](https://github.com/RyanTaoLiu
 Run `bash "$HOME/Downloads/MultiAxisPrinting-Setup-Linux.sh"` using the path to
 your downloaded file. See [Linux setup details](INSTALLERS.md#linux-installer).
 
-### How the installers obtain MAP
+### Backend downloads
 
-First-time setup downloads the exact [tested MAP backend release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27-r2)
-from **this repository**, rather than fetching changing code from `main` or
-`latest`. `MAP_BACKEND_LOCK.json` in the interface package pins the 3.3 MB ZIP's
-SHA256, size and complete 382-member inventory. Setup verifies every file before
-installing the five component folders. The archive also includes its release
-inventory and source notices.
-
-Valid installed source and cached archives are reused. Normal launches and
-check-only do not download code. Modified existing backend source is preserved
-and blocks replacement. 
-
-For an offline backend, download the exact ZIP named by the interface's lock from
-the [MAP release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27-r2). From the extracted **interface** folder, run:
-
-```text
-python map_backend.py --archive /path/to/MAP-backends-2026-11-27-r2.zip
-```
-
-Then run the normal interface setup. `map_backend.py`, `setup.py`, GUI code and
-dependency locks belong to the interface package, not to this backend-only ZIP.
-See the [interface installation notes](https://github.com/RyanTaoLiu/MultiAxisPrinting/blob/dev2/INSTALLERS.md).
-
-These are development prereleases. Actual backend download/offline reuse was
-verified on Windows and Linux. Complete fresh-environment installation, native
-Mac setup and physical printing are not claimed verified; read the matching
-[release verification notes](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/VERIFICATION.json).
+Setup obtains the fixed, hash-verified [MAP backend release](https://github.com/neelotpal-d/MAP/releases/tag/backends-2026-11-27-r2)
+automatically and reuses verified installed source on later launches. No manual
+backend copying is needed for normal installation. For local ZIP/offline-source
+options, use the [backend guide](https://github.com/RyanTaoLiu/MultiAxisPrinting/blob/dev2/MAP_BACKEND_DOWNLOAD.md).
+See the matching [Windows/Mac verification record](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-preview-2026-11-27-r2/VERIFICATION.json)
+or [Linux verification record](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-linux-preview-2026-11-27/VERIFICATION.json) for the downloaded version.
 
 ### Downloads, installed files and later launches
 
@@ -78,7 +58,7 @@ and manual/offline installation.
 
 ### Manual/source installation (fallback)
 
-Use these steps if you choose manual setup instead of the Windows, Mac or Linux installer.
+Use these steps only if you choose the source ZIP instead of an automatic installer. The shared source ZIP includes all four platform profiles.
 
 **1. Install Miniforge once.** Download the installer for your OS/CPU from the
 [official Miniforge page](https://github.com/conda-forge/miniforge#install).
@@ -87,8 +67,8 @@ the shell-initialization prompt, then open a new Terminal. If Conda already work
 use that installation. [Miniforge installation steps for each OS](INSTALLERS.md#step-1-install-miniforge-once).
 
 **2. Download and extract the application.** From the
-[interface release](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/tag/interface-preview-2026-11-27-r2),
-download the file named **application.zip**. Extract it to `C:\MultiAxisPrinting`
+[shared manual source download](https://github.com/RyanTaoLiu/MultiAxisPrinting/releases/download/interface-linux-preview-2026-11-27/application.zip),
+download the file named **application.zip**. Extract it to `%USERPROFILE%\MultiAxisPrinting`
 on Windows, or `~/MultiAxisPrinting` on Mac/Linux. The extracted folder must
 contain `setup.py` and `launch.py`. If you choose another folder, use its path
 in the commands below.
@@ -99,7 +79,7 @@ Windows — in **Miniforge Prompt**:
 
 ```cmd
 conda activate base
-cd /d "C:\MultiAxisPrinting"
+cd /d "%USERPROFILE%\MultiAxisPrinting"
 python setup.py --device auto
 python launch.py --installed-runtime
 ```
@@ -128,8 +108,8 @@ python launch.py --installed-runtime
 ```
 
 You do not need to repeat setup. The launcher uses the recorded application
-environment. See the [manual setup guide](INSTALLERS.md#linux-and-manualsource-installation)
-for explicit Conda activation, installation checks and common setup messages.
+environment. See the [manual setup guide](INSTALLERS.md#manual-installation-optional)
+for explicit Conda activation, installation checks and common setup messages. Close the interface before running setup, checks or repair.
 
 
 For backend-only development or component CLIs, keep the component folders as
@@ -158,8 +138,9 @@ GUI and existing FEA functionality are provided by
 | `standalone_bambu_layer_slicer/` | Bambu program assembly and 3MF packaging |
 
 Keep these directory names and sibling layout. Read each component README for
-its inputs and CLI. With the existing compatible numerical environment, from
-this repository root:
+its inputs and CLI. After manual setup, activate the application environment
+using the commands in [INSTALLERS.md](INSTALLERS.md#manual-installation-optional).
+From the application folder containing these components, run:
 
 ```text
 python -m MultiAxisFieldGenerator --help
@@ -169,6 +150,6 @@ python -m external_projected_pipeline --help
 python -m external_projected_pipeline doctor
 ```
 
-See AUTHORS.md for author details/placeholders. Original SIREN, Bambu-derived
+See AUTHORS.md for authorship details. Original SIREN, Bambu-derived
 and other third-party authorship/licences remain applicable; see
 THIRD_PARTY_NOTICES.md and LICENSE_STATUS.md. Generated results, checkpoints and runtime environments are stored separately from source.
